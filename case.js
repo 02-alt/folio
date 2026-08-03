@@ -66,7 +66,7 @@
   back.addEventListener("click", function (e) {
     if (reduce) return; // let the link navigate normally
     e.preventDefault();
-    var href = back.getAttribute("href") || "index.html";
+    var href = back.getAttribute("href") || "/";
 
     // Bring the hero to the top so we capture a sensible on-screen rect.
     window.scrollTo(0, 0);

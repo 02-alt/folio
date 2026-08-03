@@ -359,14 +359,16 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   display: grid;
   grid-template-columns: 1fr 216px;
   align-items: stretch;              /* notes column matches the mockup height */
-  background: #fff;                  /* matches the white-flattened mockup (no seam) */
+  background: linear-gradient(180deg, #edeef2 0%, #ffffff 78%);  /* subtle top-to-bottom gradient */
   border: 1px solid var(--case-hair);
   border-radius: var(--radius);
   overflow: hidden;
   padding: 32px 32px 36px;            /* inside breathing room around the mockup + notes */
 }
 .mapfig__shot { min-width: 0; }
-.mapfig__shot img { display: block; width: 100%; height: auto; }
+/* the mockup is white-flattened; multiply lets the card gradient show through its white
+   areas so the phone sits on the gradient with no seam */
+.mapfig__shot img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
 .mapfig__notes { position: relative; }
 .mapfig__note {                      /* top set inline = each connector's endpoint height;
                                         the title row (not the block) sits on that line */

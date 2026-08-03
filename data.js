@@ -4,7 +4,7 @@
 window.PROJECTS = [
   {
     id: "ornikar",
-    page: "ornikar.html",
+    page: "ornikar",
     badge: "Case study",
     image: "images/ornikar.webp",
     name: "Ornikar",
@@ -21,7 +21,7 @@ window.PROJECTS = [
   },
   {
     id: "alan",
-    page: "alan.html",
+    page: "alan",
     badge: "Showcase",
     image: "images/alan.webp",
     name: "Alan",
@@ -38,7 +38,7 @@ window.PROJECTS = [
   },
   {
     id: "cyberchat",
-    page: "cyberchat.html",
+    page: "cyberchat",
     badge: "Showcase",
     image: "images/cyberchat.webp",
     name: "CyberChat",
@@ -55,7 +55,7 @@ window.PROJECTS = [
   },
   {
     id: "vibe-coding",
-    page: "lab.html",
+    page: "lab",
     badge: "Showcase",
     image: "images/vibe-coding.webp",
     name: "The Lab",
