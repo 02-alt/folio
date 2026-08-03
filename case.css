@@ -1,0 +1,492 @@
+/* ============================================================
+   Case-study page (Ornikar) — sans-serif, Apple HIG
+   Relies on styles.css for @font-face + spacing tokens.
+   ============================================================ */
+
+:root {
+  --case-ink: #1d1d1f;
+  --case-muted: #86868b;         /* Apple secondary label */
+  --case-fill: #f5f5f7;          /* systemGray6-ish card fill */
+  --case-fill-2: #fafafa;
+  --case-blue: #2b7cff;
+  --case-hair: rgba(0, 0, 0, 0.08);
+  --case-col: 900px;
+}
+
+body.case {
+  background: #ffffff;
+  color: var(--case-ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.case-wrap {
+  max-width: var(--case-col);
+  margin: 0 auto;
+  padding: 40px 24px 160px;
+}
+
+/* ---- Top bar / back ---- */
+.case-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+.case-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 8px 0 4px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--case-ink);
+  text-decoration: none;
+  border-radius: 12px;
+}
+.case-back:hover { color: var(--case-blue); }
+.case-back svg { width: 20px; height: 20px; }
+.case-eyebrow { font-size: 14px; color: var(--case-muted); }
+
+/* ---- Hero image ---- */
+.case-hero {
+  border-radius: var(--radius);
+  border: 1px solid var(--case-hair);
+  overflow: hidden;
+  margin-bottom: 56px;
+  background: var(--image-space);
+}
+.case-hero img { display: block; width: 100%; height: auto; }
+
+/* ---- Meta grid ---- */
+.meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  margin-bottom: 96px;
+}
+.meta h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.meta p { font-size: 16px; line-height: 1.55; color: var(--case-muted); margin-bottom: 6px; }
+.meta .lead { color: var(--case-ink); }
+.meta .lead b { font-weight: 600; }
+.meta .block + .block { margin-top: 32px; }
+.meta .overview p + p { margin-top: 18px; }
+
+/* ---- Section headers ---- */
+.section { margin-top: 88px; }
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 22px;
+}
+.section-title::before { display: none; }   /* no bullet dot on section titles */
+
+.lead-p {
+  font-size: 21px;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin-bottom: 14px;
+}
+.body-p {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--case-muted);
+  margin-bottom: 16px;
+}
+.hl { color: var(--case-blue); }
+
+/* ---- Process (Week 1 / Week 2) ---- */
+.process {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 8px;
+  align-items: stretch;               /* both week columns share height */
+}
+.pcol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.process .week { font-size: 16px; font-weight: 500; margin: 8px 0 4px; }
+.step {
+  background: var(--case-fill);
+  border: 1px solid var(--case-hair);
+  border-radius: var(--radius);
+  padding: 20px;
+  flex: 1;                            /* all four cards end up equal size */
+  display: grid;
+  grid-template-columns: auto 1fr;    /* icon | title on row 1 */
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 12px;
+}
+.step__icon {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--case-hair);
+  display: grid; place-items: center;
+  flex: none;
+}
+.step__icon svg { width: auto; height: 16px; }
+.step h4 { font-size: 17px; font-weight: 600; }
+.step p {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--case-muted);
+  grid-column: 1 / -1;              /* description spans full width below */
+}
+
+/* ---- Insight cards ---- */
+.insights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+.insight {
+  background: var(--case-fill);
+  border: 1px solid var(--case-hair);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.insight__tag {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 500; color: var(--case-muted);
+  margin-bottom: 14px;
+}
+.insight__tag svg { width: auto; height: 15px; }
+.insight__title { font-size: 16px; font-weight: 600; color: var(--case-blue); line-height: 1.35; margin-bottom: 14px; }
+.insight__quote { font-size: 14px; line-height: 1.5; color: var(--case-muted); margin-bottom: 18px; }
+.insight__by { font-size: 14px; color: var(--case-ink); margin-top: auto; }
+
+/* ---- Constraints (2x2) ---- */
+.constraints {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+.constraint {
+  display: flex;
+  gap: 16px;
+  background: var(--case-fill);
+  border: 1px solid var(--case-hair);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.constraint__icon {
+  width: 44px; height: 44px; flex: none;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--case-hair);
+  display: grid; place-items: center;
+}
+.constraint__icon svg { width: auto; height: 19px; }
+.constraint h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.constraint p { font-size: 14px; line-height: 1.45; color: var(--case-muted); }
+
+/* ---- Image placeholders (awaiting real assets) ---- */
+.ph {
+  border-radius: var(--radius);
+  border: 1px dashed rgba(0,0,0,0.18);
+  background: repeating-linear-gradient(45deg, #fafafa, #fafafa 12px, #f3f3f3 12px, #f3f3f3 24px);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #9a9a9f;
+  font-size: 14px;
+  padding: 24px;
+  min-height: 240px;
+}
+.ph span { max-width: 32ch; }
+.ph b { display: block; color: #6b6b70; font-weight: 600; margin-bottom: 4px; }
+
+/* ---- Self-contained figure images (annotation baked in) ---- */
+.case-figure { margin-top: 24px; }
+.case-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--case-hair);
+}
+
+/* ---- Annotated spotlight figure (mockup bleeds inside the card + callout) ---- */
+.annot {
+  margin-top: 24px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 420px 1fr;   /* fixed mockup column | text */
+  align-items: center;
+  height: 320px;
+  overflow: hidden;                    /* clips the mockup that bleeds off */
+  background: linear-gradient(180deg, #fafafb, #f2f3f5);
+  border: 1px solid var(--case-hair);
+  border-radius: var(--radius);
+}
+.annot__shot { position: relative; height: 100%; overflow: hidden; }
+.annot__frame {                        /* == the mockup's own box (anchors the % overlay) */
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 380px;
+}
+.annot__base { display: block; width: 100%; height: auto; }
+.annot__hi {                           /* highlighted element; left/top/width set inline per figure */
+  position: absolute;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.28));
+}
+.annot__note { position: relative; padding: 0 28px 0 96px; }
+/* Connector drawn from the title row itself, so it always aligns with the icon */
+.annot__note .name { position: relative; }
+.annot__note .name::before {           /* horizontal line reaching back to the card */
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-right: 8px;                    /* gap before the icon */
+  width: 138px;
+  height: 1.5px;
+  background: var(--case-ink);
+  transform: translateY(-50%);
+}
+.annot__note .name::after {            /* dot on the card end of the line */
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(100% + 146px);
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--case-ink);
+  transform: translate(50%, -50%);
+}
+.annot__note .name {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 17px; font-weight: 600; margin-bottom: 8px;
+}
+.annot__note .name svg { width: auto; height: 17px; flex: none; }
+.annot__note p { font-size: 16px; line-height: 1.5; color: var(--case-muted); }
+.annot__note p b { color: var(--case-ink); font-weight: 600; }
+.annot__note p .hl { color: var(--case-blue); }
+
+/* ---- Mockup card with caption underneath ---- */
+.shotcard {
+  margin-top: 24px;
+  background: linear-gradient(180deg, #fafafb, #f2f3f5);
+  border: 1px solid var(--case-hair);
+  border-radius: var(--radius);
+  overflow: hidden;
+  padding-bottom: 28px;          /* breathing room below the mockup */
+}
+.shotcard__frame {
+  height: 330px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;             /* anchor bottom → top of the mockup bleeds */
+}
+.shotcard__frame img { width: 480px; max-width: 90%; height: auto; display: block; }
+.shotcard__cap {
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--case-muted);
+  max-width: 62ch;
+  margin: 24px auto 0;
+  padding: 0 40px;
+}
+.shotcard__cap b { color: var(--case-ink); font-weight: 600; }
+
+/* full-height variant: show the whole (portrait) phone, no bleed */
+.shotcard--full .shotcard__frame {
+  height: auto;
+  align-items: center;
+  padding-top: 32px;
+}
+.shotcard--full .shotcard__frame img { width: 340px; max-width: 72%; }
+
+/* flush variant: cropped ("half") phone sits hard against the card's bottom edge */
+.shotcard--flush { padding-bottom: 0; }
+.shotcard--flush .shotcard__frame {
+  height: auto;
+  align-items: flex-end;
+  padding-top: 40px;
+}
+.shotcard--flush .shotcard__frame img { width: 360px; max-width: 76%; }
+
+/* top-anchored crop: show the top of a tall screen (bottom bleeds off).
+   Pair with a default .shotcard (bottom-anchored) to reveal both ends. */
+.shotcard--top .shotcard__frame { align-items: flex-start; }
+
+/* two screens side by side (share one caption) */
+.shots2 {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.shots2 .shotcard { margin-top: 0; }
+
+/* split pair: two separate captures of one tall screen — its top in the left card,
+   its bottom in the right card — each shown whole and filling the card width. */
+.shots2--split { align-items: start; }
+.shots2--split .shotcard { padding: 28px; }          /* inner spacing around the phone */
+.shots2--split .shotcard__frame { height: auto; align-items: flex-start; }
+.shots2--split .shotcard__frame img { width: 100%; max-width: none; }
+/* Alan wants its dashboard split flush to the card borders (no inset) */
+body[data-project="alan"] .shots2--split .shotcard { padding: 0; }
+/* CyberChat's payment split shows one screen top-and-bottom; the halves meet at the
+   seam, so the left half is flush at its bottom and the right half flush at its top. */
+body[data-project="cyberchat"] .shots2--split .shotcard:first-child { padding-bottom: 0; }
+body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top: 0; }
+
+/* ---- Map figure: full mockup + side callouts anchored to baked connectors ---- */
+.mapfig {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 216px;
+  align-items: stretch;              /* notes column matches the mockup height */
+  background: #fff;                  /* matches the white-flattened mockup (no seam) */
+  border: 1px solid var(--case-hair);
+  border-radius: var(--radius);
+  overflow: hidden;
+  padding: 32px 32px 36px;            /* inside breathing room around the mockup + notes */
+}
+.mapfig__shot { min-width: 0; }
+.mapfig__shot img { display: block; width: 100%; height: auto; }
+.mapfig__notes { position: relative; }
+.mapfig__note {                      /* top set inline = each connector's endpoint height;
+                                        the title row (not the block) sits on that line */
+  position: absolute;
+  left: 0; right: 0;
+  transform: translateY(-11px);      /* lift so the .name row centers on the connector */
+}
+.mapfig__note .name {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 600; margin-bottom: 6px;
+}
+.mapfig__note .name svg { width: auto; height: 17px; flex: none; }
+.mapfig__note p { font-size: 14px; line-height: 1.5; color: var(--case-muted); }
+
+/* ---- Annotated figure (image + callout) ---- */
+.figure { margin-top: 24px; }
+.figure--annotated {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+.callout { font-size: 16px; line-height: 1.5; }
+.callout b { font-weight: 600; }
+.callout .name { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px; }
+.callout .name::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--case-ink); }
+.caption { text-align: center; font-size: 15px; line-height: 1.5; color: var(--case-muted); margin-top: 24px; }
+.caption b { color: var(--case-ink); font-weight: 600; }
+
+/* ---- Footer buttons (reuses .btn from styles.css) ---- */
+.case-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 112px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 780px) {
+  .meta { grid-template-columns: 1fr; gap: 32px; }
+  .process { grid-template-columns: 1fr; }   /* Week 1 then Week 2, chronological */
+  .insights { grid-template-columns: 1fr; }
+  .constraints { grid-template-columns: 1fr; }
+  .figure--annotated { grid-template-columns: 1fr; }
+  .annot { grid-template-columns: 1fr; height: auto; padding: 20px; }
+  .annot__shot { height: auto; }
+  .annot__frame { position: static; left: 0; width: 100%; }
+  .annot__note .name::before, .annot__note .name::after { display: none; }
+  .annot__note { padding: 16px 0 0; }
+  .shotcard__frame { height: auto; }
+  .shotcard__frame img { width: 100%; max-width: 320px; }
+  .shotcard__cap { padding: 0 20px; }
+  .shots2 { grid-template-columns: 1fr; }
+  /* Map: stack mockup, then callouts as a plain list (connectors point nowhere on mobile) */
+  .mapfig { grid-template-columns: 1fr; }
+  .mapfig__notes { padding: 8px 20px 20px; }
+  .mapfig__note { position: static; transform: none; right: auto; }
+  .mapfig__note + .mapfig__note { margin-top: 16px; }
+  .lead-p { font-size: 19px; }
+}
+
+@media (max-width: 560px) {
+  .case-wrap { padding: 32px 20px 120px; }
+  .section { margin-top: 64px; }
+  .section-title { font-size: 20px; }
+  .lead-p { font-size: 18px; }
+  .body-p { font-size: 16px; }
+  .case-footer { flex-wrap: wrap; }
+  .case-footer .btn { flex: 1 1 100%; }   /* full-width stacked buttons on phones */
+}
+
+/* ============================================================
+   Lightbox (click a case-study image for a clearer view)
+   ============================================================ */
+.lightbox { position: fixed; inset: 0; z-index: 1000; display: none; }
+.lightbox.open { display: block; }
+.lightbox__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.lightbox.show .lightbox__backdrop { opacity: 1; }
+.lightbox__stage {
+  position: absolute; inset: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 28px;
+}
+.lightbox__stage.actual { text-align: center; }
+.lightbox__img {
+  border-radius: 8px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  cursor: zoom-in;
+}
+.lightbox__stage.actual .lightbox__img { cursor: zoom-out; }
+.lightbox__close {
+  position: fixed; top: 18px; right: 20px; z-index: 3;
+  width: 44px; height: 44px;
+  border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff; font-size: 26px; line-height: 1;
+  cursor: pointer;
+  display: grid; place-items: center;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background-color .2s ease;
+}
+.lightbox__close:hover { background: rgba(255, 255, 255, 0.3); }
+.lightbox__hint {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 3;
+  font-family: var(--sans);
+  font-size: 13px; color: rgba(255, 255, 255, 0.72);
+  background: rgba(0, 0, 0, 0.35);
+  padding: 6px 12px; border-radius: 999px;
+  pointer-events: none;
+  opacity: 0; transition: opacity .3s ease;
+}
+.lightbox.show .lightbox__hint { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .lightbox__backdrop { transition: none; }
+}

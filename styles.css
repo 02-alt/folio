@@ -1,0 +1,339 @@
+/* ============================================================
+   matthieuc.com — recreation
+   Type:  ABC Marist (serif, body)  +  Inter (sans, modal only)
+   ============================================================ */
+
+@font-face {
+  font-family: "ABC Marist";
+  src: url("fonts/ABCMarist-Book.woff2") format("woff2"),
+       url("fonts/ABCMarist-Book.woff") format("woff");
+  font-weight: 350;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "ABC Marist";
+  src: url("fonts/ABCMarist-Regular.woff2") format("woff2"),
+       url("fonts/ABCMarist-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "ABC Marist";
+  src: url("fonts/ABCMarist-Medium.woff2") format("woff2"),
+       url("fonts/ABCMarist-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #ffffff;
+  --ink: #111111;
+  --muted: #8b8b8b;
+  --image-space: #f0efec;
+  --radius: 16px;                 /* Apple-style rounded card */
+  --hairline: rgba(0, 0, 0, 0.08); /* subtle 1px border */
+  --serif: "ABC Marist", "Times New Roman", Times, Georgia, serif;
+  --sans: "Inter", "Inter Placeholder", -apple-system, system-ui, sans-serif;
+  --col: 600px;
+
+  /* 8-pt spacing scale (Apple HIG) */
+  --s-1: 8px;
+  --s-2: 16px;
+  --s-3: 24px;
+  --s-4: 32px;
+  --s-6: 48px;
+  --s-8: 64px;
+  --s-12: 96px;
+  --s-18: 144px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+a { color: inherit; }
+
+.page {
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 300px var(--s-3) 200px;
+}
+
+/* ---------------- Hero ---------------- */
+.hero { margin-bottom: var(--s-12); }
+
+.hero__name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+  margin-bottom: 4px;         /* name → location: tight pair */
+}
+
+.hero__location {
+  font-family: var(--serif);
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 22px;        /* clear gap before the bio */
+}
+
+.hero__bio {
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.45;
+  margin-bottom: var(--s-3);
+}
+
+.hero__links {
+  font-family: var(--serif);
+  font-size: 17px;
+  margin-top: var(--s-1);
+}
+.hero__links a { text-decoration: none; transition: opacity .2s; }
+.hero__links a:hover { opacity: .55; }
+.hero__links span { color: var(--ink); padding: 0 2px; }
+
+/* ---------------- Projects list ---------------- */
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-12);
+}
+
+.project {
+  cursor: pointer;
+  border-radius: var(--radius);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.project:focus-visible { outline: 3px solid rgba(0,102,255,.5); outline-offset: 8px; }
+
+.project__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;         /* title → year: tight pair */
+}
+.project__name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.project__badge {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.project__year {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 22px;        /* clear gap before the tagline group */
+}
+.project__tagline {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 17px;
+  margin-bottom: 6px;         /* tagline → description: tight pair */
+}
+.project__desc {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-bottom: var(--s-3);  /* description → image */
+}
+
+.project__image {
+  background: var(--image-space);
+  border-radius: var(--radius);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+  transition: transform .3s cubic-bezier(.2,.8,.25,1);
+}
+.project__image img { display: block; width: 100%; height: auto; }
+.project:hover .project__image {
+  transform: scale(1.02);
+}
+.project:active .project__image { transform: scale(1.005); }
+
+/* ---------------- Personal ---------------- */
+.personal {
+  margin-top: var(--s-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.personal__sign { font-style: italic; }
+
+/* ---------------- Signature ---------------- */
+.signature {
+  margin-top: var(--s-8);
+  display: flex;
+  justify-content: center;
+}
+.signature img { width: 130px; height: auto; opacity: .9; }
+
+/* ---------------- Footer / buttons (Apple HIG) ---------------- */
+.footer {
+  margin-top: var(--s-6);
+  display: flex;
+  gap: var(--s-1);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Capsule buttons: system font, ≥44pt hit target, medium weight */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .18s ease, transform .1s ease, opacity .18s ease;
+}
+.btn:active { transform: scale(0.97); }
+.btn:focus-visible { outline: 3px solid rgba(0,102,255,.5); outline-offset: 2px; }
+
+.btn__icon { width: 19px; height: 19px; flex: none; }
+
+/* Primary — filled */
+.btn--primary { background: #111111; color: #ffffff; }
+.btn--primary:hover { background: #2a2a2a; }
+
+/* Secondary — subtle gray fill (systemGray6 style) */
+.btn--secondary { background: #f0f0f0; color: #111111; }
+.btn--secondary:hover { background: #e6e6e6; }
+
+/* ---------------- Modal (case study) ---------------- */
+.modal {
+  position: fixed; inset: 0;
+  display: none;
+  z-index: 100;
+}
+.modal.open { display: block; }
+.modal__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(20,19,18,.4);
+  backdrop-filter: blur(4px);
+  animation: fade .25s ease;
+}
+.modal__dialog {
+  position: relative;
+  max-width: 900px;
+  margin: 5vh auto;
+  max-height: 90vh;
+  overflow: auto;
+  background: #fff;
+  color: var(--ink);
+  border-radius: 24px;
+  padding: 20px;
+  animation: pop .3s cubic-bezier(.2,.8,.25,1);
+}
+.modal__close {
+  position: absolute; top: 18px; right: 22px;
+  border: 0; background: transparent;
+  font-size: 26px; line-height: 1;
+  cursor: pointer; color: #444;
+  z-index: 5;
+}
+.modal__hero {
+  background: var(--image-space);
+  border-radius: var(--radius);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+  margin-bottom: var(--s-4);
+}
+.modal__hero img { display: block; width: 100%; height: auto; }
+.modal__title {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+.modal__year { font-family: var(--serif); font-size: 13px; color: var(--muted); margin-bottom: 34px; }
+.modal__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding: 0 8px 20px;
+}
+.modal__label {
+  font-family: var(--sans);
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.modal__text {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: #555;
+  margin-bottom: 30px;
+}
+.modal__text b { color: var(--ink); font-weight: 500; }
+
+/* ---------------- Reveal animation ---------------- */
+.reveal, .project {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+.reveal.in, .project.in { opacity: 1; transform: none; }
+
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.99) } to { opacity: 1; transform: none } }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 640px) {
+  .page { padding: 140px 24px 120px; }
+  .hero { margin-bottom: 90px; }
+  .projects { gap: 100px; }
+  .modal__grid { grid-template-columns: 1fr; gap: 8px; }
+  .modal__dialog { margin: 0; min-height: 100vh; border-radius: 0; }
+}
+
+@media (max-width: 460px) {
+  .page { padding: 120px 20px 100px; }
+  .footer { flex-direction: column; align-items: stretch; }
+  .footer .btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .reveal, .project { opacity: 1; transform: none; }
+}

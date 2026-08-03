@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matthieu's Portfolio</title>
+  <meta name="description" content="Matthieu, Product Designer specializing in Privacy and Health, based in Paris, France." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+
+    <!-- ===================== HERO ===================== -->
+    <header class="hero reveal">
+      <h1 class="hero__name">Matthieu</h1>
+      <p class="hero__location">Based in Paris, France</p>
+      <p class="hero__bio">
+        I'm a Product Designer specializing in Privacy and Health, crafting
+        end-to-end experiences that are both human-centered and socially
+        meaningful.
+      </p>
+      <p class="hero__bio">
+        With roots in graphic design, I naturally grew into UX and Product
+        Design, bringing a sharp visual sensibility to every product decision
+        I makes.
+      </p>
+      <p class="hero__bio">
+        These days I design by building — I'm convinced vibe coding is where
+        product design is heading, so I prototype and ship in code.
+      </p>
+      <nav class="hero__links">
+        <a href="mailto:hello@matthieuc.com">Mail</a>
+        <span aria-hidden="true">/</span>
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener">Linkedin</a>
+        <span aria-hidden="true">/</span>
+        <a href="https://www.are.na" target="_blank" rel="noopener">Are.na</a>
+      </nav>
+    </header>
+
+    <!-- ===================== PROJECTS ===================== -->
+    <section class="projects" id="projects"></section>
+
+    <!-- ===================== PERSONAL ===================== -->
+    <section class="personal reveal">
+      <p>If you catch me when I'm not designing, I'll probably be deep into a video game.</p>
+      <p>I have a soft spot for artists and designers who push boundaries, whether that's in games, music, or tech.</p>
+      <p>I'm also on a slow but steady journey with languages, currently learning Spanish and Japanese, while keeping up with Korean, convinced that learning a language is one of the best ways to understand a culture.</p>
+      <p>And these days, I'm trying to reconnect with the mountains : skiing and hiking like I used to when I was younger, and getting back to that feeling I never should have let go of.</p>
+      <p class="personal__sign">Much love</p>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <div class="signature reveal">
+      <img src="images/signature.svg" alt="Matthieu's signature" />
+    </div>
+
+    <footer class="footer reveal">
+      <a class="btn btn--primary" href="mailto:hello@matthieuc.com">
+        <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="3"/>
+          <path d="M3.5 7l8.5 6 8.5-6"/>
+        </svg>
+        <span>Say hi</span>
+      </a>
+      <a class="btn btn--secondary" href="https://www.linkedin.com" target="_blank" rel="noopener">
+        <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M4.98 3.5a2.5 2.5 0 1 1-.02 5 2.5 2.5 0 0 1 .02-5zM3 8.98h4v12H3v-12zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v6.31h-4v-5.6c0-1.34-.02-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96v5.7H9v-12z"/>
+        </svg>
+        <span>Connect on LinkedIn</span>
+      </a>
+    </footer>
+
+  </main>
+
+  <!-- ===================== MODAL ===================== -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal__close" data-close aria-label="Close">&times;</button>
+      <div class="modal__body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
