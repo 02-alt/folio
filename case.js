@@ -218,3 +218,40 @@
   });
   addEventListener("resize", function () { if (source && !isActual) placeFit(); });
 })();
+
+/* ============================================================
+   Next-project link at the foot of every case page.
+   Data-driven from window.PROJECTS; cycles to the next project.
+   ============================================================ */
+(function () {
+  var wrap = document.querySelector(".case-wrap");
+  var footer = wrap && wrap.querySelector(".case-footer");
+  var list = window.PROJECTS;
+  if (!wrap || !footer || !list || !list.length) return;
+
+  var id = document.body.dataset.project || "";
+  var here = list.findIndex(function (p) { return p.id === id; });
+  if (here < 0) return;
+
+  var next = null;
+  for (var k = 1; k <= list.length; k++) {
+    var cand = list[(here + k) % list.length];
+    if (cand.page && cand.id !== id) { next = cand; break; }
+  }
+  if (!next) return;
+
+  var a = document.createElement("a");
+  a.className = "pnext";
+  a.href = next.page;
+  if (next.accent) a.style.setProperty("--accent", next.accent);
+  a.innerHTML =
+    '<span class="pnext__text">' +
+      '<span class="pnext__eyebrow">Next project</span>' +
+      '<span class="pnext__name">' + next.name +
+        '<svg class="pnext__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+      '</span>' +
+      '<span class="pnext__tag">' + (next.tagline || "") + '</span>' +
+    '</span>' +
+    (next.image ? '<span class="pnext__thumb"><img src="' + next.image + '" alt="" loading="lazy"></span>' : '');
+  wrap.insertBefore(a, footer);
+})();
