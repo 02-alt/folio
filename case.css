@@ -427,21 +427,30 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   font-size: 17px;
   text-decoration: none;
   color: var(--case-muted);
-  /* entrance: fade + rise when it scrolls into view */
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .25, 1);
 }
-.pnext.is-in { opacity: 1; transform: none; }
 .pnext__label { color: var(--case-muted); }
 .pnext__name { color: var(--case-ink); font-weight: 600; transition: color .2s ease; }
-.pnext__arrow { width: 15px; height: 15px; color: var(--case-muted); transition: transform .25s ease, color .2s ease; }
+/* arrow loops on hover: slides out right, a fresh one glides in from the left */
+.pnext__arrowbox {
+  width: 17px; height: 15px;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pnext__arrow { width: 15px; height: 15px; display: block; color: var(--case-muted); transition: color .2s ease; }
 .pnext:hover .pnext__name,
 .pnext:hover .pnext__arrow { color: var(--accent, var(--case-blue)); }
-.pnext:hover .pnext__arrow { transform: translateX(5px); }
+.pnext:hover .pnext__arrow { animation: pnext-arrow .5s cubic-bezier(.5, 0, .2, 1); }
+@keyframes pnext-arrow {
+  0%   { transform: translateX(0); }
+  45%  { transform: translateX(180%); }
+  46%  { transform: translateX(-180%); }
+  100% { transform: translateX(0); }
+}
 .pnext + .case-footer { margin-top: 56px; }
 @media (prefers-reduced-motion: reduce) {
-  .pnext { opacity: 1; transform: none; transition: none; }
+  .pnext:hover .pnext__arrow { animation: none; }
 }
 
 /* ---- Responsive ---- */
