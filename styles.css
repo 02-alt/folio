@@ -67,7 +67,7 @@ a { color: inherit; }
 .page {
   max-width: var(--col);
   margin: 0 auto;
-  padding: 300px var(--s-3) 200px;
+  padding: 600px var(--s-3) 200px;
 }
 
 /* ---------------- Hero ---------------- */
