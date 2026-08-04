@@ -245,13 +245,8 @@
   a.href = next.page;
   if (next.accent) a.style.setProperty("--accent", next.accent);
   a.innerHTML =
-    '<span class="pnext__text">' +
-      '<span class="pnext__eyebrow">Next project</span>' +
-      '<span class="pnext__name">' + next.name +
-        '<svg class="pnext__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
-      '</span>' +
-      '<span class="pnext__tag">' + (next.tagline || "") + '</span>' +
-    '</span>' +
-    (next.image ? '<span class="pnext__thumb"><img src="' + next.image + '" alt="" loading="lazy"></span>' : '');
+    '<span class="pnext__label">Next project</span>' +
+    '<span class="pnext__name">' + next.name + '</span>' +
+    '<svg class="pnext__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   wrap.insertBefore(a, footer);
 })();
