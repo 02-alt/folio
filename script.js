@@ -102,6 +102,21 @@ const io = new IntersectionObserver(
 );
 document.querySelectorAll(".reveal, .project").forEach((el) => io.observe(el));
 
+// ---- Signature: a stroke that draws itself when it scrolls into view ----
+// (click it to replay). The .in class from the reveal observer triggers the CSS.
+(function () {
+  const sig = document.querySelector(".signature");
+  const path = sig && sig.querySelector(".signature__path");
+  if (!path || typeof path.getTotalLength !== "function") return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  path.style.setProperty("--len", Math.ceil(path.getTotalLength()));
+  sig.addEventListener("click", () => {
+    sig.classList.remove("in");     // reset to hidden (no transition off .in)
+    void sig.getBoundingClientRect(); // force reflow so the reset lands instantly
+    sig.classList.add("in");        // draw again
+  });
+})();
+
 // ---- Reverse morph: shrink the case-study hero back onto its feed card ----
 // Runs when returning from a case study (pageshow covers back/forward cache too).
 function playReverseMorph() {

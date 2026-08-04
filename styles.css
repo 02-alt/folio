@@ -196,7 +196,20 @@ a { color: inherit; }
   display: flex;
   justify-content: center;
 }
-.signature img { width: 130px; height: auto; opacity: .9; }
+.signature__svg { width: 130px; height: auto; opacity: .9; color: inherit; cursor: pointer; display: block; overflow: visible; }
+/* Hidden until it scrolls into view; JS sets --len to the exact path length. */
+.signature__path {
+  stroke-dasharray: var(--len, 2000);
+  stroke-dashoffset: var(--len, 2000);
+}
+.signature.in .signature__path {
+  transition: stroke-dashoffset 1.7s cubic-bezier(.65, 0, .35, 1);
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Show the finished signature, no drawing */
+  .signature__path { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; }
+}
 
 /* ---------------- Footer / buttons (Apple HIG) ---------------- */
 .footer {
