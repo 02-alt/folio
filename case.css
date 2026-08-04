@@ -331,6 +331,15 @@ body.case {
    Pair with a default .shotcard (bottom-anchored) to reveal both ends. */
 .shotcard--top .shotcard__frame { align-items: flex-start; }
 
+/* flush-top variant: phone sits hard against the card's TOP edge (top bleeds up),
+   with breathing room below it — mirror of .shotcard--flush. */
+.shotcard--flush-top .shotcard__frame {
+  height: auto;
+  align-items: flex-start;
+  padding-top: 0;
+}
+.shotcard--flush-top .shotcard__frame img { width: 360px; max-width: 76%; }
+
 /* two screens side by side (share one caption) */
 .shots2 {
   margin-top: 24px;
