@@ -415,25 +415,51 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   margin-top: 112px;
 }
 
-/* ---- Next-project link (foot of every case page) — subtle ---- */
+/* ---- Next-project link (foot of every case page) ---- */
 .pnext {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 96px;
-  padding-top: 26px;
+  gap: 18px;                      /* thumbnail sits close to the text */
+  margin-top: 104px;
+  padding-top: 30px;
   border-top: 1px solid var(--case-hair);
-  font-size: 17px;
   text-decoration: none;
-  color: var(--case-muted);
+  color: var(--case-ink);
 }
-.pnext__label { color: var(--case-muted); }
-.pnext__name { color: var(--case-ink); font-weight: 600; transition: color .2s ease; }
-.pnext__arrow { width: 16px; height: 16px; color: var(--case-muted); transition: transform .25s ease, color .2s ease; }
-.pnext:hover .pnext__name,
-.pnext:hover .pnext__arrow { color: var(--accent, var(--case-blue)); }
-.pnext:hover .pnext__arrow { transform: translateX(4px); }
-.pnext + .case-footer { margin-top: 56px; }
+.pnext__eyebrow {
+  display: block;
+  font-size: 13px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--case-muted);
+  margin-bottom: 10px;
+}
+.pnext__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  transition: color .2s ease;
+}
+.pnext__arrow { width: 18px; height: 18px; flex: none; color: var(--case-muted); transition: transform .25s ease, color .2s ease; }
+.pnext__tag { display: block; margin-top: 8px; font-size: 16px; color: var(--case-muted); }
+.pnext__thumb {
+  width: 132px; height: 96px; flex: none;
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--case-hair); background: var(--case-fill);
+}
+.pnext__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+.pnext:hover .pnext__name { color: var(--accent, var(--case-blue)); }
+.pnext:hover .pnext__arrow { transform: translateX(5px); color: var(--accent, var(--case-blue)); }
+.pnext:hover .pnext__thumb img { transform: scale(1.06); }
+.pnext + .case-footer { margin-top: 44px; }
+@media (max-width: 640px) {
+  .pnext__thumb { display: none; }
+  .pnext__name { font-size: 27px; }
+}
 
 /* ---- Responsive ---- */
 @media (max-width: 780px) {
