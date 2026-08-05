@@ -171,18 +171,11 @@ a { color: inherit; }
   overflow: hidden;
   transition: transform .3s cubic-bezier(.2,.8,.25,1);
 }
-.project__image img {
-  display: block; width: 100%; height: auto;
-  transition: filter .4s ease;
-}
+.project__image img { display: block; width: 100%; height: auto; }
 .project:hover .project__image {
   transform: scale(1.02);
 }
 .project:active .project__image { transform: scale(1.005); }
-/* Spotlight: hovering the feed desaturates every image… */
-.projects:hover .project__image img { filter: grayscale(1); }
-/* …except the card you're actually on, which stays in colour. */
-.projects .project:hover .project__image img { filter: none; }
 
 /* ---------------- Personal ---------------- */
 .personal {
