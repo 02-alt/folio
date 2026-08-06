@@ -67,19 +67,14 @@ a { color: inherit; }
 .page {
   max-width: var(--col);
   margin: 0 auto;
-  padding: 0 var(--s-3) 200px;
+  /* Center the intro in the viewport (self-adjusting to screen height) with the
+     top space only, so the gap to the first project stays normal. ~50vh minus
+     half the intro's height. */
+  padding: max(48px, calc(50vh - 160px)) var(--s-3) 200px;
 }
 
 /* ---------------- Hero ---------------- */
-/* Centered in the viewport on load, on any screen height (self-adjusting).
-   ~10vh is left below so the first project peeks in. */
-.hero {
-  min-height: 90vh;
-  min-height: 90svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+.hero { margin-bottom: var(--s-12); }
 
 .hero__name {
   font-family: var(--serif);
@@ -342,7 +337,7 @@ a { color: inherit; }
 /* ---------------- Responsive ---------------- */
 @media (max-width: 640px) {
   .page { padding: 140px 24px 120px; }
-  .hero { min-height: 0; display: block; margin-bottom: 90px; }
+  .hero { margin-bottom: 90px; }
   .projects { gap: 100px; }
   .modal__grid { grid-template-columns: 1fr; gap: 8px; }
   .modal__dialog { margin: 0; min-height: 100vh; border-radius: 0; }
