@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Mark that JS is available, so the scroll-reveal styles only hide content
+       when there's a script to reveal it again (content stays visible if JS fails). -->
+  <script>document.documentElement.classList.add("js");</script>
   <title>Matthieu — Product Designer</title>
   <meta name="description" content="Matthieu, Product Designer specializing in Privacy and Health, based in Paris, France." />
 
@@ -31,7 +34,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=7" />
+  <link rel="stylesheet" href="styles.css?v=8" />
 </head>
 <body>
   <main class="page">
@@ -57,9 +60,9 @@
       <nav class="hero__links">
         <a href="mailto:matthieu.coma@pm.me">Mail</a>
         <span aria-hidden="true">/</span>
-        <a href="https://www.linkedin.com/in/matthieu-c-313b34379/" target="_blank" rel="noopener">Linkedin</a>
+        <a href="https://www.linkedin.com/in/matthieu-c-313b34379/" target="_blank" rel="noopener">Linkedin<span class="visually-hidden"> (opens in new tab)</span></a>
         <span aria-hidden="true">/</span>
-        <a href="https://www.are.na/comma-comma-98xmg2drwzu/channels" target="_blank" rel="noopener">Are.na</a>
+        <a href="https://www.are.na/comma-comma-98xmg2drwzu/channels" target="_blank" rel="noopener">Are.na<span class="visually-hidden"> (opens in new tab)</span></a>
       </nav>
     </header>
 
@@ -76,8 +79,8 @@
     </section>
 
     <!-- ===================== FOOTER ===================== -->
-    <div class="signature reveal">
-      <svg class="signature__svg" viewBox="0 0 193 61" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Matthieu's signature">
+    <div class="signature reveal" role="button" tabindex="0" aria-label="Matthieu's signature — activate to replay the animation">
+      <svg class="signature__svg" viewBox="0 0 193 61" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path class="signature__path" d="M 51.667 50.972 C 52.39 48.625 53.471 45.733 59.34 36.609 C 65.12 27.624 73.394 21.452 78.272 17.748 C 82.1 14.841 85.714 13.659 86.535 13.833 C 91.646 14.916 75.818 24.832 70.698 29.405 C 69.078 30.853 67.976 32.31 67.609 32.764 C 66.936 33.597 71.753 31.24 78.69 27.903 C 83.392 25.641 90.828 22.952 96.499 21.026 C 111.117 16.059 115.245 16.556 115.702 16.912 C 117.248 18.117 113.805 20.713 113.71 21.8 C 113.481 24.412 118.859 20.365 123.563 17.023 C 126.848 14.688 128.473 12.034 128.655 10.227 C 128.837 8.421 127.935 6.958 126.764 5.695 C 124.977 3.767 121.788 2.611 115.039 1.616 C 109.938 0.865 101.295 0.801 91.301 1.423 C 81.307 2.045 70.188 3.66 58.81 6.374 C 47.433 9.089 36.135 12.855 27.804 16.319 C 14.086 22.024 8.022 27.05 5.493 29.397 C 2.777 31.917 1.311 35.196 1.036 38.718 C 0.717 42.812 2.572 45.532 3.743 46.886 C 8.816 52.748 17.234 55.314 22.636 56.757 C 26.567 57.807 33.059 58.917 45.89 59.474 C 58.721 60.032 77.731 59.852 100.974 57.428 C 124.217 55.005 151.118 50.342 166.052 47.581 C 186.79 42.647 190.421 40.652 191.238 39.568 C 191.339 39.022 190.801 38.484 188.616 37.929" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-miterlimit="10"/>
       </svg>
     </div>
@@ -94,22 +97,13 @@
         <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M4.98 3.5a2.5 2.5 0 1 1-.02 5 2.5 2.5 0 0 1 .02-5zM3 8.98h4v12H3v-12zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v6.31h-4v-5.6c0-1.34-.02-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96v5.7H9v-12z"/>
         </svg>
-        <span>Connect on LinkedIn</span>
+        <span>Connect on LinkedIn</span><span class="visually-hidden"> (opens in new tab)</span>
       </a>
     </footer>
 
   </main>
 
-  <!-- ===================== MODAL ===================== -->
-  <div class="modal" id="modal" aria-hidden="true">
-    <div class="modal__backdrop" data-close></div>
-    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button class="modal__close" data-close aria-label="Close">&times;</button>
-      <div class="modal__body" id="modalBody"></div>
-    </div>
-  </div>
-
   <script src="data.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>

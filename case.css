@@ -5,11 +5,11 @@
 
 :root {
   --case-ink: #1d1d1f;
-  --case-muted: #86868b;         /* Apple secondary label */
+  --case-muted: #6e6e73;         /* Apple secondary label, darkened to ≥4.5:1 on white */
   --case-fill: #f5f5f7;          /* systemGray6-ish card fill */
   --case-fill-2: #fafafa;
-  --case-blue: #2b7cff;
-  --case-hair: rgba(0, 0, 0, 0.08);
+  --case-blue: #0a6cff;          /* ≥4.5:1 on white for inline links/highlights */
+  --case-hair: var(--hairline);  /* alias of styles.css --hairline */
   --case-col: 900px;
 }
 
@@ -23,7 +23,7 @@ body.case {
 .case-wrap {
   max-width: var(--case-col);
   margin: 0 auto;
-  padding: 40px 24px 160px;
+  padding: var(--s-5) var(--s-3) var(--s-20);
 }
 
 /* ---- Top bar / back ---- */
@@ -31,14 +31,14 @@ body.case {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 48px;
+  margin-bottom: var(--s-6);
 }
 .case-back {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   min-height: 44px;
-  padding: 0 8px 0 4px;
+  padding: 0 var(--s-1) 0 4px;
   font-size: 16px;
   font-weight: 500;
   color: var(--case-ink);
@@ -54,7 +54,7 @@ body.case {
   border-radius: var(--radius);
   border: 1px solid var(--case-hair);
   overflow: hidden;
-  margin-bottom: 56px;
+  margin-bottom: var(--s-7);
   background: var(--image-space);
 }
 .case-hero img { display: block; width: 100%; height: auto; }
@@ -63,8 +63,8 @@ body.case {
 .meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  margin-bottom: 96px;
+  gap: var(--s-7);
+  margin-bottom: var(--s-12);
 }
 .meta h3 {
   font-size: 17px;
@@ -74,11 +74,11 @@ body.case {
 .meta p { font-size: 16px; line-height: 1.55; color: var(--case-muted); margin-bottom: 6px; }
 .meta .lead { color: var(--case-ink); }
 .meta .lead b { font-weight: 600; }
-.meta .block + .block { margin-top: 32px; }
+.meta .block + .block { margin-top: var(--s-4); }
 .meta .overview p + p { margin-top: 18px; }
 
 /* ---- Section headers ---- */
-.section { margin-top: 88px; }
+.section { margin-top: var(--s-11); }
 .section-title {
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@ body.case {
   font-size: 18px;
   line-height: 1.5;
   color: var(--case-muted);
-  margin-bottom: 16px;
+  margin-bottom: var(--s-2);
 }
 .hl { color: var(--case-blue); }
 
@@ -108,8 +108,8 @@ body.case {
 .process {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 8px;
+  gap: var(--s-3);
+  margin-top: var(--s-1);
   align-items: stretch;               /* both week columns share height */
 }
 .pcol {
@@ -117,7 +117,7 @@ body.case {
   flex-direction: column;
   gap: 12px;
 }
-.process .week { font-size: 16px; font-weight: 500; margin: 8px 0 4px; }
+.process .week { font-size: 16px; font-weight: 500; margin: var(--s-1) 0 4px; }
 .step {
   background: var(--case-fill);
   border: 1px solid var(--case-hair);
@@ -139,7 +139,7 @@ body.case {
   flex: none;
 }
 .step__icon svg { width: auto; height: 16px; }
-.step h4 { font-size: 17px; font-weight: 600; }
+.step h3 { font-size: 17px; font-weight: 600; }
 .step p {
   font-size: 14px;
   line-height: 1.45;
@@ -151,8 +151,8 @@ body.case {
 .insights {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 8px;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
 }
 .insight {
   background: var(--case-fill);
@@ -163,7 +163,7 @@ body.case {
   flex-direction: column;
 }
 .insight__tag {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: var(--s-1);
   font-size: 14px; font-weight: 500; color: var(--case-muted);
   margin-bottom: 14px;
 }
@@ -176,12 +176,12 @@ body.case {
 .constraints {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 8px;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
 }
 .constraint {
   display: flex;
-  gap: 16px;
+  gap: var(--s-2);
   background: var(--case-fill);
   border: 1px solid var(--case-hair);
   border-radius: var(--radius);
@@ -195,7 +195,7 @@ body.case {
   display: grid; place-items: center;
 }
 .constraint__icon svg { width: auto; height: 19px; }
-.constraint h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.constraint h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
 .constraint p { font-size: 14px; line-height: 1.45; color: var(--case-muted); }
 
 /* ---- Image placeholders (awaiting real assets) ---- */
@@ -208,14 +208,14 @@ body.case {
   text-align: center;
   color: #9a9a9f;
   font-size: 14px;
-  padding: 24px;
+  padding: var(--s-3);
   min-height: 240px;
 }
 .ph span { max-width: 32ch; }
 .ph b { display: block; color: #6b6b70; font-weight: 600; margin-bottom: 4px; }
 
 /* ---- Self-contained figure images (annotation baked in) ---- */
-.case-figure { margin-top: 24px; }
+.case-figure { margin-top: var(--s-3); }
 .case-figure img {
   display: block;
   width: 100%;
@@ -226,7 +226,7 @@ body.case {
 
 /* ---- Annotated spotlight figure (mockup bleeds inside the card + callout) ---- */
 .annot {
-  margin-top: 24px;
+  margin-top: var(--s-3);
   position: relative;
   display: grid;
   grid-template-columns: 420px 1fr;   /* fixed mockup column | text */
@@ -241,7 +241,7 @@ body.case {
 .annot__frame {                        /* == the mockup's own box (anchors the % overlay) */
   position: absolute;
   top: 0;
-  left: 24px;
+  left: var(--s-3);
   width: 380px;
 }
 .annot__base { display: block; width: 100%; height: auto; }
@@ -249,7 +249,7 @@ body.case {
   position: absolute;
   filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.28));
 }
-.annot__note { position: relative; padding: 0 28px 0 96px; }
+.annot__note { position: relative; padding: 0 28px 0 var(--s-12); }
 /* Connector drawn from the title row itself, so it always aligns with the icon */
 .annot__note .name { position: relative; }
 .annot__note .name::before {           /* horizontal line reaching back to the card */
@@ -257,7 +257,7 @@ body.case {
   position: absolute;
   top: 50%;
   right: 100%;
-  margin-right: 8px;                    /* gap before the icon */
+  margin-right: var(--s-1);                    /* gap before the icon */
   width: 138px;
   height: 1.5px;
   background: var(--case-ink);
@@ -274,8 +274,8 @@ body.case {
   transform: translate(50%, -50%);
 }
 .annot__note .name {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 17px; font-weight: 600; margin-bottom: 8px;
+  display: flex; align-items: center; gap: var(--s-1);
+  font-size: 17px; font-weight: 600; margin-bottom: var(--s-1);
 }
 .annot__note .name svg { width: auto; height: 17px; flex: none; }
 .annot__note p { font-size: 16px; line-height: 1.5; color: var(--case-muted); }
@@ -284,7 +284,7 @@ body.case {
 
 /* ---- Mockup card with caption underneath ---- */
 .shotcard {
-  margin-top: 24px;
+  margin-top: var(--s-3);
   background: linear-gradient(180deg, #fafafb, #f2f3f5);
   border: 1px solid var(--case-hair);
   border-radius: var(--radius);
@@ -305,8 +305,8 @@ body.case {
   line-height: 1.5;
   color: var(--case-muted);
   max-width: 62ch;
-  margin: 24px auto 0;
-  padding: 0 40px;
+  margin: var(--s-3) auto 0;
+  padding: 0 var(--s-5);
 }
 .shotcard__cap b { color: var(--case-ink); font-weight: 600; }
 
@@ -314,7 +314,7 @@ body.case {
 .shotcard--full .shotcard__frame {
   height: auto;
   align-items: center;
-  padding-top: 32px;
+  padding-top: var(--s-4);
 }
 .shotcard--full .shotcard__frame img { width: 340px; max-width: 72%; }
 
@@ -323,7 +323,7 @@ body.case {
 .shotcard--flush .shotcard__frame {
   height: auto;
   align-items: flex-end;
-  padding-top: 40px;
+  padding-top: var(--s-5);
 }
 .shotcard--flush .shotcard__frame img { width: 360px; max-width: 76%; }
 
@@ -342,10 +342,10 @@ body.case {
 
 /* two screens side by side (share one caption) */
 .shots2 {
-  margin-top: 24px;
+  margin-top: var(--s-3);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: var(--s-2);
 }
 .shots2 .shotcard { margin-top: 0; }
 
@@ -364,7 +364,7 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 
 /* ---- Map figure: full mockup + side callouts anchored to baked connectors ---- */
 .mapfig {
-  margin-top: 24px;
+  margin-top: var(--s-3);
   display: grid;
   grid-template-columns: 1fr 216px;
   align-items: stretch;              /* notes column matches the mockup height */
@@ -372,7 +372,7 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   border: 1px solid var(--case-hair);
   border-radius: var(--radius);
   overflow: hidden;
-  padding: 32px 32px 36px;            /* inside breathing room around the mockup + notes */
+  padding: var(--s-4) var(--s-4) 36px;            /* inside breathing room around the mockup + notes */
 }
 .mapfig__shot { min-width: 0; }
 /* the mockup is white-flattened; multiply lets the card gradient show through its white
@@ -386,25 +386,25 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   transform: translateY(-11px);      /* lift so the .name row centers on the connector */
 }
 .mapfig__note .name {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: var(--s-1);
   font-size: 16px; font-weight: 600; margin-bottom: 6px;
 }
 .mapfig__note .name svg { width: auto; height: 17px; flex: none; }
 .mapfig__note p { font-size: 14px; line-height: 1.5; color: var(--case-muted); }
 
 /* ---- Annotated figure (image + callout) ---- */
-.figure { margin-top: 24px; }
+.figure { margin-top: var(--s-3); }
 .figure--annotated {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
-  gap: 24px;
+  gap: var(--s-3);
   align-items: center;
 }
 .callout { font-size: 16px; line-height: 1.5; }
 .callout b { font-weight: 600; }
-.callout .name { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px; }
+.callout .name { display: flex; align-items: center; gap: var(--s-1); font-weight: 600; margin-bottom: var(--s-1); }
 .callout .name::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--case-ink); }
-.caption { text-align: center; font-size: 15px; line-height: 1.5; color: var(--case-muted); margin-top: 24px; }
+.caption { text-align: center; font-size: 15px; line-height: 1.5; color: var(--case-muted); margin-top: var(--s-3); }
 .caption b { color: var(--case-ink); font-weight: 600; }
 
 /* ---- Footer buttons (reuses .btn from styles.css) ---- */
@@ -412,7 +412,7 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   display: flex;
   gap: 12px;
   justify-content: center;
-  margin-top: 112px;
+  margin-top: var(--s-14);
 }
 
 /* ---- Next-project link (foot of every case page) — minimalist, right-aligned ---- */
@@ -420,8 +420,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   display: flex;
   justify-content: flex-end;      /* sits on the right */
   align-items: center;
-  gap: 8px;
-  margin-top: 96px;
+  gap: var(--s-1);
+  margin-top: var(--s-12);
   padding-top: 26px;
   border-top: 1px solid var(--case-hair);
   font-size: 17px;
@@ -448,14 +448,14 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   46%  { transform: translateX(-180%); }
   100% { transform: translateX(0); }
 }
-.pnext + .case-footer { margin-top: 56px; }
+.pnext + .case-footer { margin-top: var(--s-7); }
 @media (prefers-reduced-motion: reduce) {
   .pnext:hover .pnext__arrow { animation: none; }
 }
 
 /* ---- Responsive ---- */
 @media (max-width: 780px) {
-  .meta { grid-template-columns: 1fr; gap: 32px; }
+  .meta { grid-template-columns: 1fr; gap: var(--s-4); }
   .process { grid-template-columns: 1fr; }   /* Week 1 then Week 2, chronological */
   .insights { grid-template-columns: 1fr; }
   .constraints { grid-template-columns: 1fr; }
@@ -464,22 +464,22 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .annot__shot { height: auto; }
   .annot__frame { position: static; left: 0; width: 100%; }
   .annot__note .name::before, .annot__note .name::after { display: none; }
-  .annot__note { padding: 16px 0 0; }
+  .annot__note { padding: var(--s-2) 0 0; }
   .shotcard__frame { height: auto; }
   .shotcard__frame img { width: 100%; max-width: 320px; }
   .shotcard__cap { padding: 0 20px; }
   .shots2 { grid-template-columns: 1fr; }
   /* Map: stack mockup, then callouts as a plain list (connectors point nowhere on mobile) */
   .mapfig { grid-template-columns: 1fr; }
-  .mapfig__notes { padding: 8px 20px 20px; }
+  .mapfig__notes { padding: var(--s-1) 20px 20px; }
   .mapfig__note { position: static; transform: none; right: auto; }
-  .mapfig__note + .mapfig__note { margin-top: 16px; }
+  .mapfig__note + .mapfig__note { margin-top: var(--s-2); }
   .lead-p { font-size: 19px; }
 }
 
 @media (max-width: 560px) {
-  .case-wrap { padding: 32px 20px 120px; }
-  .section { margin-top: 64px; }
+  .case-wrap { padding: var(--s-4) 20px var(--s-15); }
+  .section { margin-top: var(--s-8); }
   .section-title { font-size: 20px; }
   .lead-p { font-size: 18px; }
   .body-p { font-size: 16px; }
@@ -520,11 +520,19 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   color: #fff; font-size: 26px; line-height: 1;
   cursor: pointer;
   display: grid; place-items: center;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px) saturate(180%);
+  backdrop-filter: blur(6px) saturate(180%);
   transition: background-color .2s ease;
 }
 .lightbox__close:hover { background: rgba(255, 255, 255, 0.3); }
+/* Drop the translucency for people who ask for reduced transparency */
+@media (prefers-reduced-transparency: reduce) {
+  .lightbox__close {
+    background: #2b2b2b;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
 .lightbox__hint {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
   z-index: 3;

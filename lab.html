@@ -31,8 +31,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=7" />
-  <link rel="stylesheet" href="case.css?v=25" />
+  <link rel="stylesheet" href="styles.css?v=8" />
+  <link rel="stylesheet" href="case.css?v=26" />
 
   <!-- Easter egg: the "play"/"pause" words in the Tidal copy control a hidden track -->
   <style>
@@ -48,6 +48,8 @@
 </head>
 <body class="case" data-project="vibe-coding">
   <main class="case-wrap">
+
+    <h1 class="visually-hidden">The Lab — Designing by building</h1>
 
     <div class="case-top">
       <a class="case-back" href="/">
@@ -79,7 +81,7 @@
     <section class="section">
       <h2 class="section-title plain">Reed</h2>
       <p class="body-p">A macOS reader that pulls everything I follow into one quiet feed (RSS, YouTube, Are.na and Backloggd side by side) and groups it by when it landed: this week, last week, two weeks ago. What you follow lives in a shareable profile: a single code you can hand to someone so they get your sources in a tap.</p>
-      <div class="case-figure"><img src="images/rss-reader.gif" alt="Reed: a macOS reader grouping RSS, YouTube, Are.na and Backloggd into a single feed, with a reader view and shareable profiles" loading="lazy" /></div>
+      <div class="case-figure"><img src="images/rss-reader-poster.png" data-animated="images/rss-reader.gif" alt="Reed: a macOS reader grouping RSS, YouTube, Are.na and Backloggd into a single feed, with a reader view and shareable profiles" loading="lazy" /></div>
       <p class="caption">One feed for everything you follow: <span class="hl">grouped by time, read in place, and shareable as a profile</span>. Shown at 2× speed.</p>
     </section>
 
@@ -90,7 +92,7 @@
       </a>
       <a class="btn btn--secondary" href="https://www.linkedin.com/in/matthieu-c-313b34379/" target="_blank" rel="noopener">
         <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1-.02 5 2.5 2.5 0 0 1 .02-5zM3 8.98h4v12H3v-12zM9 8.98h3.8v1.64h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v6.31h-4v-5.6c0-1.34-.02-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96v5.7H9v-12z"/></svg>
-        <span>Connect on LinkedIn</span>
+        <span>Connect on LinkedIn</span><span class="visually-hidden"> (opens in new tab)</span>
       </a>
     </footer>
 
@@ -101,8 +103,16 @@
 
   <script src="data.js"></script>
 
-  <script src="case.js?v=7"></script>
+  <script src="case.js?v=8"></script>
   <script>
+    // Animate the GIF only when motion is allowed; otherwise the static poster
+    // stays (WCAG 2.2.2 — no un-pausable auto-animation for reduced-motion users).
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      document.querySelectorAll("img[data-animated]").forEach(function (img) {
+        img.src = img.getAttribute("data-animated");
+      });
+    })();
     (function () {
       var audio = document.getElementById("willow-audio");
       if (!audio) return;

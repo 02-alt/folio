@@ -1,5 +1,6 @@
 /* ============================================================
-   Renders the project list, phone mockups, and the case-study modal.
+   Renders the project list (as links), scroll reveal, the signature draw,
+   and the feed→case shared-element morph.
    ============================================================ */
 
 // Real project screenshot (extracted from the site's webarchive).
@@ -8,10 +9,12 @@ function projectImage(p) {
 }
 
 // ---- Build the project list ----
+// Each card is a real link to its case-study page: keyboard-operable for free,
+// works without JS, and supports ⌘/middle-click to open in a new tab.
 const list = document.getElementById("projects");
 list.innerHTML = window.PROJECTS.map(
   (p) => `
-  <article class="project" data-id="${p.id}" role="button" tabindex="0" aria-label="${p.name}: ${p.page ? "open case study" : "open details"}">
+  <a class="project" data-id="${p.id}" href="${p.page}">
     <div class="project__head">
       <h2 class="project__name">${p.name}</h2>
       ${p.page ? `<span class="project__badge">${p.badge || "Case study"}</span>` : ""}
@@ -20,12 +23,8 @@ list.innerHTML = window.PROJECTS.map(
     <div class="project__tagline">${p.tagline}</div>
     <p class="project__desc">${p.description}</p>
     ${p.image ? `<div class="project__image">${projectImage(p)}</div>` : ""}
-  </article>`
+  </a>`
 ).join("");
-
-// ---- Modal ----
-const modal = document.getElementById("modal");
-const modalBody = document.getElementById("modalBody");
 
 // Navigate to a case-study page, passing the card image's on-screen rect in the
 // URL. The destination page (case.js) uses it to morph its hero in from exactly
@@ -41,51 +40,17 @@ function navigateWithTransition(p) {
 
 function openProject(id) {
   const p = window.PROJECTS.find((x) => x.id === id);
-  if (!p) return;
-  if (p.page) { navigateWithTransition(p); return; }
-  modalBody.innerHTML = `
-    ${p.image ? `<div class="modal__hero">${projectImage(p)}</div>` : ""}
-    <h3 class="modal__title" id="modalTitle">${p.name}</h3>
-    <div class="modal__year">${p.year}</div>
-    <div class="modal__grid">
-      <div>
-        <div class="modal__label">My Role</div>
-        <p class="modal__text"><b>${p.role.split(":")[0].trim()}</b>${p.role.includes(":") ? ": " + p.role.split(":").slice(1).join(":").trim() : ""}</p>
-        <div class="modal__label">Team</div>
-        <p class="modal__text">${p.team}</p>
-      </div>
-      <div>
-        <div class="modal__label">Overview</div>
-        <p class="modal__text">${p.overview}</p>
-      </div>
-    </div>`;
-  modal.classList.add("open");
-  modal.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
+  if (p && p.page) navigateWithTransition(p);
 }
 
-function closeModal() {
-  modal.classList.remove("open");
-  modal.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
-}
-
+// Intercept primary clicks to run the shared-element morph; let modified or
+// middle clicks fall through so the link opens in a new tab as usual.
 list.addEventListener("click", (e) => {
   const card = e.target.closest(".project");
-  if (card) openProject(card.dataset.id);
-});
-list.addEventListener("keydown", (e) => {
-  const card = e.target.closest(".project");
-  if (card && (e.key === "Enter" || e.key === " ")) {
-    e.preventDefault();
-    openProject(card.dataset.id);
-  }
-});
-modal.addEventListener("click", (e) => {
-  if (e.target.hasAttribute("data-close")) closeModal();
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeModal();
+  if (!card) return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  e.preventDefault();
+  openProject(card.dataset.id);
 });
 
 // ---- Reveal on scroll ----
@@ -110,10 +75,15 @@ document.querySelectorAll(".reveal, .project").forEach((el) => io.observe(el));
   if (!path || typeof path.getTotalLength !== "function") return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   path.style.setProperty("--len", Math.ceil(path.getTotalLength()));
-  sig.addEventListener("click", () => {
+  const replay = () => {
     sig.classList.remove("in");     // reset to hidden (no transition off .in)
     void sig.getBoundingClientRect(); // force reflow so the reset lands instantly
     sig.classList.add("in");        // draw again
+  };
+  sig.addEventListener("click", replay);
+  // Keyboard operable (the element is role="button" tabindex="0" in the markup).
+  sig.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); replay(); }
   });
 })();
 
@@ -131,12 +101,14 @@ function playReverseMorph() {
   if (!card) return;
 
   const to = card.getBoundingClientRect();
-  const ease = "cubic-bezier(.4,0,.2,1)";
+  // Mirror of the forward morph (.6s cubic-bezier(.2,.8,.25,1)) so the return
+  // feels like a true reverse of the entrance.
+  const ease = "cubic-bezier(.75,0,.8,.2)";
   const clone = document.createElement("div");
   clone.style.cssText =
     "position:fixed;z-index:9999;overflow:hidden;border-radius:16px;border:1px solid rgba(0,0,0,.08);" +
     "left:" + info.left + "px;top:" + info.top + "px;width:" + info.width + "px;height:" + info.height + "px;" +
-    "transition:left .5s " + ease + ",top .5s " + ease + ",width .5s " + ease + ",height .5s " + ease + ";";
+    "transition:left .6s " + ease + ",top .6s " + ease + ",width .6s " + ease + ",height .6s " + ease + ";";
   const im = document.createElement("img");
   im.src = info.src;
   im.style.cssText = "display:block;width:100%;height:100%;object-fit:cover;object-position:top;";
@@ -155,6 +127,6 @@ function playReverseMorph() {
   let done = false;
   const end = () => { if (done) return; done = true; card.style.visibility = ""; clone.remove(); };
   clone.addEventListener("transitionend", end, { once: true });
-  setTimeout(end, 620);
+  setTimeout(end, 720);
 }
 window.addEventListener("pageshow", playReverseMorph);

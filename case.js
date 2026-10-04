@@ -99,10 +99,13 @@
   var lb = document.createElement("div");
   lb.className = "lightbox";
   lb.setAttribute("aria-hidden", "true");
+  lb.setAttribute("role", "dialog");
+  lb.setAttribute("aria-modal", "true");
+  lb.setAttribute("aria-label", "Image viewer");
   lb.innerHTML =
     '<div class="lightbox__backdrop"></div>' +
     '<button class="lightbox__close" aria-label="Close">×</button>' +
-    '<div class="lightbox__stage"><img class="lightbox__img" alt=""></div>' +
+    '<div class="lightbox__stage"><img class="lightbox__img" alt="" role="button" tabindex="0" aria-label="Toggle actual size"></div>' +
     '<div class="lightbox__hint">Click image for actual size</div>';
   document.body.appendChild(lb);
 
@@ -179,7 +182,7 @@
     var sx = from.width / to.width, sy = from.height / to.height;
     lb.classList.remove("show");
     limg.style.transformOrigin = "top left";
-    limg.style.transition = "transform .4s cubic-bezier(.4,0,.2,1)";
+    limg.style.transition = "transform .4s cubic-bezier(.75,0,.8,.2)";
     limg.style.transform = "translate(" + dx + "px," + dy + "px) scale(" + sx + "," + sy + ")";
     var done = false;
     var end = function () { if (done) return; done = true; cleanup(); };
@@ -207,14 +210,35 @@
 
   imgs.forEach(function (img) {
     img.style.cursor = "zoom-in";
+    img.setAttribute("role", "button");
+    img.setAttribute("tabindex", "0");
+    if (!img.getAttribute("aria-label")) {
+      img.setAttribute("aria-label", "Enlarge image" + (img.alt ? ": " + img.alt : ""));
+    }
     img.addEventListener("click", function (e) { e.preventDefault(); open(img); });
+    img.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(img); }
+    });
   });
   limg.addEventListener("click", function (e) { e.stopPropagation(); toggleActual(); });
+  limg.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleActual(); }
+  });
   stage.addEventListener("click", function (e) { if (e.target === stage) close(); });
   lb.querySelector(".lightbox__backdrop").addEventListener("click", close);
   closeBtn.addEventListener("click", close);
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && lb.classList.contains("open")) close();
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") { close(); return; }
+    // Trap focus within the dialog (close button ⇄ image).
+    if (e.key === "Tab") {
+      var focusables = [closeBtn, limg];
+      var first = focusables[0], last = focusables[focusables.length - 1];
+      var active = document.activeElement;
+      if (e.shiftKey && active === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
+      else if (focusables.indexOf(active) === -1) { e.preventDefault(); first.focus(); }
+    }
   });
   addEventListener("resize", function () { if (source && !isActual) placeFit(); });
 })();
