@@ -244,6 +244,58 @@
 })();
 
 /* ============================================================
+   Screen-recording clips: silent loops that play only while on
+   screen. A play/pause button per clip; with reduced motion they
+   start paused on their poster and play only when asked.
+   ============================================================ */
+(function () {
+  var clips = document.querySelectorAll(".clip");
+  if (!clips.length) return;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var ICONS =
+    '<svg class="i-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1.2"/><rect x="14" y="4.5" width="4" height="15" rx="1.2"/></svg>' +
+    '<svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 4.8v14.4c0 .8.9 1.3 1.6.9l11.3-7.2c.6-.4.6-1.4 0-1.8L9.1 3.9c-.7-.4-1.6.1-1.6.9z"/></svg>';
+
+  clips.forEach(function (clip) {
+    var video = clip.querySelector("video");
+    var card = clip.querySelector(".clip__card");
+    if (!video || !card) return;
+    video.muted = true;
+    clip._userPaused = reduce;
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "clip__btn";
+    btn.innerHTML = ICONS;
+    card.appendChild(btn);
+
+    function sync() {
+      var paused = video.paused;
+      clip.classList.toggle("is-paused", paused);
+      btn.setAttribute("aria-label", (paused ? "Play" : "Pause") + " video");
+    }
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    sync();
+
+    btn.addEventListener("click", function () {
+      if (video.paused) { clip._userPaused = false; video.play().catch(function () {}); }
+      else { clip._userPaused = true; video.pause(); }
+    });
+  });
+
+  if (!("IntersectionObserver" in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var clip = e.target, video = clip.querySelector("video");
+      if (e.isIntersecting && !clip._userPaused) video.play().catch(function () {});
+      else if (!e.isIntersecting && !video.paused) video.pause();
+    });
+  }, { threshold: 0.35 });
+  clips.forEach(function (clip) { io.observe(clip); });
+})();
+
+/* ============================================================
    Next-project link at the foot of every case page.
    Data-driven from window.PROJECTS; cycles to the next project.
    ============================================================ */

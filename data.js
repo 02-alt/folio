@@ -57,7 +57,7 @@ window.PROJECTS = [
     id: "vibe-coding",
     page: "lab",
     badge: "Showcase",
-    image: "images/vibe-coding.webp",
+    image: "images/lab-crate.webp",
     name: "The Lab",
     year: "2026",
     tagline: "Designing by building",

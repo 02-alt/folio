@@ -453,6 +453,61 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .pnext:hover .pnext__arrow { animation: none; }
 }
 
+/* ---- Screen-recording clips: silent looping video in a CSS iPhone frame ---- */
+.clips {
+  margin-top: var(--s-3);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5) var(--s-2);
+}
+.clip { margin: 0; }
+.clip__card {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 28px;
+  background: linear-gradient(180deg, #fafafb, #f2f3f5);
+  border: 1px solid var(--case-hair);
+  border-radius: var(--radius);
+}
+.clip__phone {                       /* black bezel + titanium edge; corners follow the screen's */
+  width: 280px; max-width: 100%;
+  padding: 9px;
+  background: #0b0b0c;
+  border-radius: 48px;
+  box-shadow: 0 0 0 1.5px #c7c7cc, 0 18px 40px -18px rgba(0, 0, 0, 0.35);
+}
+.clip__phone video {
+  display: block;
+  width: 100%; height: auto;
+  aspect-ratio: 600 / 1300;
+  border-radius: 39px;
+  background: #000;
+}
+.clip__btn {                         /* play / pause, bottom-right of the card */
+  position: absolute; right: 14px; bottom: 14px;
+  width: 36px; height: 36px;
+  border: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--case-ink);
+  box-shadow: 0 0 0 1px var(--case-hair), 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  backdrop-filter: blur(8px) saturate(180%);
+  transition: background-color .2s ease;
+}
+.clip__btn:hover { background: #fff; }
+.clip__btn:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 3px; }
+.clip__btn svg { width: 14px; height: 14px; display: block; }
+.clip__btn .i-play { display: none; }
+.clip.is-paused .clip__btn .i-play { display: block; }
+.clip.is-paused .clip__btn .i-pause { display: none; }
+.clip .caption { margin-top: var(--s-2); padding: 0 var(--s-1); }
+@media (prefers-reduced-transparency: reduce) {
+  .clip__btn { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 780px) {
   .meta { grid-template-columns: 1fr; gap: var(--s-4); }
@@ -485,6 +540,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .body-p { font-size: 16px; }
   .case-footer { flex-wrap: wrap; }
   .case-footer .btn { flex: 1 1 100%; }   /* full-width stacked buttons on phones */
+  .clips { grid-template-columns: 1fr; }
+  .clip__phone { width: 250px; }
 }
 
 /* ============================================================

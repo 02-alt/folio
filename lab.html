@@ -32,19 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=8" />
-  <link rel="stylesheet" href="case.css?v=26" />
-
-  <!-- Easter egg: the "play"/"pause" words in the Tidal copy control a hidden track -->
-  <style>
-    .willow-ctl {
-      font: inherit; color: inherit; background: none; border: 0; padding: 0;
-      -webkit-appearance: none; appearance: none; cursor: pointer;
-      border-radius: 3px; transition: color .2s ease;
-    }
-    .willow-ctl:hover { color: var(--case-blue); }
-    .willow-ctl.is-active { color: var(--case-blue); }
-    .willow-ctl:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 3px; }
-  </style>
+  <link rel="stylesheet" href="case.css?v=27" />
 </head>
 <body class="case" data-project="vibe-coding">
   <main class="case-wrap">
@@ -59,30 +47,40 @@
       <span class="case-eyebrow">The Lab · 2026 · Showcase</span>
     </div>
 
-    <div class="case-hero"><img src="images/vibe-coding.webp" alt="The Lab: designing by building" /></div>
+    <div class="case-hero"><img src="images/lab-crate.webp" alt="The Lab: Cabin on iPhone, flipping through a crate of album covers" /></div>
 
     <p class="lead-p">Designing by building. I'm convinced vibe coding is where product design is heading, so I prototype and ship in code.</p>
     <p class="body-p">Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I've designed and built myself, starting with this very portfolio, and the apps below.</p>
 
     <section class="section">
-      <h2 class="section-title plain">Tidal Mini Player</h2>
-      <p class="body-p">A macOS menu-bar mini player for the TIDAL desktop app, written in Swift (SwiftUI + AppKit). It sits in the menu bar with the current track, and clicks open into a compact player styled after TIDAL's own: full-bleed album art with the title, artist, a live progress bar, and previous / <button type="button" class="willow-ctl" data-willow="play" aria-label="Play a track">play</button>-<button type="button" class="willow-ctl" data-willow="pause" aria-label="Pause the track">pause</button> / next controls overlaid on top.</p>
-      <div class="case-figure"><img src="images/tidal.png" alt="Tidal Mini Player: a compact TIDAL-styled player floating over the desktop while TIDAL plays" loading="lazy" /></div>
-      <p class="caption">The floating panel mirrors TIDAL's own mini player: <span class="hl">the exact album art, live position, and real transport controls</span>, always in reach.</p>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title plain">Claude Fuel</h2>
-      <p class="body-p">A skeuomorphic macOS menu-bar app that shows your Claude token consumption as a retro fuel gauge: a machined-metal "beeper" with a pixelated dot-matrix LCD. It reads your local Claude Code usage straight from the CLI's transcripts, so there's no login and no API key. Your remaining fuel shows right in the menu bar, readable at a glance without opening the app.</p>
-      <div class="case-figure"><img src="images/claude-fuel.png" alt="Claude Fuel: a skeuomorphic dot-matrix fuel gauge showing session and weekly token usage, floating on the desktop" loading="lazy" /></div>
-      <p class="caption">Session and weekly gauges sweeping <span class="hl">E → F</span>, the big percent remaining, the reset countdown, and segmented fuel bars: usage turned into something you actually want to glance at.</p>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title plain">Reed</h2>
-      <p class="body-p">A macOS reader that pulls everything I follow into one quiet feed (RSS, YouTube, Are.na and Backloggd side by side) and groups it by when it landed: this week, last week, two weeks ago. What you follow lives in a shareable profile: a single code you can hand to someone so they get your sources in a tap.</p>
-      <div class="case-figure"><img src="images/rss-reader-poster.png" data-animated="images/rss-reader.gif" alt="Reed: a macOS reader grouping RSS, YouTube, Are.na and Backloggd into a single feed, with a reader view and shareable profiles" loading="lazy" /></div>
-      <p class="caption">One feed for everything you follow: <span class="hl">grouped by time, read in place, and shareable as a profile</span>. Shown at 2× speed.</p>
+      <h2 class="section-title plain">Cabin</h2>
+      <p class="body-p">A Bandcamp player for Mac and iPhone, written in Swift. It turns the albums you've bought on Bandcamp into a collection you actually want to browse: flipped through like records in a crate, read like liner notes, and mapped by where the music comes from. Below, the iPhone app.</p>
+      <div class="clips">
+        <figure class="clip">
+          <div class="clip__card"><div class="clip__phone">
+            <video muted loop playsinline preload="none" poster="images/cabin-crate.webp" aria-label="Cabin on iPhone: flipping through the Crate, a stack of album covers, and filtering it"><source src="media/cabin-crate.mp4" type="video/mp4" /></video>
+          </div></div>
+          <figcaption class="caption"><b>Crate.</b> Your collection as a stack of records, <span class="hl">flicked through one sleeve at a time</span>, filtered by New, Favourites, Downloaded or Imported.</figcaption>
+        </figure>
+        <figure class="clip">
+          <div class="clip__card"><div class="clip__phone">
+            <video muted loop playsinline preload="none" poster="images/cabin-album.webp" aria-label="Cabin on iPhone: an album page scrolling from the tracklist to its notes, purchase receipt and credits"><source src="media/cabin-album.mp4" type="video/mp4" /></video>
+          </div></div>
+          <figcaption class="caption"><b>Album page.</b> Tracks first, then <span class="hl">the liner notes</span>: play history, the album's story, where the artist is from, the purchase receipt and full credits.</figcaption>
+        </figure>
+        <figure class="clip">
+          <div class="clip__card"><div class="clip__phone">
+            <video muted loop playsinline preload="none" poster="images/cabin-nowplaying.webp" aria-label="Cabin on iPhone: Now Playing, swiping between artist, album, credits and synced lyrics, then the queue and AirPlay"><source src="media/cabin-nowplaying.mp4" type="video/mp4" /></video>
+          </div></div>
+          <figcaption class="caption"><b>Now Playing.</b> Swipe the artwork for <span class="hl">the artist, the album, its credits or synced lyrics</span>; the queue and AirPlay are one tap away.</figcaption>
+        </figure>
+        <figure class="clip">
+          <div class="clip__card"><div class="clip__phone">
+            <video muted loop playsinline preload="none" poster="images/cabin-map.webp" aria-label="Cabin on iPhone: the Collection map, zooming into places and listing the albums from each one"><source src="media/cabin-map.mp4" type="video/mp4" /></video>
+          </div></div>
+          <figcaption class="caption"><b>Collection map.</b> <span class="hl">Every album pinned to where the artist is from</span>, across your collection, your wishlist or your friends', with a radio for any place.</figcaption>
+        </figure>
+      </div>
     </section>
 
     <footer class="case-footer">
@@ -98,33 +96,8 @@
 
   </main>
 
-  <!-- Hidden track for the play/pause easter egg -->
-  <audio id="willow-audio" src="media/willow-garden.mp3" preload="none"></audio>
-
   <script src="data.js"></script>
 
-  <script src="case.js?v=8"></script>
-  <script>
-    // Animate the GIF only when motion is allowed; otherwise the static poster
-    // stays (WCAG 2.2.2 — no un-pausable auto-animation for reduced-motion users).
-    (function () {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      document.querySelectorAll("img[data-animated]").forEach(function (img) {
-        img.src = img.getAttribute("data-animated");
-      });
-    })();
-    (function () {
-      var audio = document.getElementById("willow-audio");
-      if (!audio) return;
-      var plays = document.querySelectorAll('[data-willow="play"]');
-      var pauses = document.querySelectorAll('[data-willow="pause"]');
-      plays.forEach(function (b) { b.addEventListener("click", function () { audio.play(); }); });
-      pauses.forEach(function (b) { b.addEventListener("click", function () { audio.pause(); }); });
-      function active(on) { plays.forEach(function (b) { b.classList.toggle("is-active", on); }); }
-      audio.addEventListener("play", function () { active(true); });
-      audio.addEventListener("pause", function () { active(false); });
-      audio.addEventListener("ended", function () { active(false); });
-    })();
-  </script>
+  <script src="case.js?v=9"></script>
 </body>
 </html>
