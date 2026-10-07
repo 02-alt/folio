@@ -5,7 +5,8 @@
 
 // Real project screenshot (extracted from the site's webarchive).
 function projectImage(p) {
-  return `<img src="${p.image}" alt="${p.name}: ${p.tagline}" loading="lazy" />`;
+  const dark = p.imageDark ? ` data-dark="${p.imageDark}"` : "";
+  return `<img src="${p.image}"${dark} alt="${p.name}: ${p.tagline}" loading="lazy" />`;
 }
 
 // ---- Build the project list ----
@@ -131,6 +132,17 @@ function playReverseMorph() {
 }
 window.addEventListener("pageshow", playReverseMorph);
 
+// ---- Theme-aware images: <img data-dark="…"> shows its dark variant in dark mode ----
+function syncThemeImages() {
+  const dark = document.documentElement.dataset.theme === "dark";
+  document.querySelectorAll("img[data-dark]").forEach((img) => {
+    if (!img.dataset.light) img.dataset.light = img.getAttribute("src");
+    const want = dark ? img.dataset.dark : img.dataset.light;
+    if (img.getAttribute("src") !== want) img.setAttribute("src", want);
+  });
+}
+syncThemeImages();
+
 // ---- Appearance toggle (light ⇄ dark), remembered across pages ----
 (function () {
   const btn = document.querySelector(".theme-toggle");
@@ -143,5 +155,6 @@ window.addEventListener("pageshow", playReverseMorph);
     if (dark) root.dataset.theme = "dark"; else delete root.dataset.theme;
     try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
     sync();
+    syncThemeImages();
   });
 })();

@@ -5,6 +5,15 @@
      history.back() restores the feed (with its scroll) underneath.
    Works without the View Transitions API.
    ============================================================ */
+/* Theme-aware images: <img data-dark="…"> shows its dark variant in dark mode.
+   Runs first so the morph and lightbox see the right source. */
+(function () {
+  if (document.documentElement.dataset.theme !== "dark") return;
+  [].forEach.call(document.querySelectorAll("img[data-dark]"), function (img) {
+    img.setAttribute("src", img.getAttribute("data-dark"));
+  });
+})();
+
 (function () {
   var hero = document.querySelector(".case-hero");
   var wrap = document.querySelector(".case-wrap");
