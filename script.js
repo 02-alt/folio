@@ -130,3 +130,18 @@ function playReverseMorph() {
   setTimeout(end, 720);
 }
 window.addEventListener("pageshow", playReverseMorph);
+
+// ---- Appearance toggle (light ⇄ dark), remembered across pages ----
+(function () {
+  const btn = document.querySelector(".theme-toggle");
+  if (!btn) return;
+  const root = document.documentElement;
+  const sync = () => btn.setAttribute("aria-pressed", String(root.dataset.theme === "dark"));
+  sync();
+  btn.addEventListener("click", () => {
+    const dark = root.dataset.theme !== "dark";
+    if (dark) root.dataset.theme = "dark"; else delete root.dataset.theme;
+    try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+    sync();
+  });
+})();

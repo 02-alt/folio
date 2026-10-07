@@ -31,9 +31,15 @@
   <meta name="twitter:description" content="Matthieu, Product Designer specializing in Privacy and Health, based in Paris, France." />
   <meta name="twitter:image" content="https://matthieuc.com/images/social-preview.png" />
 
-  <link rel="stylesheet" href="styles.css?v=9" />
+  <!-- Apply the saved appearance before first paint (no light flash in dark mode) -->
+  <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
+  <link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body>
+  <button type="button" class="theme-toggle" aria-label="Dark mode" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.25" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.75a8.25 8.25 0 0 0 0 16.5z" fill="currentColor"/></svg>
+  </button>
+
   <main class="page">
 
     <!-- ===================== HERO ===================== -->
@@ -101,6 +107,6 @@
   </main>
 
   <script src="data.js?v=4"></script>
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
