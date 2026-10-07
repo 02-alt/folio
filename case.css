@@ -60,6 +60,7 @@ body.case {
 }
 .case-title + .meta { margin-top: var(--s-5); }   /* Ornikar: title, then the details grid */
 .case-title + .section { margin-top: var(--s-6); } /* no lead paragraph: title straight into a section */
+.case-hero + .visually-hidden + .section { margin-top: 0; } /* no visible title: hero straight into a section */
 
 /* ---- Hero image ---- */
 .case-hero {
