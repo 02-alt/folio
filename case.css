@@ -46,14 +46,26 @@ body.case {
 }
 .case-back:hover { color: var(--case-blue); }
 .case-back svg { width: 20px; height: 20px; }
-.case-eyebrow { font-size: 14px; color: var(--case-muted); }
+.case-eyebrow { font-size: 13px; line-height: 1.4; color: var(--case-muted); }   /* HIG Footnote */
+
+/* ---- Type scale: Apple HIG text styles, 8-pt rhythm ----
+   h1 Large Title 34 · h2 Title 1 28 · lead Title 2 22 · h3 Title 3 20 /
+   Headline 17 · body 17 · callout 16 · caption (Subheadline) 15 · footnote 13 */
+.case-title {
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--s-2);
+}
+.case-title + .meta { margin-top: var(--s-5); }   /* Ornikar: title, then the details grid */
 
 /* ---- Hero image ---- */
 .case-hero {
   border-radius: var(--radius);
   border: 1px solid var(--case-hair);
   overflow: hidden;
-  margin-bottom: var(--s-7);
+  margin-bottom: var(--s-5);
   background: var(--image-space);
 }
 .case-hero img { display: block; width: 100%; height: auto; }
@@ -68,13 +80,14 @@ body.case {
 .meta h3 {
   font-size: 17px;
   font-weight: 600;
-  margin-bottom: 10px;
+  line-height: 1.3;
+  margin-bottom: var(--s-1);
 }
-.meta p { font-size: 16px; line-height: 1.55; color: var(--case-muted); margin-bottom: 6px; }
+.meta p { font-size: 16px; line-height: 1.5; color: var(--case-muted); margin-bottom: var(--s-1); }
 .meta .lead { color: var(--case-ink); }
 .meta .lead b { font-weight: 600; }
 .meta .block + .block { margin-top: var(--s-4); }
-.meta .overview p + p { margin-top: 18px; }
+.meta .overview p + p { margin-top: var(--s-2); }
 
 /* ---- Section headers ---- */
 .section { margin-top: var(--s-11); }
@@ -82,29 +95,30 @@ body.case {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 600;
-  letter-spacing: -0.01em;
-  margin-bottom: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin-bottom: var(--s-3);
 }
 .section-title::before { display: none; }   /* no bullet dot on section titles */
 
 .lead-p {
-  font-size: 21px;
+  font-size: 22px;
   line-height: 1.4;
   letter-spacing: -0.01em;
-  margin-bottom: 14px;
+  margin-bottom: var(--s-2);
 }
 .body-p {
-  font-size: 18px;
-  line-height: 1.5;
+  font-size: 17px;
+  line-height: 1.55;
   color: var(--case-muted);
   margin-bottom: var(--s-2);
 }
 .hl { color: var(--case-blue); }
 /* keep a lone word off the last line; even out short headings */
 .lead-p, .body-p, .caption, .shotcard__cap, .meta p { text-wrap: pretty; }
-.section-title, .feature__title { text-wrap: balance; }
+.case-title, .section-title, .feature__title { text-wrap: balance; }
 
 /* ---- Process (Week 1 / Week 2) ---- */
 .process {
@@ -197,7 +211,7 @@ body.case {
   display: grid; place-items: center;
 }
 .constraint__icon svg { width: auto; height: 19px; }
-.constraint h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.constraint h3 { font-size: 17px; font-weight: 600; line-height: 1.3; margin-bottom: var(--s-1); }
 .constraint p { font-size: 14px; line-height: 1.45; color: var(--case-muted); }
 
 /* ---- Image placeholders (awaiting real assets) ---- */
@@ -466,10 +480,11 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 }
 .feature--flip .feature__text { order: 2; }
 .feature__title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
-  line-height: 1.3;
-  margin-bottom: 10px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--s-1);
 }
 .feature__text .body-p { margin-bottom: 0; }
 
@@ -544,15 +559,18 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .mapfig__notes { padding: var(--s-1) 20px 20px; }
   .mapfig__note { position: static; transform: none; right: auto; }
   .mapfig__note + .mapfig__note { margin-top: var(--s-2); }
-  .lead-p { font-size: 19px; }
+  .case-title { font-size: 30px; }
+  .section-title { font-size: 24px; }
+  .lead-p { font-size: 20px; }
 }
 
 @media (max-width: 560px) {
   .case-wrap { padding: var(--s-4) 20px var(--s-15); }
   .section { margin-top: var(--s-8); }
-  .section-title { font-size: 20px; }
-  .lead-p { font-size: 18px; }
-  .body-p { font-size: 16px; }
+  .case-title { font-size: 28px; }
+  .section-title { font-size: 22px; }
+  .lead-p { font-size: 19px; }
+  .feature__title { font-size: 19px; }
   .case-footer { flex-wrap: wrap; }
   .case-footer .btn { flex: 1 1 100%; }   /* full-width stacked buttons on phones */
   .clip__phone { width: 250px; }
