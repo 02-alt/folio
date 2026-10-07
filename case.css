@@ -487,6 +487,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   margin-bottom: var(--s-1);
 }
 .feature__text .body-p { margin-bottom: 0; }
+.case-cta { margin-top: var(--s-1); }
+.case-cta .btn__icon { width: 16px; height: 16px; }
 
 /* ---- Screen-recording clips: silent looping video in a CSS iPhone frame ---- */
 .clip { margin: 0; }
