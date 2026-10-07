@@ -3,6 +3,15 @@
    Type:  ABC Marist (serif, body)  +  Inter (sans, badges & labels)
    ============================================================ */
 
+/* Inter, self-hosted (Latin subset): variable weight + optical size, so large
+   text gets Inter's tighter display cut automatically (font-optical-sizing: auto) */
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter-opsz-wght-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
 @font-face {
   font-family: "ABC Marist";
   src: url("fonts/ABCMarist-Book.woff2") format("woff2"),
@@ -61,7 +70,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
 
 body {
   background: var(--bg);

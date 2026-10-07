@@ -17,7 +17,6 @@ body.case {
   background: #ffffff;
   color: var(--case-ink);
   font-family: var(--sans);
-  -webkit-font-smoothing: antialiased;
 }
 
 .case-wrap {
@@ -103,6 +102,9 @@ body.case {
   margin-bottom: var(--s-2);
 }
 .hl { color: var(--case-blue); }
+/* keep a lone word off the last line; even out short headings */
+.lead-p, .body-p, .caption, .shotcard__cap, .meta p { text-wrap: pretty; }
+.section-title, .feature__title { text-wrap: balance; }
 
 /* ---- Process (Week 1 / Week 2) ---- */
 .process {
@@ -453,13 +455,25 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .pnext:hover .pnext__arrow { animation: none; }
 }
 
-/* ---- Screen-recording clips: silent looping video in a CSS iPhone frame ---- */
-.clips {
-  margin-top: var(--s-3);
+/* ---- Feature rows: a title + text beside one screen recording; .feature--flip
+   puts the phone on the left so consecutive rows alternate ---- */
+.feature {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--s-5) var(--s-2);
+  gap: var(--s-6);
+  align-items: center;
+  margin-top: var(--s-8);
 }
+.feature--flip .feature__text { order: 2; }
+.feature__title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+.feature__text .body-p { margin-bottom: 0; }
+
+/* ---- Screen-recording clips: silent looping video in a CSS iPhone frame ---- */
 .clip { margin: 0; }
 .clip__card {
   position: relative;
@@ -503,7 +517,6 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 .clip__btn .i-play { display: none; }
 .clip.is-paused .clip__btn .i-play { display: block; }
 .clip.is-paused .clip__btn .i-pause { display: none; }
-.clip .caption { margin-top: var(--s-2); padding: 0 var(--s-1); }
 @media (prefers-reduced-transparency: reduce) {
   .clip__btn { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
@@ -524,6 +537,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .shotcard__frame img { width: 100%; max-width: 320px; }
   .shotcard__cap { padding: 0 20px; }
   .shots2 { grid-template-columns: 1fr; }
+  .feature { grid-template-columns: 1fr; gap: var(--s-3); margin-top: var(--s-7); }
+  .feature--flip .feature__text { order: 0; }
   /* Map: stack mockup, then callouts as a plain list (connectors point nowhere on mobile) */
   .mapfig { grid-template-columns: 1fr; }
   .mapfig__notes { padding: var(--s-1) 20px 20px; }
@@ -540,7 +555,6 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .body-p { font-size: 16px; }
   .case-footer { flex-wrap: wrap; }
   .case-footer .btn { flex: 1 1 100%; }   /* full-width stacked buttons on phones */
-  .clips { grid-template-columns: 1fr; }
   .clip__phone { width: 250px; }
 }
 

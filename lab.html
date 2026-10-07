@@ -28,11 +28,9 @@
   <meta name="twitter:description" content="The Lab: designing by building. A growing gallery of tools and apps I've designed and shipped end-to-end in code." />
   <meta name="twitter:image" content="https://matthieuc.com/images/social-preview.png" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=8" />
-  <link rel="stylesheet" href="case.css?v=27" />
+  <link rel="preload" href="fonts/Inter-opsz-wght-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css?v=9" />
+  <link rel="stylesheet" href="case.css?v=28" />
 </head>
 <body class="case" data-project="vibe-coding">
   <main class="case-wrap">
@@ -49,36 +47,54 @@
 
     <div class="case-hero"><img src="images/lab-crate.webp" alt="The Lab: Cabin on iPhone, flipping through a crate of album covers" /></div>
 
-    <p class="lead-p">Designing by building. I'm convinced vibe coding is where product design is heading, so I prototype and ship in code.</p>
-    <p class="body-p">Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I've designed and built myself, starting with this very portfolio, and the apps below.</p>
+    <p class="lead-p">Designing by building. I’m convinced vibe coding is where product design is heading, so I prototype and ship in code.</p>
+    <p class="body-p">Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I’ve designed and built myself, starting with this very portfolio, and the apps below.</p>
 
     <section class="section">
       <h2 class="section-title plain">Cabin</h2>
-      <p class="body-p">A Bandcamp player for Mac and iPhone, written in Swift. It turns the albums you've bought on Bandcamp into a collection you actually want to browse: flipped through like records in a crate, read like liner notes, and mapped by where the music comes from. Below, the iPhone app.</p>
-      <div class="clips">
+      <p class="body-p">A Bandcamp player for Mac and iPhone, written in Swift. It turns the albums you’ve bought on Bandcamp into a collection you actually want to browse: flipped through like records in a crate, read like liner notes, and mapped by where the music comes from. Below, the iPhone app.</p>
+      <div class="feature">
+        <div class="feature__text">
+          <h3 class="feature__title">Crate</h3>
+          <p class="body-p">Your collection as a stack of records, <span class="hl">flicked through one sleeve at a time</span>. Filter the crate by New, Favourites, Downloaded or Imported and keep digging.</p>
+        </div>
         <figure class="clip">
           <div class="clip__card"><div class="clip__phone">
             <video muted loop playsinline preload="none" poster="images/cabin-crate.webp" aria-label="Cabin on iPhone: flipping through the Crate, a stack of album covers, and filtering it"><source src="media/cabin-crate.mp4" type="video/mp4" /></video>
           </div></div>
-          <figcaption class="caption"><b>Crate.</b> Your collection as a stack of records, <span class="hl">flicked through one sleeve at a time</span>, filtered by New, Favourites, Downloaded or Imported.</figcaption>
         </figure>
+      </div>
+      <div class="feature feature--flip">
+        <div class="feature__text">
+          <h3 class="feature__title">Album page</h3>
+          <p class="body-p">Tracks first, then <span class="hl">the liner notes</span>: how often you’ve played it, the album’s story, where the artist is from, the receipt of your purchase and full credits.</p>
+        </div>
         <figure class="clip">
           <div class="clip__card"><div class="clip__phone">
             <video muted loop playsinline preload="none" poster="images/cabin-album.webp" aria-label="Cabin on iPhone: an album page scrolling from the tracklist to its notes, purchase receipt and credits"><source src="media/cabin-album.mp4" type="video/mp4" /></video>
           </div></div>
-          <figcaption class="caption"><b>Album page.</b> Tracks first, then <span class="hl">the liner notes</span>: play history, the album's story, where the artist is from, the purchase receipt and full credits.</figcaption>
         </figure>
+      </div>
+      <div class="feature">
+        <div class="feature__text">
+          <h3 class="feature__title">Now Playing</h3>
+          <p class="body-p">Swipe the artwork for <span class="hl">the artist, the album, its credits or synced lyrics</span>. The queue and AirPlay are one tap away.</p>
+        </div>
         <figure class="clip">
           <div class="clip__card"><div class="clip__phone">
             <video muted loop playsinline preload="none" poster="images/cabin-nowplaying.webp" aria-label="Cabin on iPhone: Now Playing, swiping between artist, album, credits and synced lyrics, then the queue and AirPlay"><source src="media/cabin-nowplaying.mp4" type="video/mp4" /></video>
           </div></div>
-          <figcaption class="caption"><b>Now Playing.</b> Swipe the artwork for <span class="hl">the artist, the album, its credits or synced lyrics</span>; the queue and AirPlay are one tap away.</figcaption>
         </figure>
+      </div>
+      <div class="feature feature--flip">
+        <div class="feature__text">
+          <h3 class="feature__title">Collection map</h3>
+          <p class="body-p"><span class="hl">Every album pinned to where the artist is from</span>, across your collection, your wishlist or your friends’. Open any place to see what’s from there, or start a radio of it.</p>
+        </div>
         <figure class="clip">
           <div class="clip__card"><div class="clip__phone">
             <video muted loop playsinline preload="none" poster="images/cabin-map.webp" aria-label="Cabin on iPhone: the Collection map, zooming into places and listing the albums from each one"><source src="media/cabin-map.mp4" type="video/mp4" /></video>
           </div></div>
-          <figcaption class="caption"><b>Collection map.</b> <span class="hl">Every album pinned to where the artist is from</span>, across your collection, your wishlist or your friends', with a radio for any place.</figcaption>
         </figure>
       </div>
     </section>
@@ -96,7 +112,7 @@
 
   </main>
 
-  <script src="data.js?v=2"></script>
+  <script src="data.js?v=3"></script>
 
   <script src="case.js?v=9"></script>
 </body>

@@ -1,6 +1,6 @@
 /* Project content — copy taken from matthieuc.com.
    `screen` renders a placeholder app screen inside the phone mockup
-   (real assets aren't included, so the image space is reserved with a mockup). */
+   (real assets aren’t included, so the image space is reserved with a mockup). */
 window.PROJECTS = [
   {
     id: "ornikar",
@@ -62,11 +62,11 @@ window.PROJECTS = [
     year: "2026",
     tagline: "Designing by building",
     description:
-      "A few things I've designed and built end-to-end, in code.",
+      "A few things I’ve designed and built end-to-end, in code.",
     accent: "#111111",
     role: "Designer & builder: end-to-end, from concept to shipped product",
     team: "Solo",
     overview:
-      "Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I've designed and built myself, starting with this very portfolio.",
+      "Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I’ve designed and built myself, starting with this very portfolio.",
   },
 ];
