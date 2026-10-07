@@ -270,6 +270,11 @@
     var card = clip.querySelector(".clip__card");
     if (!video || !card) return;
     video.muted = true;
+    // Keep the poster painted behind the video: Safari hides the poster as soon as
+    // play() is called and shows black until the first frame has buffered.
+    if (video.poster) {
+      video.style.background = "#000 url(\"" + video.poster + "\") center / cover no-repeat";
+    }
     clip._userPaused = reduce;
 
     var btn = document.createElement("button");
