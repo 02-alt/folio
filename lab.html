@@ -32,7 +32,7 @@
   <!-- Apply the saved appearance before first paint (no light flash in dark mode) -->
   <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
   <link rel="stylesheet" href="styles.css?v=10" />
-  <link rel="stylesheet" href="case.css?v=33" />
+  <link rel="stylesheet" href="case.css?v=34" />
 </head>
 <body class="case" data-project="vibe-coding">
   <main class="case-wrap">
@@ -57,48 +57,76 @@
         <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
         <span class="visually-hidden"> (opens in new tab)</span>
       </a>
-      <div class="feature">
+      <div class="feature feature--wide">
         <div class="feature__text">
+          <p class="feature__devices">Mac &amp; iPhone</p>
           <h3 class="feature__title">Crate</h3>
-          <p class="body-p">Your collection as a stack of records, <span class="hl">flicked through one sleeve at a time</span>. Filter the crate by New, Favourites, Downloaded or Imported and keep digging.</p>
+          <p class="body-p">Your collection as a stack of records, <span class="hl">flicked through one sleeve at a time</span>: a shelf of covers on Mac, a stack under your thumb on iPhone. Filter by New, Favourites, Downloaded or Imported, or switch to the grid, playlists and wishlist.</p>
         </div>
         <figure class="clip">
-          <div class="clip__card"><div class="clip__phone">
-            <video muted loop playsinline preload="metadata" poster="images/cabin-crate.webp" aria-label="Cabin on iPhone: flipping through the Crate, a stack of album covers, and filtering it"><source src="media/cabin-crate.mp4" type="video/mp4" /></video>
-          </div></div>
+          <div class="clip__card clip__card--combo">
+            <div class="clip__mac" style="--ar: 1104 / 986">
+              <video muted loop playsinline preload="metadata" poster="images/cabin-mac-crate.webp" aria-label="Cabin on Mac: flipping through the Crate shelf of album covers, then the grid, playlists and wishlist"><source src="media/cabin-mac-crate.mp4" type="video/mp4" /></video>
+            </div>
+            <div class="clip__phone">
+              <video muted loop playsinline preload="metadata" poster="images/cabin-crate.webp" aria-label="Cabin on iPhone: flipping through the Crate, a stack of album covers, and filtering it"><source src="media/cabin-crate.mp4" type="video/mp4" /></video>
+            </div>
+          </div>
         </figure>
       </div>
       <div class="feature feature--flip">
         <div class="feature__text">
+          <p class="feature__devices">iPhone</p>
           <h3 class="feature__title">Album page</h3>
           <p class="body-p">Tracks first, then <span class="hl">the liner notes</span>: how often you’ve played it, the album’s story, where the artist is from, the receipt of your purchase and full credits.</p>
         </div>
         <figure class="clip">
           <div class="clip__card"><div class="clip__phone">
-            <video muted loop playsinline preload="metadata" poster="images/cabin-album.webp" aria-label="Cabin on iPhone: an album page scrolling from the tracklist to its notes, purchase receipt and credits"><source src="media/cabin-album.mp4" type="video/mp4" /></video>
-          </div></div>
+              <video muted loop playsinline preload="metadata" poster="images/cabin-album.webp" aria-label="Cabin on iPhone: an album page scrolling from the tracklist to its notes, purchase receipt and credits"><source src="media/cabin-album.mp4" type="video/mp4" /></video>
+            </div></div>
+        </figure>
+      </div>
+      <div class="feature feature--wide">
+        <div class="feature__text">
+          <p class="feature__devices">Mac &amp; iPhone</p>
+          <h3 class="feature__title">Now Playing</h3>
+          <p class="body-p"><span class="hl">The artist, the album, its credits and synced lyrics</span> around the artwork: side by side on Mac, a swipe away on iPhone, with the queue and AirPlay one tap off.</p>
+        </div>
+        <figure class="clip">
+          <div class="clip__card clip__card--combo">
+            <div class="clip__mac" style="--ar: 1400 / 910">
+              <video muted loop playsinline preload="metadata" poster="images/cabin-mac-nowplaying.webp" aria-label="Cabin on Mac: Now Playing with the artist, album and credits panels and synced lyrics around the cover"><source src="media/cabin-mac-nowplaying.mp4" type="video/mp4" /></video>
+            </div>
+            <div class="clip__phone">
+              <video muted loop playsinline preload="metadata" poster="images/cabin-nowplaying.webp" aria-label="Cabin on iPhone: Now Playing, swiping between artist, album, credits and synced lyrics, then the queue and AirPlay"><source src="media/cabin-nowplaying.mp4" type="video/mp4" /></video>
+            </div>
+          </div>
         </figure>
       </div>
       <div class="feature">
         <div class="feature__text">
-          <h3 class="feature__title">Now Playing</h3>
-          <p class="body-p">Swipe the artwork for <span class="hl">the artist, the album, its credits or synced lyrics</span>. The queue and AirPlay are one tap away.</p>
-        </div>
-        <figure class="clip">
-          <div class="clip__card"><div class="clip__phone">
-            <video muted loop playsinline preload="metadata" poster="images/cabin-nowplaying.webp" aria-label="Cabin on iPhone: Now Playing, swiping between artist, album, credits and synced lyrics, then the queue and AirPlay"><source src="media/cabin-nowplaying.mp4" type="video/mp4" /></video>
-          </div></div>
-        </figure>
-      </div>
-      <div class="feature feature--flip">
-        <div class="feature__text">
+          <p class="feature__devices">iPhone</p>
           <h3 class="feature__title">Collection map</h3>
           <p class="body-p"><span class="hl">Every album pinned to where the artist is from</span>, across your collection, your wishlist or your friends’. Open any place to see what’s from there, or start a radio of it.</p>
         </div>
         <figure class="clip">
           <div class="clip__card"><div class="clip__phone">
-            <video muted loop playsinline preload="metadata" poster="images/cabin-map.webp" aria-label="Cabin on iPhone: the Collection map, zooming into places and listing the albums from each one"><source src="media/cabin-map.mp4" type="video/mp4" /></video>
-          </div></div>
+              <video muted loop playsinline preload="metadata" poster="images/cabin-map.webp" aria-label="Cabin on iPhone: the Collection map, zooming into places and listing the albums from each one"><source src="media/cabin-map.mp4" type="video/mp4" /></video>
+            </div></div>
+        </figure>
+      </div>
+      <div class="feature feature--wide">
+        <div class="feature__text">
+          <p class="feature__devices">Mac</p>
+          <h3 class="feature__title">Recap</h3>
+          <p class="body-p">Your year or month on Bandcamp: <span class="hl">a cloud of the covers you played</span>, the artists you supported, your sound by genre and a day-by-day calendar, saved as a playlist in one click.</p>
+        </div>
+        <figure class="clip">
+          <div class="clip__card clip__card--mac">
+            <div class="clip__mac" style="--ar: 1104 / 986">
+              <video muted loop playsinline preload="metadata" poster="images/cabin-mac-recap.webp" aria-label="Cabin on Mac: the yearly and monthly Recap, a cloud of album covers, listening stats, genres and a calendar"><source src="media/cabin-mac-recap.mp4" type="video/mp4" /></video>
+            </div>
+          </div>
         </figure>
       </div>
     </section>
@@ -118,6 +146,6 @@
 
   <script src="data.js?v=5"></script>
 
-  <script src="case.js?v=11"></script>
+  <script src="case.js?v=12"></script>
 </body>
 </html>

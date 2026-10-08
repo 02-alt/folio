@@ -266,15 +266,19 @@
     '<svg class="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 4.8v14.4c0 .8.9 1.3 1.6.9l11.3-7.2c.6-.4.6-1.4 0-1.8L9.1 3.9c-.7-.4-1.6.1-1.6.9z"/></svg>';
 
   clips.forEach(function (clip) {
-    var video = clip.querySelector("video");
+    // A clip holds one video, or two (Mac + iPhone) that play and pause together.
+    var videos = [].slice.call(clip.querySelectorAll("video"));
     var card = clip.querySelector(".clip__card");
-    if (!video || !card) return;
-    video.muted = true;
-    // Keep the poster painted behind the video: Safari hides the poster as soon as
-    // play() is called and shows black until the first frame has buffered.
-    if (video.poster) {
-      video.style.background = "#000 url(\"" + video.poster + "\") center / cover no-repeat";
-    }
+    if (!videos.length || !card) return;
+    clip._videos = videos;
+    videos.forEach(function (video) {
+      video.muted = true;
+      // Keep the poster painted behind the video: Safari hides the poster as soon as
+      // play() is called and shows black until the first frame has buffered.
+      if (video.poster) {
+        video.style.background = "#000 url(\"" + video.poster + "\") center / cover no-repeat";
+      }
+    });
     clip._userPaused = reduce;
 
     var btn = document.createElement("button");
@@ -284,26 +288,29 @@
     card.appendChild(btn);
 
     function sync() {
-      var paused = video.paused;
+      var paused = videos[0].paused;
       clip.classList.toggle("is-paused", paused);
-      btn.setAttribute("aria-label", (paused ? "Play" : "Pause") + " video");
+      btn.setAttribute("aria-label", (paused ? "Play" : "Pause") + (videos.length > 1 ? " videos" : " video"));
     }
-    video.addEventListener("play", sync);
-    video.addEventListener("pause", sync);
+    videos.forEach(function (v) { v.addEventListener("play", sync); v.addEventListener("pause", sync); });
     sync();
 
     btn.addEventListener("click", function () {
-      if (video.paused) { clip._userPaused = false; video.play().catch(function () {}); }
-      else { clip._userPaused = true; video.pause(); }
+      if (videos[0].paused) { clip._userPaused = false; playAll(clip); }
+      else { clip._userPaused = true; pauseAll(clip); }
     });
   });
+
+  function playAll(clip) { clip._videos.forEach(function (v) { v.play().catch(function () {}); }); }
+  function pauseAll(clip) { clip._videos.forEach(function (v) { if (!v.paused) v.pause(); }); }
 
   if (!("IntersectionObserver" in window)) return;
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
-      var clip = e.target, video = clip.querySelector("video");
-      if (e.isIntersecting && !clip._userPaused) video.play().catch(function () {});
-      else if (!e.isIntersecting && !video.paused) video.pause();
+      var clip = e.target;
+      if (!clip._videos) return;
+      if (e.isIntersecting && !clip._userPaused) playAll(clip);
+      else if (!e.isIntersecting) pauseAll(clip);
     });
   }, { threshold: 0.35 });
   clips.forEach(function (clip) { io.observe(clip); });

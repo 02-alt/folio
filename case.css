@@ -519,6 +519,15 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 .case-cta { margin-top: var(--s-1); }
 .case-cta .btn__icon { width: 16px; height: 16px; }
 
+/* wide rows: text on top, the figure spans the column (Mac windows) */
+.feature--wide { grid-template-columns: 1fr; gap: var(--s-3); }
+.feature--wide .feature__text { max-width: 62ch; }
+.feature__devices {
+  font-size: 13px; line-height: 1.4;
+  color: var(--case-muted);
+  margin-bottom: 4px;                 /* HIG Footnote over the Title 3 */
+}
+
 /* ---- Screen-recording clips: silent looping video in a CSS iPhone frame ---- */
 .clip { margin: 0; }
 .clip__card {
@@ -544,6 +553,34 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   border-radius: 39px;
   background: #000;
 }
+/* Mac window recording: rounded like a macOS window, hairline edge + soft shadow */
+.clip__mac {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 0 0 1.5px rgba(255, 255, 255, 0.08),
+              0 24px 48px -24px rgba(0, 0, 0, 0.45);
+}
+.clip__mac video { display: block; width: 100%; height: auto; aspect-ratio: var(--ar); background: #000; }
+.clip__card--mac { padding: var(--s-5); }
+
+/* Mac + iPhone together: the window on the left, the phone in front of its
+   bottom-right corner. Sizes are % of the card so the pair scales as one. */
+.clip__card--combo {
+  align-items: flex-end;
+  padding: var(--s-5) var(--s-5) var(--s-4);
+}
+.clip__card--combo .clip__mac { flex: 0 0 78%; }
+.clip__card--combo .clip__phone {
+  flex: 0 0 26%;
+  width: auto;
+  margin: 0 0 calc(-1 * var(--s-2)) -8%;   /* overlap the window, sit a little lower */
+  padding: 2.6%;
+  border-radius: 17% / 8%;
+  position: relative;                       /* paint above the window */
+  box-shadow: 0 0 0 1.5px #c7c7cc, 0 24px 48px -16px rgba(0, 0, 0, 0.5);
+}
+.clip__card--combo .clip__phone video { border-radius: 14.5% / 6.8%; }
+
 .clip__btn {                         /* play / pause, bottom-right of the card */
   position: absolute; right: 14px; bottom: 14px;
   width: 36px; height: 36px;
@@ -605,6 +642,10 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .case-footer { flex-wrap: wrap; }
   .case-footer .btn { flex: 1 1 100%; }   /* full-width stacked buttons on phones */
   .clip__phone { width: 250px; }
+  .clip__card--combo { flex-wrap: wrap; justify-content: center; padding: var(--s-3); }
+  .clip__card--combo .clip__mac { flex-basis: 100%; }
+  .clip__card--combo .clip__phone { flex: 0 0 56%; margin: calc(-1 * var(--s-6)) 0 0; }
+  .clip__card--mac { padding: var(--s-3); }
 }
 
 /* ============================================================
