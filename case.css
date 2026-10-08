@@ -561,13 +561,19 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 .device--mac { width: 100%; }
 .device--mac .device__screen {
   left: 10.77%; top: 11.25%; width: 78.46%; height: 77.5%;
+  background: none;
+}
+.device--mac .device__screen::before {          /* desktop wallpaper (fades out in Window view) */
+  content: ""; position: absolute; inset: 0;
   background: #0b0d10 url("images/mac-wallpaper.webp") center / cover no-repeat;
+  transition: opacity .45s ease;
 }
 .device__win {
   position: absolute; left: 50%; top: 51.5%;
   height: 92%; aspect-ratio: var(--ar);
   max-width: 94%;
   transform: translate(-50%, -50%);
+  transition: transform .6s cubic-bezier(.2, .8, .25, 1);
   border-radius: 1.2% / 1.4%;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(0, 0, 0, 0.55);
@@ -576,10 +582,62 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 
 /* Mac + iPhone together: the MacBook, with the iPhone standing in front of its
    bottom-right corner. Sizes are % of the card so the pair scales as one. */
-.clip__card--combo { align-items: flex-end; padding: var(--s-5) var(--s-5) var(--s-4); }
-.clip__card--combo .device--mac { flex: 0 0 84%; }
-.clip__card--combo .device--iphone { flex: 0 0 19%; width: auto; margin: 0 0 0 -11%; z-index: 2; }
-.clip__card--mac { padding: var(--s-5) var(--s-4) var(--s-4); }
+/* The stage keeps one height whatever the view, so switching never shifts the page.
+   Height = the MacBook at 84% width (frame ratio 1184/1800). */
+.clip__card--combo { display: block; padding: 64px var(--s-5) var(--s-4); }
+.clip__stage { position: relative; aspect-ratio: 1 / .5525; }
+.clip__stage .device {
+  position: absolute; bottom: 0;
+  transition: left .6s cubic-bezier(.2, .8, .25, 1), width .6s cubic-bezier(.2, .8, .25, 1),
+              opacity .4s ease, transform .6s cubic-bezier(.2, .8, .25, 1);
+}
+.clip__stage .device--mac { left: 4%; width: 84%; }
+.clip__stage .device--iphone { left: 77%; width: 19%; max-width: none; z-index: 2; }
+/* Mac only: the MacBook slides to centre, the iPhone steps away */
+[data-view="mac"] .clip__stage .device--mac { left: 8%; }
+[data-view="mac"] .clip__stage .device--iphone { opacity: 0; transform: translateX(24%); pointer-events: none; }
+/* iPhone only: the phone grows to the stage height, the MacBook fades back */
+[data-view="iphone"] .clip__stage .device--mac { opacity: 0; transform: scale(.94); pointer-events: none; }
+[data-view="iphone"] .clip__stage .device--iphone { left: 36.3%; width: 27.4%; }
+
+/* Mac-only figure; Window view lifts the app window out of the MacBook */
+.clip__card--mac { display: block; padding: 64px var(--s-4) var(--s-4); }
+.device--mac .device__frame { transition: opacity .45s ease; }
+[data-view="window"] .device--mac .device__frame,
+[data-view="window"] .device--mac .device__screen::before { opacity: 0; }
+[data-view="window"] .device--mac .device__screen { overflow: visible; }
+[data-view="window"] .device__win { transform: translate(-50%, -50%) scale(1.36); }
+
+/* Segmented control (Both / Mac / iPhone, MacBook / Window), top-centre of the card */
+.seg {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 3;
+  display: inline-flex; padding: 2px; gap: 0;
+  border-radius: 999px;
+  background: var(--seg-bg, rgba(0, 0, 0, 0.06));
+}
+.seg__thumb {
+  position: absolute; top: 2px; bottom: 2px; left: 0; width: 0;
+  border-radius: 999px;
+  background: var(--seg-thumb, #fff);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  transition: transform .35s cubic-bezier(.2, .8, .25, 1), width .35s cubic-bezier(.2, .8, .25, 1);
+}
+.seg__btn {
+  position: relative; z-index: 1;
+  min-width: 64px; height: 28px; padding: 0 12px;
+  border: 0; border-radius: 999px; background: none;
+  font: 500 13px/1 var(--sans); color: var(--case-muted);
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: color .2s ease;
+}
+.seg__btn[aria-pressed="true"] { color: var(--case-ink); }
+.seg__btn:hover { color: var(--case-ink); }
+.seg__btn:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 1px; }
+:root[data-theme="dark"] .seg { --seg-bg: rgba(255, 255, 255, 0.08); --seg-thumb: #3a3a3c; }
+@media (prefers-reduced-motion: reduce) {
+  .clip__stage .device, .device__win, .seg__thumb,
+  .device--mac .device__frame, .device--mac .device__screen::before { transition: none; }
+}
 
 .clip__btn {                         /* play / pause, bottom-right of the card */
   position: absolute; right: 14px; bottom: 14px;
@@ -642,10 +700,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .case-footer { flex-wrap: wrap; }
   .case-footer .btn { flex: 1 1 100%; }   /* full-width stacked buttons on phones */
   .device--iphone { width: 240px; }
-  .clip__card--combo { padding: var(--s-3) var(--s-2) var(--s-2); }
-  .clip__card--combo .device--mac { flex-basis: 82%; }
-  .clip__card--combo .device--iphone { flex-basis: 24%; margin-left: -10%; }
-  .clip__card--mac { padding: var(--s-3) var(--s-2) var(--s-2); }
+  .clip__card--combo, .clip__card--mac { padding: 60px var(--s-2) var(--s-2); }
+  .seg__btn { min-width: 56px; padding: 0 10px; }
 }
 
 /* ============================================================

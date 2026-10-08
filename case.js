@@ -288,7 +288,7 @@
     card.appendChild(btn);
 
     function sync() {
-      var paused = videos[0].paused;
+      var paused = videos.every(function (v) { return v.paused; });
       clip.classList.toggle("is-paused", paused);
       btn.setAttribute("aria-label", (paused ? "Play" : "Pause") + (videos.length > 1 ? " videos" : " video"));
     }
@@ -296,13 +296,59 @@
     sync();
 
     btn.addEventListener("click", function () {
-      if (videos[0].paused) { clip._userPaused = false; playAll(clip); }
+      if (videos.every(function (v) { return v.paused; })) { clip._userPaused = false; playAll(clip); }
       else { clip._userPaused = true; pauseAll(clip); }
     });
   });
 
-  function playAll(clip) { clip._videos.forEach(function (v) { v.play().catch(function () {}); }); }
+  // A video is "off" when its device is hidden by the view switch (Mac only / iPhone only).
+  function isOff(v) {
+    var card = v.closest(".clip__card"), view = card && card.dataset.view;
+    if (!view || view === "both" || !card.classList.contains("clip__card--combo")) return false;
+    return !v.closest(".device--" + view);
+  }
+  function playAll(clip) {
+    clip._videos.forEach(function (v) {
+      if (isOff(v)) { if (!v.paused) v.pause(); }
+      else v.play().catch(function () {});
+    });
+  }
   function pauseAll(clip) { clip._videos.forEach(function (v) { if (!v.paused) v.pause(); }); }
+
+  // View switch: a segmented control for cards that declare data-views.
+  var LABELS = { both: "Both", mac: "Mac", iphone: "iPhone", device: "MacBook", window: "Window" };
+  clips.forEach(function (clip) {
+    var card = clip.querySelector(".clip__card[data-views]");
+    if (!card) return;
+    var views = card.dataset.views.split(",");
+    card.dataset.view = views[0];
+    var seg = document.createElement("div");
+    seg.className = "seg";
+    seg.setAttribute("role", "group");
+    seg.setAttribute("aria-label", "Show");
+    seg.innerHTML = '<span class="seg__thumb" aria-hidden="true"></span>' + views.map(function (v) {
+      return '<button type="button" class="seg__btn" data-v="' + v + '">' + LABELS[v] + "</button>";
+    }).join("");
+    card.appendChild(seg);
+    var thumb = seg.querySelector(".seg__thumb");
+    var btns = [].slice.call(seg.querySelectorAll(".seg__btn"));
+    function place() {
+      var on = btns.filter(function (b) { return b.dataset.v === card.dataset.view; })[0];
+      btns.forEach(function (b) { b.setAttribute("aria-pressed", String(b === on)); });
+      thumb.style.width = on.offsetWidth + "px";
+      thumb.style.transform = "translateX(" + on.offsetLeft + "px)";
+    }
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        card.dataset.view = b.dataset.v;
+        place();
+        if (!clip._userPaused) playAll(clip); else pauseAll(clip);
+      });
+    });
+    place();
+    addEventListener("resize", place);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+  });
 
   if (!("IntersectionObserver" in window)) return;
   var io = new IntersectionObserver(function (entries) {
