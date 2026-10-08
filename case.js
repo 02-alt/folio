@@ -363,6 +363,88 @@
 })();
 
 /* ============================================================
+   Magnifier: on desktop, hovering a device screen shows a round lens
+   that magnifies the live video under the pointer (2.5×), drawn from
+   the full-resolution source into a canvas every frame.
+   ============================================================ */
+(function () {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  var cards = document.querySelectorAll(".clip__card");
+  if (!cards.length) return;
+  var SIZE = 200, ZOOM = 2.5;
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var lens = document.createElement("div");
+  lens.className = "loupe";
+  lens.setAttribute("aria-hidden", "true");
+  var canvas = document.createElement("canvas");
+  canvas.width = canvas.height = SIZE * dpr;
+  lens.appendChild(canvas);
+  document.body.appendChild(lens);
+  var ctx = canvas.getContext("2d");
+  var active = null, px = 0, py = 0, raf = 0;
+
+  function visible(v) {
+    var d = v.closest(".device");
+    return d && getComputedStyle(d).opacity !== "0";
+  }
+  function videoAt(card, x, y) {
+    var vids = card.querySelectorAll("video");
+    // iPhone sits in front of the Mac: check in reverse document order
+    for (var i = vids.length - 1; i >= 0; i--) {
+      var r = vids[i].getBoundingClientRect();
+      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom && visible(vids[i])) return vids[i];
+    }
+    return null;
+  }
+  function draw() {
+    raf = 0;
+    if (!active) return;
+    var v = active, r = v.getBoundingClientRect();
+    var vw = v.videoWidth, vh = v.videoHeight;
+    if (vw && v.readyState >= 2) {
+      var cover = getComputedStyle(v).objectFit !== "contain";
+      var s = cover ? Math.max(r.width / vw, r.height / vh) : Math.min(r.width / vw, r.height / vh);
+      var ox = (r.width - vw * s) / 2, oy = (r.height - vh * s) / 2;
+      var sx = (px - r.left - ox) / s, sy = (py - r.top - oy) / s;
+      var span = SIZE / (s * ZOOM);                       // source pixels across the lens
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // clamp the source rect to the frame (Safari skips out-of-bounds draws)
+      var x0 = sx - span / 2, y0 = sy - span / 2, k = canvas.width / span;
+      var cx0 = Math.max(0, x0), cy0 = Math.max(0, y0);
+      var cx1 = Math.min(vw, x0 + span), cy1 = Math.min(vh, y0 + span);
+      if (cx1 > cx0 && cy1 > cy0) {
+        ctx.drawImage(v, cx0, cy0, cx1 - cx0, cy1 - cy0,
+          (cx0 - x0) * k, (cy0 - y0) * k, (cx1 - cx0) * k, (cy1 - cy0) * k);
+      }
+    }
+    if (!v.paused) raf = requestAnimationFrame(draw);
+  }
+  function move(e) {
+    px = e.clientX; py = e.clientY;
+    var v = videoAt(e.currentTarget, px, py);
+    if (v !== active) {
+      active = v;
+      lens.classList.toggle("is-on", !!v);
+      e.currentTarget.classList.toggle("is-zooming", !!v);
+    }
+    if (!v) return;
+    lens.style.transform = "translate(" + (px - SIZE / 2) + "px," + (py - SIZE / 2) + "px)";
+    if (!raf) raf = requestAnimationFrame(draw);
+  }
+  function leave(e) {
+    active = null;
+    lens.classList.remove("is-on");
+    e.currentTarget.classList.remove("is-zooming");
+  }
+  [].forEach.call(cards, function (card) {
+    card.addEventListener("pointermove", move);
+    card.addEventListener("pointerleave", leave);
+  });
+  addEventListener("scroll", function () { if (active) { active = null; lens.classList.remove("is-on"); } }, { passive: true });
+})();
+
+/* ============================================================
    Next-project link at the foot of every case page.
    Data-driven from window.PROJECTS; cycles to the next project.
    ============================================================ */
