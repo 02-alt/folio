@@ -454,11 +454,16 @@
   var wrap = document.querySelector(".case-wrap");
   if (!wrap) return;
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var targets = [];
+  var targets = [], groups = {};
+  var featSections = [].filter.call(wrap.querySelectorAll(".section"), function (s) { return s.querySelector(".feature__title"); });
   [].forEach.call(wrap.querySelectorAll(".section"), function (sec) {
     var feats = sec.querySelectorAll(".feature__title");
-    if (feats.length) [].push.apply(targets, feats);
-    else {
+    if (feats.length) {
+      // several apps on one page: label each group with its section title
+      var st = sec.querySelector(".section-title");
+      if (featSections.length > 1 && st) groups[targets.length] = st.textContent;
+      [].push.apply(targets, feats);
+    } else {
       var h = sec.querySelector(".section-title");
       if (h && !h.classList.contains("visually-hidden")) targets.push(h);
     }
@@ -494,6 +499,13 @@
       t.focus({ preventScroll: true });
     });
     li.appendChild(a);
+    if (groups[i] != null) {
+      var g = document.createElement("li");
+      g.className = "toc__group";
+      g.setAttribute("aria-hidden", "true");
+      g.textContent = groups[i];
+      list.appendChild(g);
+    }
     list.appendChild(li);
     return a;
   });

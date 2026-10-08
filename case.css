@@ -698,6 +698,12 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   margin: 0 0 var(--s-1) 8px;
 }
 .toc__list { list-style: none; margin: 0; padding: 0; }
+.toc__group {
+  font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--case-muted);
+  padding: 0 8px; margin: var(--s-2) 0 4px;
+}
+.toc__group:first-child { margin-top: 0; }
 .toc__link {
   display: grid; grid-template-columns: 16px 1fr 22px; align-items: center; gap: 8px;
   min-height: 32px; padding: 0 8px;
