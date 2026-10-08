@@ -548,13 +548,19 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 
 /* iPhone 16 — screen 1179×2556 in a 1359×2736 frame */
 .device--iphone { width: 280px; max-width: 100%; filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.22)); }
-.device--iphone .device__screen { left: 6.623%; top: 3.289%; width: 86.755%; height: 93.421%; }
+/* screen rect overscanned ~2px under the bezel so sub-pixel rounding never opens a gap */
+.device--iphone .device__screen {
+  left: 6.47%; top: 3.21%; width: 87.06%; height: 93.58%;
+  /* clip to the bezel's own screen opening (its continuous-curve corners) */
+  -webkit-mask: url("images/mask-iphone16-screen.png") 0 0 / 100% 100% no-repeat;
+          mask: url("images/mask-iphone16-screen.png") 0 0 / 100% 100% no-repeat;
+}
 
 /* MacBook Pro 14" — screen 3024×1964 in a 3860×2540 frame. The window recording sits
    on the desktop wallpaper, sized to the screen height, like an app window on the display. */
 .device--mac { width: 100%; }
 .device--mac .device__screen {
-  left: 10.829%; top: 11.339%; width: 78.342%; height: 77.323%;
+  left: 10.77%; top: 11.25%; width: 78.46%; height: 77.5%;
   background: #0b0d10 url("images/mac-wallpaper.webp") center / cover no-repeat;
 }
 .device__win {
