@@ -548,14 +548,14 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 
 /* iPhone 16 — screen 1179×2556 in a 1359×2736 frame */
 .device--iphone { width: 280px; max-width: 100%; filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.22)); }
-.device--iphone .device__screen { left: 6.623%; top: 3.289%; width: 86.755%; height: 93.421%; border-radius: 13% / 6%; }
+.device--iphone .device__screen { left: 6.623%; top: 3.289%; width: 86.755%; height: 93.421%; }
 
 /* MacBook Pro 14" — screen 3024×1964 in a 3860×2540 frame. The window recording sits
-   on a dark desktop, sized to the screen height, like an app window on the display. */
+   on the desktop wallpaper, sized to the screen height, like an app window on the display. */
 .device--mac { width: 100%; }
 .device--mac .device__screen {
   left: 10.829%; top: 11.339%; width: 78.342%; height: 77.323%;
-  background: radial-gradient(120% 90% at 50% 0%, #34363d 0%, #16171b 55%, #0b0b0d 100%);
+  background: #0b0d10 url("images/mac-wallpaper.webp") center / cover no-repeat;
 }
 .device__win {
   position: absolute; left: 50%; top: 51.5%;
