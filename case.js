@@ -445,6 +445,91 @@
 })();
 
 /* ============================================================
+   Side menu: a compact table of contents in the left gutter on wide
+   screens. Built from the page's section titles (or, for a section made
+   of feature rows, from the feature titles). Highlights the section in
+   view, shows "n / N", appears once the hero has scrolled past.
+   ============================================================ */
+(function () {
+  var wrap = document.querySelector(".case-wrap");
+  if (!wrap) return;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var targets = [];
+  [].forEach.call(wrap.querySelectorAll(".section"), function (sec) {
+    var feats = sec.querySelectorAll(".feature__title");
+    if (feats.length) [].push.apply(targets, feats);
+    else {
+      var h = sec.querySelector(".section-title");
+      if (h && !h.classList.contains("visually-hidden")) targets.push(h);
+    }
+  });
+  if (targets.length < 2) return;
+
+  function slug(s) { return s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+  var nav = document.createElement("nav");
+  nav.className = "toc";
+  nav.setAttribute("aria-label", "On this page");
+  var count = document.createElement("div");
+  count.className = "toc__count";
+  count.setAttribute("aria-hidden", "true");
+  var list = document.createElement("ol");
+  list.className = "toc__list";
+  var links = targets.map(function (t, i) {
+    if (!t.id) t.id = slug(t.textContent);
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.className = "toc__link";
+    a.href = "#" + t.id;
+    a.innerHTML = '<span class="toc__num">' + (i + 1) + '</span><span class="toc__label"></span><span class="toc__dash" aria-hidden="true"></span>';
+    a.querySelector(".toc__label").textContent = t.textContent;
+    a.title = t.textContent;
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      // land on the whole row/section (title + its figure), not just the heading
+      var block = t.closest(".feature") || t.closest(".section") || t;
+      var y = block.getBoundingClientRect().top + scrollY - 48;
+      window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+      try { history.replaceState(null, "", "#" + t.id); } catch (e2) {}
+      t.setAttribute("tabindex", "-1");
+      t.focus({ preventScroll: true });
+    });
+    li.appendChild(a);
+    list.appendChild(li);
+    return a;
+  });
+  nav.appendChild(count);
+  nav.appendChild(list);
+  document.body.appendChild(nav);
+
+  var hero = document.querySelector(".case-hero");
+  var current = -1, ticking = false;
+  function update() {
+    ticking = false;
+    // shown once the hero has mostly scrolled away
+    var heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+    nav.classList.toggle("is-on", heroBottom < innerHeight * 0.35);
+    // active = last section whose block starts above 40% of the viewport
+    var line = innerHeight * 0.4, idx = 0;
+    targets.forEach(function (t, i) {
+      var block = t.closest(".feature") || t.closest(".section") || t;
+      if (block.getBoundingClientRect().top <= line) idx = i;
+    });
+    if (idx !== current) {
+      current = idx;
+      links.forEach(function (a, i) {
+        a.classList.toggle("is-active", i === idx);
+        if (i === idx) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
+      });
+      count.textContent = (idx + 1) + " / " + targets.length;
+    }
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", onScroll);
+  update();
+})();
+
+/* ============================================================
    Next-project link at the foot of every case page.
    Data-driven from window.PROJECTS; cycles to the next project.
    ============================================================ */

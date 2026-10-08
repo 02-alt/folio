@@ -678,6 +678,53 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .clip__btn { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 
+/* ---- Side menu (wide screens): sits in the left gutter, vertically centred ---- */
+.toc {
+  position: fixed; top: 50%; z-index: 20;
+  left: max(24px, calc(50% - var(--case-col) / 2 - 232px));
+  width: 200px;
+  transform: translate(-8px, -50%);
+  opacity: 0; visibility: hidden;
+  transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .25, 1), visibility 0s linear .35s;
+  font-family: var(--sans);
+}
+.toc.is-on {
+  opacity: 1; visibility: visible; transform: translate(0, -50%);
+  transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .25, 1), visibility 0s;
+}
+.toc__count {
+  font-size: 12px; line-height: 1; letter-spacing: .02em;
+  color: var(--case-muted);
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 var(--s-1) 8px;
+}
+.toc__list { list-style: none; margin: 0; padding: 0; }
+.toc__link {
+  display: grid; grid-template-columns: 16px 1fr 22px; align-items: center; gap: 8px;
+  min-height: 32px; padding: 0 8px;
+  border-radius: 8px;
+  font-size: 13px; line-height: 1.25;
+  color: var(--case-muted);
+  text-decoration: none;
+  transition: color .2s ease, background-color .2s ease;
+}
+.toc__num { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .7; }
+.toc__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.toc__dash {
+  justify-self: end;
+  width: 10px; height: 1.5px; border-radius: 1px;
+  background: currentColor; opacity: .45;
+  transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease;
+}
+.toc__link:hover { color: var(--case-ink); background: var(--case-fill); }
+.toc__link.is-active { color: var(--case-ink); font-weight: 500; }
+.toc__link.is-active .toc__dash { width: 20px; opacity: 1; }
+.toc__link:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 1px; }
+@media (max-width: 1359px) { .toc { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .toc, .toc.is-on, .toc__link, .toc__dash { transition: none; }
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 780px) {
   .meta { grid-template-columns: 1fr; gap: var(--s-4); }
