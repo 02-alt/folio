@@ -521,7 +521,6 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 
 /* wide rows: text on top, the figure spans the column (Mac windows) */
 .feature--wide { grid-template-columns: 1fr; gap: var(--s-3); }
-.feature--wide .feature__text { max-width: 62ch; }
 .feature__devices {
   font-size: 13px; line-height: 1.4;
   color: var(--case-muted);
