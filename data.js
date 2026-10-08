@@ -3,6 +3,23 @@
    (real assets aren’t included, so the image space is reserved with a mockup). */
 window.PROJECTS = [
   {
+    id: "vibe-coding",
+    page: "lab",
+    badge: "Showcase",
+    image: "images/lab-crate.webp",
+    imageDark: "images/lab-crate-dark.webp",
+    name: "The Lab",
+    year: "2026",
+    tagline: "Designing by building",
+    description:
+      "A few things I’ve designed and built end-to-end, in code.",
+    accent: "#111111",
+    role: "Designer & builder: end-to-end, from concept to shipped product",
+    team: "Solo",
+    overview:
+      "Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I’ve designed and built myself, starting with this very portfolio.",
+  },
+  {
     id: "ornikar",
     page: "ornikar",
     badge: "Case study",
@@ -19,23 +36,6 @@ window.PROJECTS = [
     team: "1 PM, 2 Engineers, 1 Product Designer",
     overview:
       "Ornikar disrupted the French driving school market by offering a more affordable and flexible alternative, but as the platform scaled, key friction points in the user experience were holding back engagement and conversion.",
-  },
-  {
-    id: "vibe-coding",
-    page: "lab",
-    badge: "Showcase",
-    image: "images/lab-crate.webp",
-    imageDark: "images/lab-crate-dark.webp",
-    name: "The Lab",
-    year: "2026",
-    tagline: "Designing by building",
-    description:
-      "A few things I’ve designed and built end-to-end, in code.",
-    accent: "#111111",
-    role: "Designer & builder: end-to-end, from concept to shipped product",
-    team: "Solo",
-    overview:
-      "Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I’ve designed and built myself, starting with this very portfolio.",
   },
   {
     id: "alan",
