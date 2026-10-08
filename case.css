@@ -539,47 +539,41 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   border: 1px solid var(--case-hair);
   border-radius: var(--radius);
 }
-.clip__phone {                       /* black bezel + titanium edge; corners follow the screen's */
-  width: 280px; max-width: 100%;
-  padding: 9px;
-  background: #0b0b0c;
-  border-radius: 48px;
-  box-shadow: 0 0 0 1.5px #c7c7cc, 0 18px 40px -18px rgba(0, 0, 0, 0.35);
-}
-.clip__phone video {
-  display: block;
-  width: 100%; height: auto;
-  aspect-ratio: 600 / 1300;
-  border-radius: 39px;
-  background: #000;
-}
-/* Mac window recording: rounded like a macOS window, hairline edge + soft shadow */
-.clip__mac {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 0 0 1.5px rgba(255, 255, 255, 0.08),
-              0 24px 48px -24px rgba(0, 0, 0, 0.45);
-}
-.clip__mac video { display: block; width: 100%; height: auto; aspect-ratio: var(--ar); background: #000; }
-.clip__card--mac { padding: var(--s-5); }
+/* Apple product bezels (developer.apple.com/design/resources): the frame PNG sits on
+   top, the recording plays in its screen opening (positions = % of the frame image). */
+.device { position: relative; }
+.device__frame { position: relative; z-index: 1; display: block; width: 100%; height: auto; pointer-events: none; }
+.device__screen { position: absolute; overflow: hidden; background: #000; }
+.device__screen video { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-/* Mac + iPhone together: the window on the left, the phone in front of its
+/* iPhone 16 — screen 1179×2556 in a 1359×2736 frame */
+.device--iphone { width: 280px; max-width: 100%; filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.22)); }
+.device--iphone .device__screen { left: 6.623%; top: 3.289%; width: 86.755%; height: 93.421%; border-radius: 13% / 6%; }
+
+/* MacBook Pro 14" — screen 3024×1964 in a 3860×2540 frame. The window recording sits
+   on a dark desktop, sized to the screen height, like an app window on the display. */
+.device--mac { width: 100%; }
+.device--mac .device__screen {
+  left: 10.829%; top: 11.339%; width: 78.342%; height: 77.323%;
+  background: radial-gradient(120% 90% at 50% 0%, #34363d 0%, #16171b 55%, #0b0b0d 100%);
+}
+.device__win {
+  position: absolute; left: 50%; top: 51.5%;
+  height: 92%; aspect-ratio: var(--ar);
+  max-width: 94%;
+  transform: translate(-50%, -50%);
+  border-radius: 1.2% / 1.4%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(0, 0, 0, 0.55);
+}
+.device__win video { object-fit: contain; }
+
+/* Mac + iPhone together: the MacBook, with the iPhone standing in front of its
    bottom-right corner. Sizes are % of the card so the pair scales as one. */
-.clip__card--combo {
-  align-items: flex-end;
-  padding: var(--s-5) var(--s-5) var(--s-4);
-}
-.clip__card--combo .clip__mac { flex: 0 0 78%; }
-.clip__card--combo .clip__phone {
-  flex: 0 0 26%;
-  width: auto;
-  margin: 0 0 calc(-1 * var(--s-2)) -8%;   /* overlap the window, sit a little lower */
-  padding: 2.6%;
-  border-radius: 17% / 8%;
-  position: relative;                       /* paint above the window */
-  box-shadow: 0 0 0 1.5px #c7c7cc, 0 24px 48px -16px rgba(0, 0, 0, 0.5);
-}
-.clip__card--combo .clip__phone video { border-radius: 14.5% / 6.8%; }
+.clip__card--combo { align-items: flex-end; padding: var(--s-5) var(--s-5) var(--s-4); }
+.clip__card--combo .device--mac { flex: 0 0 84%; }
+.clip__card--combo .device--iphone { flex: 0 0 19%; width: auto; margin: 0 0 0 -11%; z-index: 2; }
+.clip__card--mac { padding: var(--s-5) var(--s-4) var(--s-4); }
 
 .clip__btn {                         /* play / pause, bottom-right of the card */
   position: absolute; right: 14px; bottom: 14px;
@@ -641,11 +635,11 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .feature__title { font-size: 19px; }
   .case-footer { flex-wrap: wrap; }
   .case-footer .btn { flex: 1 1 100%; }   /* full-width stacked buttons on phones */
-  .clip__phone { width: 250px; }
-  .clip__card--combo { flex-wrap: wrap; justify-content: center; padding: var(--s-3); }
-  .clip__card--combo .clip__mac { flex-basis: 100%; }
-  .clip__card--combo .clip__phone { flex: 0 0 56%; margin: calc(-1 * var(--s-6)) 0 0; }
-  .clip__card--mac { padding: var(--s-3); }
+  .device--iphone { width: 240px; }
+  .clip__card--combo { padding: var(--s-3) var(--s-2) var(--s-2); }
+  .clip__card--combo .device--mac { flex-basis: 82%; }
+  .clip__card--combo .device--iphone { flex-basis: 24%; margin-left: -10%; }
+  .clip__card--mac { padding: var(--s-3) var(--s-2) var(--s-2); }
 }
 
 /* ============================================================
