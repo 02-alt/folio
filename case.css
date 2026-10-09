@@ -607,21 +607,49 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 [data-view="window"] .device--mac .device__screen { overflow: visible; }
 [data-view="window"] .device__win { transform: translate(-50%, -50%) scale(1.36); }
 
-/* Magnifier lens (desktop): follows the pointer over a device screen */
-.loupe {
-  position: fixed; left: 0; top: 0; z-index: 50;
-  width: 200px; height: 200px;
-  border-radius: 50%;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55), 0 0 0 2px rgba(0, 0, 0, 0.12),
-              0 18px 40px rgba(0, 0, 0, 0.35);
-  transition: opacity .18s ease;
+/* Zoom: a mockup grows out of its card to fill the screen (case.js) */
+.clip__card.is-zoomable { cursor: zoom-in; }
+.clip__card.is-zoomable .seg, .clip__card.is-zoomable .clip__btn { cursor: default; }
+.clip__card .device:focus-visible, .clip__card .clip__stage:focus-visible {
+  outline: 2px solid var(--case-blue); outline-offset: 6px; border-radius: 12px;
 }
-.loupe.is-on { opacity: 1; }
-.loupe canvas { display: block; width: 100%; height: 100%; }
-.clip__card.is-zooming { cursor: none; }
+.zoom-lock, .zoom-lock body { overflow: hidden; }
+.zoom { position: fixed; inset: 0; z-index: 1000; display: none; cursor: zoom-out; }
+.zoom.is-on { display: block; }
+.zoom.is-on:not(.is-open) { pointer-events: none; }   /* on its way back: clicks reach the page, so the card can catch it */
+.zoom__scrim {
+  position: absolute; inset: 0;
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+          backdrop-filter: blur(24px) saturate(140%);
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.zoom__layer { position: absolute; inset: 0; }
+.zoom.is-open .zoom__scrim { opacity: 1; }
+.zoom__close {
+  position: absolute; top: 16px; right: 16px; z-index: 1;
+  width: 36px; height: 36px;
+  border: 0; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--seg-bg, rgba(0, 0, 0, 0.06));
+  color: var(--case-ink);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .3s ease, background-color .2s ease;
+}
+.zoom.is-open .zoom__close { opacity: 1; }
+.zoom__close:hover { background: rgba(0, 0, 0, 0.1); }
+.zoom__close:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 2px; }
+.zoom__close svg { width: 16px; height: 16px; display: block; }
+:root[data-theme="dark"] .zoom__close { background: rgba(255, 255, 255, 0.1); }
+:root[data-theme="dark"] .zoom__close:hover { background: rgba(255, 255, 255, 0.16); }
+@media (prefers-reduced-transparency: reduce) {
+  .zoom__scrim { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zoom__scrim, .zoom__close { transition-duration: .15s; }
+}
 
 /* Segmented control (Both / Mac / iPhone, MacBook / Window), top-centre of the card */
 .seg {

@@ -303,8 +303,9 @@
 
   // A video is "off" when its device is hidden by the view switch (Mac only / iPhone only).
   function isOff(v) {
-    var card = v.closest(".clip__card"), view = card && card.dataset.view;
-    if (!view || view === "both" || !card.classList.contains("clip__card--combo")) return false;
+    // the view lives on the card, or on the zoom layer while the mockup is enlarged
+    var scope = v.closest("[data-view]"), view = scope && scope.dataset.view;
+    if (!view || view === "both" || !v.closest(".clip__stage")) return false;
     return !v.closest(".device--" + view);
   }
   function playAll(clip) {
@@ -363,85 +364,183 @@
 })();
 
 /* ============================================================
-   Magnifier: on desktop, hovering a device screen shows a round lens
-   that magnifies the live video under the pointer (2.5×), drawn from
-   the full-resolution source into a canvas every frame.
+   Zoom: click (or Enter on) a device mockup and it grows out of its
+   card to fill the screen, re-laid out at full size so the recording
+   and a 2× bezel render sharp. Click anywhere, Esc or × to send it
+   back to its spot. Interruptible: each move starts from where the
+   mockup is on screen. Reduced motion: a short fade instead.
    ============================================================ */
 (function () {
-  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   var cards = document.querySelectorAll(".clip__card");
-  if (!cards.length) return;
-  var SIZE = 200, ZOOM = 2.5;
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-  var lens = document.createElement("div");
-  lens.className = "loupe";
-  lens.setAttribute("aria-hidden", "true");
-  var canvas = document.createElement("canvas");
-  canvas.width = canvas.height = SIZE * dpr;
-  lens.appendChild(canvas);
-  document.body.appendChild(lens);
-  var ctx = canvas.getContext("2d");
-  var active = null, px = 0, py = 0, raf = 0;
+  if (!cards.length || !Element.prototype.animate) return;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EASE = "cubic-bezier(.2, .8, .25, 1)";
 
-  function visible(v) {
-    var d = v.closest(".device");
-    return d && getComputedStyle(d).opacity !== "0";
-  }
-  function videoAt(card, x, y) {
-    var vids = card.querySelectorAll("video");
-    // iPhone sits in front of the Mac: check in reverse document order
-    for (var i = vids.length - 1; i >= 0; i--) {
-      var r = vids[i].getBoundingClientRect();
-      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom && visible(vids[i])) return vids[i];
+  var zoom = document.createElement("div");
+  zoom.className = "zoom";
+  zoom.setAttribute("role", "dialog");
+  zoom.setAttribute("aria-modal", "true");
+  zoom.setAttribute("aria-label", "Enlarged view");
+  zoom.innerHTML =
+    '<div class="zoom__scrim"></div>' +
+    '<div class="zoom__layer"></div>' +
+    '<button type="button" class="zoom__close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+  document.body.appendChild(zoom);
+  var layer = zoom.querySelector(".zoom__layer");
+  var closeBtn = zoom.querySelector(".zoom__close");
+
+  // 2× bezels: fetched once the page is idle, swapped in when a mockup is enlarged
+  var HI = /bezel-(iphone16|mbp14)\.webp(\?.*)?$/, hiLoads = {};
+  function hiSrc(src) { return HI.test(src) ? src.replace(HI, "bezel-$1@2x.webp") : null; }
+  function load(hi) {
+    if (!hiLoads[hi]) {
+      var img = new Image();
+      img.src = hi;
+      hiLoads[hi] = img.decode ? img.decode() : new Promise(function (ok) { img.onload = ok; });
     }
-    return null;
+    return hiLoads[hi];
   }
-  function draw() {
-    raf = 0;
-    if (!active) return;
-    var v = active, r = v.getBoundingClientRect();
-    var vw = v.videoWidth, vh = v.videoHeight;
-    if (vw && v.readyState >= 2) {
-      var cover = getComputedStyle(v).objectFit !== "contain";
-      var s = cover ? Math.max(r.width / vw, r.height / vh) : Math.min(r.width / vw, r.height / vh);
-      var ox = (r.width - vw * s) / 2, oy = (r.height - vh * s) / 2;
-      var sx = (px - r.left - ox) / s, sy = (py - r.top - oy) / s;
-      var span = SIZE / (s * ZOOM);                       // source pixels across the lens
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      // clamp the source rect to the frame (Safari skips out-of-bounds draws)
-      var x0 = sx - span / 2, y0 = sy - span / 2, k = canvas.width / span;
-      var cx0 = Math.max(0, x0), cy0 = Math.max(0, y0);
-      var cx1 = Math.min(vw, x0 + span), cy1 = Math.min(vh, y0 + span);
-      if (cx1 > cx0 && cy1 > cy0) {
-        ctx.drawImage(v, cx0, cy0, cx1 - cx0, cy1 - cy0,
-          (cx0 - x0) * k, (cy0 - y0) * k, (cx1 - cx0) * k, (cy1 - cy0) * k);
-      }
-    }
-    if (!v.paused) raf = requestAnimationFrame(draw);
+  function frames(root, fn) {
+    [].forEach.call(root.querySelectorAll(".device__frame"), function (f) {
+      var hi = hiSrc(f.getAttribute("src"));
+      if (hi) fn(f, hi);
+    });
   }
-  function move(e) {
-    px = e.clientX; py = e.clientY;
-    var v = videoAt(e.currentTarget, px, py);
-    if (v !== active) {
-      active = v;
-      lens.classList.toggle("is-on", !!v);
-      e.currentTarget.classList.toggle("is-zooming", !!v);
-    }
-    if (!v) return;
-    lens.style.transform = "translate(" + (px - SIZE / 2) + "px," + (py - SIZE / 2) + "px)";
-    if (!raf) raf = requestAnimationFrame(draw);
-  }
-  function leave(e) {
-    active = null;
-    lens.classList.remove("is-on");
-    e.currentTarget.classList.remove("is-zooming");
-  }
-  [].forEach.call(cards, function (card) {
-    card.addEventListener("pointermove", move);
-    card.addEventListener("pointerleave", leave);
+  addEventListener("load", function () {
+    setTimeout(function () { frames(document, function (f, hi) { load(hi); }); }, 1500);
   });
-  addEventListener("scroll", function () { if (active) { active = null; lens.classList.remove("is-on"); } }, { passive: true });
+  function sharpen(el) {
+    frames(el, function (f, hi) { load(hi).then(function () { f.src = hi; }, function () {}); });
+  }
+
+  var el = null, card = null, ph = null, anim = null, fit = null, saved = "", lastFocus = null, isOpen = false;
+
+  function target(c) { return c.querySelector(".clip__stage") || c.querySelector(".device"); }
+
+  // The largest rect with the mockup's proportions that fits the viewport
+  function fitTo(w, h) {
+    var m = innerWidth < 600 ? 16 : 56;
+    var k = Math.min((innerWidth - m * 2) / w, (innerHeight - m * 2) / h, 3);
+    var fw = w * k, fh = h * k;
+    return { left: (innerWidth - fw) / 2, top: (innerHeight - fh) / 2, w: fw };
+  }
+  function lay() {
+    el.style.left = fit.left + "px";
+    el.style.top = fit.top + "px";
+    el.style.width = fit.w + "px";
+  }
+  // transform that makes the full-size mockup look like it sits at rect r
+  function at(r) {
+    return "translate(" + (r.left - fit.left) + "px," + (r.top - fit.top) + "px) scale(" + r.width / fit.w + ")";
+  }
+  // Move the mockup between the page and the overlay without interrupting its videos
+  function move(parent, before) {
+    var playing = [].filter.call(el.querySelectorAll("video"), function (v) { return !v.paused; });
+    parent.insertBefore(el, before || null);
+    playing.forEach(function (v) { if (v.paused) v.play().catch(function () {}); });
+  }
+  // Start from wherever the mockup is on screen right now (mid-flight included)
+  function run(to, dur) {
+    var from = "none";
+    if (anim) { from = getComputedStyle(el).transform; anim.cancel(); }
+    anim = el.animate([{ transform: from }, { transform: to }], { duration: dur, easing: EASE, fill: "forwards" });
+    return anim;
+  }
+
+  function open(c) {
+    if (isOpen) return;
+    if (el && card !== c) return;            // another mockup is still flying home
+    isOpen = true;
+    if (!el) {
+      card = c; el = target(c);
+      lastFocus = document.activeElement;
+      var r = el.getBoundingClientRect();
+      ph = document.createElement("div");
+      ph.className = el.className + " zoom-ph";
+      ph.style.aspectRatio = r.width + " / " + r.height;
+      ph.setAttribute("aria-hidden", "true");
+      saved = el.getAttribute("style") || "";
+      if (c.dataset.view) layer.dataset.view = c.dataset.view; else delete layer.dataset.view;
+      fit = fitTo(r.width, r.height);
+      sharpen(el);
+      el.parentNode.insertBefore(ph, el);
+      move(layer);
+      el.style.position = "absolute";
+      el.style.margin = "0";
+      el.style.maxWidth = "none";
+      el.style.transformOrigin = "0 0";
+      lay();
+      document.documentElement.classList.add("zoom-lock");
+      zoom.classList.add("is-on");
+      if (reduce) {
+        anim = el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: "ease" });
+      } else {
+        anim = el.animate([{ transform: at(r) }, { transform: "none" }], { duration: 560, easing: EASE, fill: "forwards" });
+      }
+    } else {
+      run("none", 480);                      // caught on its way back: turn around
+    }
+    anim.onfinish = null;
+    requestAnimationFrame(function () { zoom.classList.add("is-open"); });
+    closeBtn.focus({ preventScroll: true });
+  }
+
+  function close() {
+    if (!isOpen) return;
+    isOpen = false;
+    zoom.classList.remove("is-open");
+    var a;
+    if (reduce) {
+      if (anim) anim.cancel();
+      a = anim = el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease", fill: "forwards" });
+    } else {
+      a = run(at(ph.getBoundingClientRect()), 440);
+    }
+    a.onfinish = function () {
+      move(ph.parentNode, ph);
+      ph.remove();
+      el.setAttribute("style", saved);
+      if (!saved) el.removeAttribute("style");
+      a.cancel();
+      zoom.classList.remove("is-on");
+      document.documentElement.classList.remove("zoom-lock");
+      var f = lastFocus;
+      el = card = ph = anim = null;
+      if (f && f.focus) f.focus({ preventScroll: true });
+    };
+  }
+
+  [].forEach.call(cards, function (c) {
+    var t = target(c);
+    if (!t) return;
+    var v = c.querySelector("video");
+    t.setAttribute("role", "button");
+    t.setAttribute("tabindex", "0");
+    t.setAttribute("aria-label", "Enlarge" + (v && v.getAttribute("aria-label") ? ": " + v.getAttribute("aria-label") : ""));
+    c.classList.add("is-zoomable");
+    c.addEventListener("click", function (e) {
+      if (e.target.closest(".seg, .clip__btn")) return;
+      open(c);
+    });
+    t.addEventListener("keydown", function (e) {
+      if (isOpen || (e.key !== "Enter" && e.key !== " ")) return;
+      e.preventDefault();
+      open(c);
+    });
+  });
+
+  zoom.addEventListener("click", function (e) { e.stopPropagation(); close(); });
+  document.addEventListener("keydown", function (e) {
+    if (!isOpen) return;
+    if (e.key === "Escape" || ((e.key === "Enter" || e.key === " ") && document.activeElement !== closeBtn)) { e.preventDefault(); close(); }
+    else if (e.key === "Tab") { e.preventDefault(); closeBtn.focus(); }   // the close button is the only stop
+  });
+  addEventListener("resize", function () {
+    if (!el || !isOpen) return;
+    var r = ph.getBoundingClientRect();
+    fit = fitTo(r.width, r.height);
+    lay();
+  });
 })();
 
 /* ============================================================
