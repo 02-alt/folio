@@ -614,18 +614,25 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   outline: 2px solid var(--case-blue); outline-offset: 6px; border-radius: 12px;
 }
 .zoom-lock, .zoom-lock body { overflow: hidden; }
-.zoom { position: fixed; inset: 0; z-index: 1000; display: none; cursor: zoom-out; }
+.zoom { position: fixed; inset: 0; z-index: 1000; display: none; cursor: zoom-out; touch-action: none; }
 .zoom.is-on { display: block; }
 .zoom.is-on:not(.is-open) { pointer-events: none; }   /* on its way back: clicks reach the page, so the card can catch it */
 .zoom__scrim {
   position: absolute; inset: 0;
-  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   -webkit-backdrop-filter: blur(24px) saturate(140%);
           backdrop-filter: blur(24px) saturate(140%);
   opacity: 0;
   transition: opacity .4s ease;
 }
 .zoom__layer { position: absolute; inset: 0; }
+/* Portrait phones dive into the Mac's screen: bezel and desktop fade, the window lifts */
+.zoom__layer.is-dive .device--mac .device__frame,
+.zoom__layer.is-dive .device--mac .device__screen::before { opacity: 0; }
+.zoom__layer.is-dive .device--mac .device__screen { overflow: visible; }
+.zoom__layer.is-dive .device__win { transform: translate(-50%, -50%) scale(1.36); }
+.zoom__layer.is-measuring, .zoom__layer.is-measuring *,
+.zoom__layer.is-measuring *::before { transition: none !important; }
 .zoom.is-open .zoom__scrim { opacity: 1; }
 .zoom__close {
   position: absolute; top: 16px; right: 16px; z-index: 1;

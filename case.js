@@ -436,16 +436,40 @@
     frames(el, function (f, hi) { load(hi).then(function () { f.src = hi; }, function () {}); });
   }
 
-  var el = null, card = null, ph = null, anim = null, fit = null, saved = "", lastFocus = null, isOpen = false;
+  var el = null, card = null, ph = null, anim = null, fit = null, focus = null, mode = null, maxW = 0,
+      saved = "", lastFocus = null, isOpen = false;
 
   function target(c) { return c.querySelector(".clip__stage") || c.querySelector(".device"); }
 
-  // The largest rect with the mockup's proportions that fits the viewport
-  function fitTo(w, h) {
-    var m = innerWidth < 600 ? 16 : 56;
-    var k = Math.min((innerWidth - m * 2) / w, (innerHeight - m * 2) / h, 3);
-    var fw = w * k, fh = h * k;
-    return { left: (innerWidth - fw) / 2, top: (innerHeight - fh) / 2, w: fw };
+  // What the zoom settles on. A landscape MacBook can't grow on a portrait phone, so
+  // there it dives into the screen instead: the bezel fades and the app window fills
+  // the width (or, for Mac + iPhone in iPhone view, the phone fills the screen).
+  function modeFor(c) {
+    var view = c.dataset.view, portrait = innerWidth < 700 && innerHeight > innerWidth;
+    if (!portrait || !c.querySelector(".device--mac")) return { view: view, dive: false, focus: null };
+    if (view === "iphone") return { view: view, dive: false, focus: ".device--iphone" };
+    return { view: view === "both" ? "mac" : view, dive: true, focus: ".device__win" };
+  }
+  function setState(m) {
+    if (m.view) layer.dataset.view = m.view; else delete layer.dataset.view;
+    layer.classList.toggle("is-dive", m.dive);
+  }
+  // The rect to fit, in units of the mockup's width, measured in its zoomed state
+  function measure(r) {
+    if (!mode.focus) return { x: 0, y: 0, w: 1, h: r.height / r.width };
+    layer.classList.add("is-measuring");     // no transitions: read the end state now
+    setState(mode);
+    var f = el.querySelector(mode.focus).getBoundingClientRect();
+    setState({ view: card.dataset.view, dive: false });
+    void el.offsetWidth;
+    layer.classList.remove("is-measuring");
+    return { x: (f.left - r.left) / r.width, y: (f.top - r.top) / r.width, w: f.width / r.width, h: f.height / r.width };
+  }
+  // Size the mockup so its focus rect is as large as the viewport allows, centred
+  function fitTo(f) {
+    var narrow = innerWidth < 600, mx = narrow ? 20 : 56, my = narrow ? 24 : 56;
+    var w = Math.min((innerWidth - mx * 2) / f.w, (innerHeight - my * 2) / f.h, maxW);
+    return { left: innerWidth / 2 - (f.x + f.w / 2) * w, top: innerHeight / 2 - (f.y + f.h / 2) * w, w: w };
   }
   function lay() {
     el.style.left = fit.left + "px";
@@ -483,8 +507,8 @@
       ph.style.aspectRatio = r.width + " / " + r.height;
       ph.setAttribute("aria-hidden", "true");
       saved = el.getAttribute("style") || "";
-      if (c.dataset.view) layer.dataset.view = c.dataset.view; else delete layer.dataset.view;
-      fit = fitTo(r.width, r.height);
+      mode = modeFor(c);
+      setState({ view: c.dataset.view, dive: false });
       sharpen(el);
       el.parentNode.insertBefore(ph, el);
       move(layer);
@@ -492,9 +516,14 @@
       el.style.margin = "0";
       el.style.maxWidth = "none";
       el.style.transformOrigin = "0 0";
+      zoom.classList.add("is-on");
+      fit = { left: r.left, top: r.top, w: r.width };
+      lay();                                 // same size as on the page, to measure
+      maxW = r.width * (mode.focus ? 6 : 3);  // a focused part (window, phone) starts smaller
+      focus = measure(r);
+      fit = fitTo(focus);
       lay();
       document.documentElement.classList.add("zoom-lock");
-      zoom.classList.add("is-on");
       if (reduce) {
         anim = el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: "ease" });
       } else {
@@ -504,7 +533,7 @@
       run("none", 480);                      // caught on its way back: turn around
     }
     anim.onfinish = null;
-    requestAnimationFrame(function () { zoom.classList.add("is-open"); });
+    requestAnimationFrame(function () { zoom.classList.add("is-open"); setState(mode); });
     closeBtn.focus({ preventScroll: true });
   }
 
@@ -512,6 +541,7 @@
     if (!isOpen) return;
     isOpen = false;
     zoom.classList.remove("is-open");
+    setState({ view: card.dataset.view, dive: false });
     var a;
     if (reduce) {
       if (anim) anim.cancel();
@@ -528,7 +558,7 @@
       zoom.classList.remove("is-on");
       document.documentElement.classList.remove("zoom-lock");
       var f = lastFocus;
-      el = card = ph = anim = null;
+      el = card = ph = anim = mode = null;
       if (f && f.focus) f.focus({ preventScroll: true });
     };
   }
@@ -553,6 +583,7 @@
   });
 
   zoom.addEventListener("click", function (e) { e.stopPropagation(); close(); });
+  zoom.addEventListener("touchmove", function (e) { e.preventDefault(); }, { passive: false });   // keep the page still
   document.addEventListener("keydown", function (e) {
     if (!isOpen) return;
     if (e.key === "Escape" || ((e.key === "Enter" || e.key === " ") && document.activeElement !== closeBtn)) { e.preventDefault(); close(); }
@@ -560,8 +591,7 @@
   });
   addEventListener("resize", function () {
     if (!el || !isOpen) return;
-    var r = ph.getBoundingClientRect();
-    fit = fitTo(r.width, r.height);
+    fit = fitTo(focus);
     lay();
   });
 })();
