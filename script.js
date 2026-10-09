@@ -6,7 +6,9 @@
 // Real project screenshot (extracted from the site's webarchive).
 function projectImage(p) {
   const dark = p.imageDark ? ` data-dark="${p.imageDark}"` : "";
-  return `<img src="${p.image}"${dark} alt="${p.name}: ${p.tagline}" loading="lazy" />`;
+  // width/height reserve the 16:9 box before the file loads, so the feed's layout
+  // (and the card the Back morph lands on) is stable from the first frame.
+  return `<img src="${p.image}"${dark} alt="${p.name}: ${p.tagline}" width="1024" height="576" loading="lazy" />`;
 }
 
 // ---- Build the project list ----
@@ -87,50 +89,6 @@ document.querySelectorAll(".reveal, .project").forEach((el) => io.observe(el));
     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); replay(); }
   });
 })();
-
-// ---- Reverse morph: shrink the case-study hero back onto its feed card ----
-// Runs when returning from a case study (pageshow covers back/forward cache too).
-function playReverseMorph() {
-  let raw;
-  try { raw = sessionStorage.getItem("reverse"); } catch (e) { return; }
-  if (!raw) return;
-  try { sessionStorage.removeItem("reverse"); } catch (e) {}
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  const info = JSON.parse(raw);
-  const card = document.querySelector('.project[data-id="' + (info.id || "") + '"] .project__image');
-  if (!card) return;
-
-  const to = card.getBoundingClientRect();
-  // Mirror of the forward morph (.6s cubic-bezier(.2,.8,.25,1)) so the return
-  // feels like a true reverse of the entrance.
-  const ease = "cubic-bezier(.75,0,.8,.2)";
-  const clone = document.createElement("div");
-  clone.style.cssText =
-    "position:fixed;z-index:9999;overflow:hidden;border-radius:16px;border:1px solid rgba(0,0,0,.08);" +
-    "left:" + info.left + "px;top:" + info.top + "px;width:" + info.width + "px;height:" + info.height + "px;" +
-    "transition:left .6s " + ease + ",top .6s " + ease + ",width .6s " + ease + ",height .6s " + ease + ";";
-  const im = document.createElement("img");
-  im.src = info.src;
-  im.style.cssText = "display:block;width:100%;height:100%;object-fit:cover;object-position:top;";
-  clone.appendChild(im);
-
-  card.style.visibility = "hidden"; // hide the real card until the clone lands
-  document.body.appendChild(clone);
-
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    clone.style.left = to.left + "px";
-    clone.style.top = to.top + "px";
-    clone.style.width = to.width + "px";
-    clone.style.height = to.height + "px";
-  }));
-
-  let done = false;
-  const end = () => { if (done) return; done = true; card.style.visibility = ""; clone.remove(); };
-  clone.addEventListener("transitionend", end, { once: true });
-  setTimeout(end, 720);
-}
-window.addEventListener("pageshow", playReverseMorph);
 
 // ---- Theme-aware images: <img data-dark="…"> shows its dark variant in dark mode ----
 function syncThemeImages() {

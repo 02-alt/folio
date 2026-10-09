@@ -346,6 +346,27 @@ a { color: inherit; }
 }
 .reveal.in, .project.in { opacity: 1; transform: none; }
 
+/* ---------------- Return from a case page ---------------- */
+/* A camera pulling back: the case page eases away (shrinks a touch, fades)
+   while the feed settles in from just past full size. One critically damped
+   curve, no overshoot. Only the case page's Back link opts in (case.js), so
+   the forward hero morph is untouched. */
+::view-transition { background: var(--bg); }
+html.vt-back::view-transition-old(root) {
+  animation: vt-leave .28s cubic-bezier(.4, 0, 1, 1) both;
+}
+html.vt-back::view-transition-new(root) {
+  animation: vt-settle .56s cubic-bezier(.32, .72, 0, 1) .12s both;
+}
+@keyframes vt-leave  { 70% { opacity: 0; } to { opacity: 0; transform: scale(.97); } } /* gone before the feed is half in: no double exposure */
+@keyframes vt-settle { from { opacity: 0; transform: scale(1.02); } }
+/* The feed was already seen: no scroll-reveal replay under the transition. */
+html.vt-back .reveal, html.vt-back .project { opacity: 1; transform: none; transition: none; }
+
+/* Fallback (no cross-document view transitions): the feed fades up. */
+html.returning body { animation: feed-return .5s cubic-bezier(.32, .72, 0, 1) both; }
+@keyframes feed-return { from { opacity: 0; } }
+
 /* ---------------- Responsive ---------------- */
 @media (max-width: 640px) {
   .page { padding: 140px 24px 120px; }

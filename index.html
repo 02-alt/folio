@@ -33,7 +33,21 @@
 
   <!-- Apply the saved appearance before first paint (no light flash in dark mode) -->
   <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <!-- Back from a case page: the case page pulls away as the feed settles in
+       (styles.css "Return from a case page"). Native cross-document view
+       transition where supported; a plain fade-up elsewhere. -->
+  <script>(function(){
+    var R=document.documentElement,vt="CSSViewTransitionRule" in window;
+    function flag(){try{var b=sessionStorage.getItem("back");sessionStorage.removeItem("back");return !!b;}catch(x){return false;}}
+    // Opt in only for the return trip, so forward links never start one.
+    function arm(){if(!flag())return;if(!vt){R.classList.remove("returning");void R.offsetWidth;R.classList.add("returning");return;}
+      var s=document.createElement("style");s.id="vt-opt-in";s.textContent="@view-transition{navigation:auto}";document.head.appendChild(s);}
+    arm();
+    addEventListener("pageshow",function(e){if(e.persisted)arm();});
+    addEventListener("pagereveal",function(e){var s=document.getElementById("vt-opt-in"),t=e.viewTransition;if(s)s.remove();if(!t)return;
+      t.ready.catch(function(){});R.classList.add("vt-back");t.finished.finally(function(){R.classList.remove("vt-back");});});
+  })();</script>
+  <link rel="stylesheet" href="styles.css?v=13" />
 </head>
 <body>
   <button type="button" class="theme-toggle" aria-label="Dark mode" aria-pressed="false">
@@ -107,6 +121,6 @@
   </main>
 
   <script src="data.js?v=6"></script>
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>

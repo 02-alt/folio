@@ -1,9 +1,9 @@
 /* ============================================================
    Shared-element morph for the case-study page.
    - Forward: hero grows from the feed card's rect (passed via #m= hash).
-   - Reverse: on Back, hero shrinks into the stored feed card rect, then
-     history.back() restores the feed (with its scroll) underneath.
-   Works without the View Transitions API.
+   - Back: the case page pulls away as the feed settles in (native
+     cross-document view transition, see styles.css).
+   The forward morph works without the View Transitions API.
    ============================================================ */
 /* Theme-aware images: <img data-dark="…"> shows its dark variant in dark mode.
    Runs first so the morph and lightbox see the right source. */
@@ -67,31 +67,54 @@
     others.forEach(function (c) { c.style.transition = ""; });
   }
 
-  /* ---------- Reverse (Back): hand off to the feed, which shrinks the ----------
-     hero clone onto the card OVER the real feed (no blank-page flash). */
+  /* ---------- Back: the case page pulls away as the feed settles in ----------
+     Native cross-document view transition (styles.css "Return from a case
+     page"). The page opts in only here, so forward links and the browser's own
+     Back stay as they are. Without support, the page fades out and the feed
+     fades up. */
   var back = document.querySelector(".case-back");
   if (!back) return;
+  var nativeVT = "CSSViewTransitionRule" in window;
 
   back.addEventListener("click", function (e) {
     if (reduce) return; // let the link navigate normally
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
     var href = back.getAttribute("href") || "/";
+    try { sessionStorage.setItem("back", "1"); } catch (e2) {}
 
-    // Bring the hero to the top so we capture a sensible on-screen rect.
-    window.scrollTo(0, 0);
-    requestAnimationFrame(function () {
-      var r = hero.getBoundingClientRect();
-      var img = hero.querySelector("img");
-      try {
-        sessionStorage.setItem("reverse", JSON.stringify({
-          id: document.body.dataset.project || "",
-          left: r.left, top: r.top, width: r.width, height: r.height,
-          src: img ? (img.currentSrc || img.src) : "",
-        }));
-      } catch (e2) {}
-      if (document.referrer && history.length > 1) history.back();
+    var go = function () {
+      var fromFeed = false;
+      try { fromFeed = new URL(document.referrer).origin === location.origin; } catch (e3) {}
+      if (fromFeed && history.length > 1) history.back();
       else window.location.href = href;
-    });
+    };
+
+    if (nativeVT) {
+      var opt = document.createElement("style");
+      opt.id = "vt-opt-in";
+      opt.textContent = "@view-transition { navigation: auto; }";
+      document.head.appendChild(opt);
+      go();
+    } else {
+      wrap.style.transition = "opacity .2s cubic-bezier(.4,0,1,1)";
+      wrap.style.opacity = "0";
+      setTimeout(go, 200);
+    }
+  });
+
+  // A skipped transition rejects its promises; nothing to report.
+  window.addEventListener("pageswap", function (e) {
+    var t = e.viewTransition;
+    if (t) [t.ready, t.finished, t.updateCallbackDone].forEach(function (p) { if (p) p.catch(function () {}); });
+  });
+
+  // Coming forward again through the back/forward cache: undo the opt-in / fade.
+  window.addEventListener("pageshow", function (e) {
+    if (!e.persisted) return;
+    var opt = document.getElementById("vt-opt-in");
+    if (opt) opt.remove();
+    wrap.style.transition = ""; wrap.style.opacity = "";
   });
 })();
 
