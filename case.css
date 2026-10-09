@@ -717,14 +717,14 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   position: fixed; top: 50%; z-index: 20;
   left: max(24px, calc(50% - var(--case-col) / 2 - 232px));
   width: 200px;
-  transform: translate(-8px, -50%);
+  transform: translateY(-50%);
   opacity: 0; visibility: hidden;
-  transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .25, 1), visibility 0s linear .35s;
+  transition: opacity .3s ease, visibility 0s linear .3s;
   font-family: var(--sans);
 }
 .toc.is-on {
-  opacity: 1; visibility: visible; transform: translate(0, -50%);
-  transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .25, 1), visibility 0s;
+  opacity: 1; visibility: visible;
+  transition: opacity .3s ease, visibility 0s;
 }
 .toc__count {
   font-size: 12px; line-height: 1; letter-spacing: .02em;
@@ -754,15 +754,49 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   justify-self: end;
   width: 10px; height: 1.5px; border-radius: 1px;
   background: currentColor; opacity: .45;
-  transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease;
+  /* entrance: each dash draws in from the right, top to bottom */
+  transform: scaleX(0); transform-origin: right center;
+  transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease, transform .2s ease;
+}
+.toc.is-on .toc__dash {
+  transform: none;
+  transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease, transform .5s cubic-bezier(.2, .8, .25, 1);
+  transition-delay: 0s, 0s, calc(var(--i, 0) * 35ms + 80ms);
 }
 .toc__link:hover { color: var(--case-ink); background: var(--case-fill); }
 .toc__link.is-active { color: var(--case-ink); font-weight: 500; }
 .toc__link.is-active .toc__dash { width: 20px; opacity: 1; }
 .toc__link:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 1px; }
+/* At rest only the dashes show, like a minimap; hovering (or tabbing into) the
+   menu brings the numbers and titles in, top to bottom. */
+@media (hover: hover) {
+  .toc__count, .toc__group, .toc__num, .toc__label {
+    opacity: 0; transform: translateX(-6px);
+    transition: opacity .3s ease, transform .3s ease;
+  }
+  /* a new section reached: its title peeks out for a moment */
+  .toc__link.is-peek :is(.toc__num, .toc__label), .toc__group.is-peek {
+    opacity: 1; transform: none;
+    transition: opacity .3s ease, transform .45s cubic-bezier(.2, .8, .25, 1);
+  }
+  .toc__link.is-peek .toc__num { opacity: .7; }
+  .toc:hover :is(.toc__count, .toc__group, .toc__label),
+  .toc:focus-within :is(.toc__count, .toc__group, .toc__label) { opacity: 1; }
+  .toc:hover .toc__num, .toc:focus-within .toc__num { opacity: .7; }
+  .toc:hover :is(.toc__count, .toc__group, .toc__num, .toc__label),
+  .toc:focus-within :is(.toc__count, .toc__group, .toc__num, .toc__label) {
+    transform: none;
+    transition: opacity .25s ease, transform .35s cubic-bezier(.2, .8, .25, 1);
+    transition-delay: calc(var(--i, 0) * 18ms);
+  }
+}
 @media (max-width: 1359px) { .toc { display: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .toc, .toc.is-on, .toc__link, .toc__dash { transition: none; }
+  .toc, .toc.is-on, .toc__link, .toc__dash, .toc.is-on .toc__dash,
+  .toc__count, .toc__group, .toc__num, .toc__label,
+  .toc:hover :is(.toc__count, .toc__group, .toc__num, .toc__label),
+  .toc:focus-within :is(.toc__count, .toc__group, .toc__num, .toc__label),
+  .toc__link.is-peek :is(.toc__num, .toc__label), .toc__group.is-peek { transition: none; }
 }
 
 /* ---- Responsive ---- */

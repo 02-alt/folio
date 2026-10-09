@@ -631,6 +631,7 @@
   count.setAttribute("aria-hidden", "true");
   var list = document.createElement("ol");
   list.className = "toc__list";
+  var groupOf = [], lastG = null;
   var links = targets.map(function (t, i) {
     if (!t.id) t.id = slug(t.textContent);
     var li = document.createElement("li");
@@ -657,13 +658,34 @@
       g.setAttribute("aria-hidden", "true");
       g.textContent = groups[i];
       list.appendChild(g);
+      lastG = g;
     }
+    groupOf[i] = lastG;
     list.appendChild(li);
     return a;
   });
   nav.appendChild(count);
   nav.appendChild(list);
+  // row index, for the staggered entrance and hover reveal
+  [].forEach.call(list.children, function (li, k) { li.style.setProperty("--i", k + 1); });
   document.body.appendChild(nav);
+
+  // Reaching a new section briefly shows its title (and its app's name when that
+  // changes too), then the menu settles back to its dashes. Waits for the scroll
+  // to rest on a section, so a long jump doesn't flash every title on the way.
+  var peekT = 0, hideT = 0, peekedGroup = null;
+  function unpeek() { [].forEach.call(nav.querySelectorAll(".is-peek"), function (e) { e.classList.remove("is-peek"); }); }
+  function schedulePeek(delay) { clearTimeout(peekT); peekT = setTimeout(peek, delay); }
+  function peek() {
+    if (!nav.classList.contains("is-on") || current < 0) return;
+    unpeek();
+    links[current].classList.add("is-peek");
+    var g = groupOf[current];
+    if (g && g !== peekedGroup) g.classList.add("is-peek");
+    peekedGroup = g;
+    clearTimeout(hideT);
+    hideT = setTimeout(unpeek, 1800);
+  }
 
   var hero = document.querySelector(".case-hero");
   var current = -1, ticking = false;
@@ -671,7 +693,9 @@
     ticking = false;
     // shown once the hero has mostly scrolled away
     var heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
-    nav.classList.toggle("is-on", heroBottom < innerHeight * 0.35);
+    var on = heroBottom < innerHeight * 0.35;
+    if (on && !nav.classList.contains("is-on")) schedulePeek(450);   // after the dashes draw in
+    nav.classList.toggle("is-on", on);
     // active = last section whose block starts above 40% of the viewport
     var line = innerHeight * 0.4, idx = 0;
     targets.forEach(function (t, i) {
@@ -685,6 +709,7 @@
         if (i === idx) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
       });
       count.textContent = (idx + 1) + " / " + targets.length;
+      if (on) schedulePeek(200);
     }
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
