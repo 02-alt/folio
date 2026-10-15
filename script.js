@@ -56,28 +56,34 @@ list.addEventListener("click", (e) => {
   openProject(card.dataset.id);
 });
 
-// ---- Reveal on scroll ----
-const io = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((en) => {
-      if (en.isIntersecting) {
-        en.target.classList.add("in");
-        io.unobserve(en.target);
-      }
-    });
-  },
-  { threshold: 0.12 }
-);
-document.querySelectorAll(".reveal, .project").forEach((el) => io.observe(el));
+// ---- Entrance: one page-load sequence, no scroll reveals ----
+// What's in view at load rises in top to bottom; anything below the fold is
+// simply visible once scrolled to. The signature keeps its own observer (below)
+// so it draws when it comes into view.
+(function () {
+  let i = 0;
+  const vh = innerHeight;
+  document.querySelectorAll(".reveal, .project").forEach((el) => {
+    if (el.classList.contains("signature")) return;
+    const inView = el.getBoundingClientRect().top < vh;   // also flushes the hidden state, so the rise animates
+    if (inView) el.style.setProperty("--d", (i++ * 70) + "ms");
+    el.classList.add("in");
+    if (!inView) el.classList.add("is-static");
+  });
+})();
 
 // ---- Signature: a stroke that draws itself when it scrolls into view ----
 // (click it to replay). The .in class from the reveal observer triggers the CSS.
 (function () {
   const sig = document.querySelector(".signature");
   const path = sig && sig.querySelector(".signature__path");
-  if (!path || typeof path.getTotalLength !== "function") return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!path || typeof path.getTotalLength !== "function") { if (sig) sig.classList.add("in"); return; }
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { sig.classList.add("in"); return; }
   path.style.setProperty("--len", Math.ceil(path.getTotalLength()));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => { if (en.isIntersecting) { sig.classList.add("in"); io.unobserve(sig); } });
+  }, { threshold: 0.12 });
+  io.observe(sig);
   const replay = () => {
     sig.classList.remove("in");     // reset to hidden (no transition off .in)
     void sig.getBoundingClientRect(); // force reflow so the reset lands instantly

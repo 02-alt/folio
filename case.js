@@ -43,10 +43,10 @@
         hero.style.willChange = "transform";
         others.forEach(function (c) { c.style.opacity = "0"; c.style.transform = "translateY(14px)"; });
         requestAnimationFrame(function () {
-          hero.style.transition = "transform .6s cubic-bezier(.2,.8,.25,1)";
+          hero.style.transition = "transform .5s var(--ease-out)";
           hero.style.transform = "none";
           others.forEach(function (c) {
-            c.style.transition = "opacity .5s ease .06s, transform .5s ease .06s";
+            c.style.transition = "opacity .4s ease .05s, transform .5s var(--ease-out) .05s";
             c.style.opacity = ""; c.style.transform = "";
           });
           hero.addEventListener("transitionend", clearHero, { once: true });
@@ -209,7 +209,7 @@
     limg.style.transform = "translate(" + dx + "px," + dy + "px) scale(" + sx + "," + sy + ")";
     requestAnimationFrame(function () {
       lb.classList.add("show");
-      limg.style.transition = "transform .4s cubic-bezier(.2,.8,.25,1)";
+      limg.style.transition = "transform .45s var(--ease-out)";
       limg.style.transform = "none";
     });
   }
@@ -234,12 +234,12 @@
     var sx = from.width / to.width, sy = from.height / to.height;
     lb.classList.remove("show");
     limg.style.transformOrigin = "top left";
-    limg.style.transition = "transform .4s cubic-bezier(.75,0,.8,.2)";
+    limg.style.transition = "transform .32s var(--ease-out)";   /* exits quicker than it entered */
     limg.style.transform = "translate(" + dx + "px," + dy + "px) scale(" + sx + "," + sy + ")";
     var done = false;
     var end = function () { if (done) return; done = true; cleanup(); };
     limg.addEventListener("transitionend", end, { once: true });
-    setTimeout(end, 460);
+    setTimeout(end, 380);
   }
 
   function toggleActual() {
@@ -382,9 +382,34 @@
       thumb.style.width = on.offsetWidth + "px";
       thumb.style.transform = "translateX(" + on.offsetLeft + "px)";
     }
+    // The devices' left/width change with the view; move them there with a
+    // transform instead (FLIP): measured from wherever they are right now, so a
+    // quick second click simply turns around, and the videos never relayout.
+    var stage = card.querySelector(".clip__stage");
+    var devs = stage ? [].slice.call(stage.querySelectorAll(".device")) : [];
+    var EASE = "cubic-bezier(.32, .72, 0, 1)";
+    function switchTo(v) {
+      var before = devs.map(function (d) { return d.getBoundingClientRect(); });
+      devs.forEach(function (d) { if (d._flip) { d._flip.cancel(); d._flip = null; } });
+      card.dataset.view = v;
+      if (reduce || !Element.prototype.animate) return;
+      devs.forEach(function (d, i) {
+        var a = before[i], b = d.getBoundingClientRect();
+        if (!a.width || !b.width) return;
+        var dx = (a.left + a.width / 2) - (b.left + b.width / 2);
+        var dy = (a.top + a.height / 2) - (b.top + b.height / 2);
+        var k = a.width / b.width;
+        if (Math.abs(dx) < .5 && Math.abs(dy) < .5 && Math.abs(k - 1) < .001) return;
+        d._flip = d.animate(
+          [{ transform: "translate(" + dx + "px," + dy + "px) scale(" + k + ")" }, { transform: "none" }],
+          { duration: 500, easing: EASE, composite: "add" });   /* added on top of the view's own fade/slide */
+        d._flip.onfinish = function () { d._flip = null; };
+      });
+    }
     btns.forEach(function (b) {
       b.addEventListener("click", function () {
-        card.dataset.view = b.dataset.v;
+        if (card.dataset.view === b.dataset.v) return;
+        switchTo(b.dataset.v);
         place();
         if (!clip._userPaused) playAll(clip); else pauseAll(clip);
       });
@@ -417,7 +442,7 @@
   var cards = document.querySelectorAll(".clip__card");
   if (!cards.length || !Element.prototype.animate) return;
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var EASE = "cubic-bezier(.2, .8, .25, 1)";
+  var EASE = "cubic-bezier(.32, .72, 0, 1)";   /* = --ease-out in styles.css */
 
   var zoom = document.createElement("div");
   zoom.className = "zoom";
@@ -547,10 +572,10 @@
       if (reduce) {
         anim = el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: "ease" });
       } else {
-        anim = el.animate([{ transform: at(r) }, { transform: "none" }], { duration: 560, easing: EASE, fill: "forwards" });
+        anim = el.animate([{ transform: at(r) }, { transform: "none" }], { duration: 500, easing: EASE, fill: "forwards" });
       }
     } else {
-      run("none", 480);                      // caught on its way back: turn around
+      run("none", 400);                      // caught on its way back: turn around
     }
     anim.onfinish = null;
     requestAnimationFrame(function () { zoom.classList.add("is-open"); setState(mode); });
@@ -567,7 +592,7 @@
       if (anim) anim.cancel();
       a = anim = el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease", fill: "forwards" });
     } else {
-      a = run(at(ph.getBoundingClientRect()), 440);
+      a = run(at(ph.getBoundingClientRect()), 400);
     }
     a.onfinish = function () {
       move(ph.parentNode, ph);

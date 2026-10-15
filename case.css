@@ -90,7 +90,7 @@ body.case {
 }
 .case-back--float.is-on {
   opacity: 1; visibility: visible; transform: none;
-  transition: opacity .25s ease, transform .35s cubic-bezier(.2, .8, .25, 1), visibility 0s, color .2s ease, background-color .2s ease;
+  transition: opacity .25s ease, transform .35s var(--ease-out), visibility 0s, color .2s ease, background-color .2s ease;
 }
 .case-back--float:hover { background: var(--clip-btn-bg-hover, #fff); }
 .case-back--float:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 3px; }
@@ -530,19 +530,13 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   align-items: center;
   justify-content: center;
 }
-.pnext__arrow { width: 15px; height: 15px; display: block; color: var(--case-muted); transition: color .2s ease; }
+.pnext__arrow { width: 15px; height: 15px; display: block; color: var(--case-muted); transition: color .2s ease, transform .25s var(--ease-out); }
 .pnext:hover .pnext__name,
 .pnext:hover .pnext__arrow { color: var(--accent, var(--case-blue)); }
-.pnext:hover .pnext__arrow { animation: pnext-arrow .5s cubic-bezier(.5, 0, .2, 1); }
-@keyframes pnext-arrow {
-  0%   { transform: translateX(0); }
-  45%  { transform: translateX(180%); }
-  46%  { transform: translateX(-180%); }
-  100% { transform: translateX(0); }
-}
+@media (hover: hover) { .pnext:hover .pnext__arrow { transform: translateX(3px); } }   /* a nudge, not a loop */
 .pnext + .case-footer { margin-top: var(--s-7); }
 @media (prefers-reduced-motion: reduce) {
-  .pnext:hover .pnext__arrow { animation: none; }
+  .pnext__arrow { transition: color .2s ease; }
 }
 
 /* ---- Feature rows: a title + text beside one screen recording; .feature--flip
@@ -612,14 +606,14 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
 .device--mac .device__screen::before {          /* desktop wallpaper (fades out in Window view) */
   content: ""; position: absolute; inset: 0;
   background: #0b0d10 url("images/mac-wallpaper.webp") center / cover no-repeat;
-  transition: opacity .45s ease;
+  transition: opacity .35s ease;
 }
 .device__win {
   position: absolute; left: 50%; top: 51.5%;
   height: 92%; aspect-ratio: var(--ar);
   max-width: 94%;
   transform: translate(-50%, -50%);
-  transition: transform .6s cubic-bezier(.2, .8, .25, 1);
+  transition: transform .5s var(--ease-out);
   border-radius: 1.2% / 1.4%;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 12px 32px rgba(0, 0, 0, 0.55);
@@ -634,8 +628,12 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
 .clip__stage { position: relative; aspect-ratio: 1 / .5525; }
 .clip__stage .device {
   position: absolute; bottom: 0;
-  transition: left .6s cubic-bezier(.2, .8, .25, 1), width .6s cubic-bezier(.2, .8, .25, 1),
-              opacity .4s ease, transform .6s cubic-bezier(.2, .8, .25, 1);
+  transition: opacity .35s ease, transform .5s var(--ease-out);
+  /* a view switch changes left/width; case.js moves the device there with a
+     transform (FLIP) so the move is compositor-only and never relayouts the video */
+}
+.zoom__layer .clip__stage .device {   /* inside the zoom the view is set directly, let it glide */
+  transition: left .5s var(--ease-out), width .5s var(--ease-out), opacity .35s ease, transform .5s var(--ease-out);
 }
 .clip__stage .device--mac { left: 4%; width: 84%; }
 .clip__stage .device--iphone { left: 77%; width: 19%; max-width: none; z-index: 2; }
@@ -648,7 +646,7 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
 
 /* Mac-only figure; Window view lifts the app window out of the MacBook */
 .clip__card--mac { display: block; padding: 64px var(--s-4) var(--s-4); }
-.device--mac .device__frame { transition: opacity .45s ease; }
+.device--mac .device__frame { transition: opacity .35s ease; }
 [data-view="window"] .device--mac .device__frame,
 [data-view="window"] .device--mac .device__screen::before { opacity: 0; }
 [data-view="window"] .device--mac .device__screen { overflow: visible; }
@@ -670,7 +668,7 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   -webkit-backdrop-filter: blur(24px) saturate(140%);
           backdrop-filter: blur(24px) saturate(140%);
   opacity: 0;
-  transition: opacity .4s ease;
+  transition: opacity .35s ease;
 }
 .zoom__layer { position: absolute; inset: 0; }
 /* Portrait phones dive into the Mac's screen: bezel and desktop fade, the window lifts */
@@ -717,7 +715,7 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   border-radius: 999px;
   background: var(--seg-thumb, #fff);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
-  transition: transform .35s cubic-bezier(.2, .8, .25, 1), width .35s cubic-bezier(.2, .8, .25, 1);
+  transition: transform .3s var(--ease-out), width .3s var(--ease-out);
 }
 .seg__btn {
   position: relative; z-index: 1;
@@ -806,11 +804,11 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   background: currentColor; opacity: clamp(.12, .32 - var(--d, 9) * .05, .32);
   /* entrance: each dash draws in from the right, top to bottom */
   transform: scaleX(0); transform-origin: right center;
-  transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease, transform .2s ease;
+  transition: width .3s var(--ease-out), opacity .3s ease, transform .2s ease;
 }
 .toc.is-on .toc__dash {
   transform: none;
-  transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease, transform .5s cubic-bezier(.2, .8, .25, 1);
+  transition: width .3s var(--ease-out), opacity .3s ease, transform .5s var(--ease-out);
   transition-delay: 0s, 0s, calc(var(--i, 0) * 35ms + 80ms);
 }
 .toc__link:hover { color: var(--case-ink); background: var(--case-fill); }
@@ -838,7 +836,7 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   /* a new section reached: its title peeks out for a moment */
   .toc__link.is-peek :is(.toc__num, .toc__label), .toc__group.is-peek {
     opacity: 1; transform: none;
-    transition: opacity .3s ease, transform .45s cubic-bezier(.2, .8, .25, 1);
+    transition: opacity .3s ease, transform .45s var(--ease-out);
   }
   .toc__link.is-peek .toc__num { opacity: .7; }
   .toc:hover :is(.toc__count, .toc__group, .toc__label),
@@ -847,7 +845,7 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   .toc:hover :is(.toc__count, .toc__group, .toc__num, .toc__label),
   .toc:focus-within :is(.toc__count, .toc__group, .toc__num, .toc__label) {
     transform: none;
-    transition: opacity .25s ease, transform .35s cubic-bezier(.2, .8, .25, 1);
+    transition: opacity .25s ease, transform .35s var(--ease-out);
     transition-delay: calc(var(--i, 0) * 18ms);
   }
 }
@@ -931,7 +929,7 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   position: absolute; inset: 0;
   background: rgba(0, 0, 0, 0.9);
   opacity: 0;
-  transition: opacity .35s ease;
+  transition: opacity .3s ease;
 }
 .lightbox.show .lightbox__backdrop { opacity: 1; }
 .lightbox__stage {
