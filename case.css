@@ -118,6 +118,7 @@ body.case {
   margin-bottom: var(--s-2);
 }
 .case-title + .meta { margin-top: var(--s-5); }   /* Ornikar: title, then the details grid */
+.lead-p + .meta { margin-top: var(--s-5); }       /* Alan: title, lead, then the details grid */
 .case-title + .section { margin-top: var(--s-6); } /* no lead paragraph: title straight into a section */
 .case-hero + .visually-hidden + .section { margin-top: 0; } /* no visible title: hero straight into a section */
 
@@ -428,16 +429,17 @@ body.case {
 
 /* split pair: two separate captures of one tall screen — its top in the left card,
    its bottom in the right card — each shown whole and filling the card width. */
-.shots2--split { align-items: start; }
+.shots2--split { align-items: stretch; }   /* equal card heights; the shorter half gets room below its phone */
 .shots2--split .shotcard { padding: 28px; }          /* inner spacing around the phone */
 .shots2--split .shotcard__frame { height: auto; align-items: flex-start; }
 .shots2--split .shotcard__frame img { width: 100%; max-width: none; }
-/* Alan wants its dashboard split flush to the card borders (no inset) */
-body[data-project="alan"] .shots2--split .shotcard { padding: 0; }
-/* CyberChat's payment split shows one screen top-and-bottom; the halves meet at the
-   seam, so the left half is flush at its bottom and the right half flush at its top. */
-body[data-project="cyberchat"] .shots2--split .shotcard:first-child { padding-bottom: 0; }
-body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top: 0; }
+/* The halves meet at the seam: the top half is flush at its bottom edge and the
+   bottom half flush at its top edge, with the usual inset on the other sides. */
+.shots2--split .shotcard:first-child { padding-bottom: 0; }
+.shots2--split .shotcard:last-child { padding-top: 0; }
+/* Alan's bottom capture starts with the tail of the progress bar already shown in the
+   top capture; pull it up past that strip so the two halves don't repeat it. */
+body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: -11%; }
 
 /* ---- Map figure: full mockup + side callouts anchored to baked connectors ---- */
 .mapfig {
@@ -451,7 +453,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   overflow: hidden;
   padding: var(--s-4) var(--s-4) 36px;            /* inside breathing room around the mockup + notes */
 }
-.mapfig__shot { min-width: 0; }
+.mapfig__shot { min-width: 0; position: relative; }
+.mapfig__pin { display: none; }       /* phones only, see the 780px block */
 /* the mockup is white-flattened; multiply lets the card gradient show through its white
    areas so the phone sits on the gradient with no seam */
 .mapfig__shot img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
@@ -866,7 +869,27 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
   .feature--flip .feature__text { order: 0; }
   /* Map: stack mockup, then callouts as a plain list (connectors point nowhere on mobile) */
   .mapfig { grid-template-columns: 1fr; }
-  .mapfig__notes { padding: var(--s-1) 20px 20px; }
+  /* the connectors are baked into the right third of the mockup image; crop to the phone */
+  .mapfig__shot { overflow: hidden; }
+  .mapfig__shot img { width: 148.4%; max-width: none; }
+  /* the cropped connectors end on numbered pins; the notes below carry the same numbers */
+  .mapfig__pin {
+    position: absolute; right: 2px; transform: translateY(-50%);
+    display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #fff; color: #1d1d1f; border: 1.5px solid #1d1d1f;
+    font-size: 13px; font-weight: 600; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .mapfig__notes { padding: var(--s-3) 20px 20px; counter-reset: mapnote; }
+  .mapfig__note .name svg { display: none; }
+  .mapfig__note .name::before {
+    counter-increment: mapnote; content: counter(mapnote);
+    display: flex; align-items: center; justify-content: center; flex: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #fff; color: #1d1d1f; border: 1.5px solid #1d1d1f;
+    font-size: 12px; font-weight: 600; line-height: 1;
+  }
   .mapfig__note { position: static; transform: none; right: auto; }
   .mapfig__note + .mapfig__note { margin-top: var(--s-2); }
   .case-title { font-size: 30px; }
