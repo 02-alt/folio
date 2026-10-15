@@ -32,7 +32,7 @@
   <!-- Apply the saved appearance before first paint (no light flash in dark mode) -->
   <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
   <link rel="stylesheet" href="styles.css?v=13" />
-  <link rel="stylesheet" href="case.css?v=49" />
+  <link rel="stylesheet" href="case.css?v=50" />
 </head>
 <body class="case" data-project="alan">
   <main class="case-wrap">
@@ -75,28 +75,30 @@
       <p class="body-p">The heart of the experience: a day-by-day path where each validated day moves you forward, keeps the streak alive and unlocks the next step.</p>
       <div class="mapfig">
         <div class="mapfig__shot">
-          <img src="images/alan-map.webp" alt="Alan: the day-by-day journey map, week 1" width="1586" height="2211" loading="lazy" />
-          <!-- phones: the notes stack below, so each connector ends on a numbered pin instead -->
-          <span class="mapfig__pin" style="top:24.4%;" aria-hidden="true">1</span>
-          <span class="mapfig__pin" style="top:50.05%;" aria-hidden="true">2</span>
-          <span class="mapfig__pin" style="top:83.97%;" aria-hidden="true">3</span>
+          <img src="images/alan-map-clean.webp" alt="Alan: the day-by-day journey map, week 1" width="1077" height="2211" loading="lazy" />
+          <!-- phones: the notes stack below, so numbered pins sit on the anchors instead of leaders -->
+          <span class="mapfig__pin" style="left:58.7%; top:24.4%;" aria-hidden="true">1</span>
+          <span class="mapfig__pin" style="left:79.3%; top:50.1%;" aria-hidden="true">2</span>
+          <span class="mapfig__pin" style="left:91.3%; top:84%;" aria-hidden="true">3</span>
         </div>
+        <!-- leaders are drawn here by case.js (one hairline per note, anchor → title row) -->
+        <svg class="mapfig__leaders" aria-hidden="true"></svg>
         <div class="mapfig__notes">
-          <div class="mapfig__note" style="top:11.3%;">
+          <div class="mapfig__note" data-anchor="0.587 0.244" style="top:24.4%;">
             <div class="name">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.4l2.4 2.4 4.6-5"/></svg>
               Daily steps
             </div>
             <p>Each node is a day. Validate it to move forward and keep your streak alive.</p>
           </div>
-          <div class="mapfig__note" style="top:37.7%; left:-40px;">
+          <div class="mapfig__note" data-anchor="0.793 0.501" style="top:50.1%;">
             <div class="name">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4.5L3.5 6.7v13.8L9 18.3l6 2.2 5.5-2.2V4.5L15 6.7 9 4.5z"/><path d="M9 4.5v13.8M15 6.7v13.8"/></svg>
               A visual path
             </div>
             <p>Progress becomes a journey you can see: the loop that keeps people coming back.</p>
           </div>
-          <div class="mapfig__note" style="top:66.4%;">
+          <div class="mapfig__note" data-anchor="0.913 0.840" style="top:84%;">
             <div class="name">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.4V12l3 1.9"/></svg>
               Today at a glance
@@ -161,6 +163,6 @@
 
   </main>
   <script src="data.js?v=6"></script>
-  <script src="case.js?v=25"></script>
+  <script src="case.js?v=26"></script>
 </body>
 </html>

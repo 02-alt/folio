@@ -791,3 +791,52 @@
     location.replace(a.href);
   });
 })();
+
+/* ============================================================
+   Map figure leaders (alan.html): one hairline per callout, from its anchor on
+   the mockup to its title row. Each note's data-anchor holds "x y" as fractions
+   of the mockup image; the note is re-centred on the anchor row so every leader
+   is perfectly horizontal.
+   ============================================================ */
+(function () {
+  var fig = document.querySelector(".mapfig");
+  if (!fig) return;
+  var svg = fig.querySelector(".mapfig__leaders");
+  var img = fig.querySelector(".mapfig__shot img");
+  var notes = [].slice.call(fig.querySelectorAll(".mapfig__note[data-anchor]"));
+  if (!svg || !img || !notes.length) return;
+  var NS = "http://www.w3.org/2000/svg";
+  var GAP = 10;      /* px between the leader's end and the title row */
+  var R = 3.5;       /* anchor dot radius */
+
+  function draw() {
+    if (getComputedStyle(svg).display === "none") return;   /* phones: pins instead */
+    var fr = fig.getBoundingClientRect(), ir = img.getBoundingClientRect();
+    if (!ir.width) return;
+    svg.setAttribute("viewBox", "0 0 " + fr.width + " " + fr.height);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    notes.forEach(function (note) {
+      var a = note.getAttribute("data-anchor").split(/\s+/).map(parseFloat);
+      var ax = ir.left - fr.left + a[0] * ir.width;
+      var ay = ir.top - fr.top + a[1] * ir.height;
+      /* centre the title row on the anchor row */
+      var name = note.querySelector(".name");
+      var col = note.parentNode.getBoundingClientRect();
+      note.style.transform = "none";
+      note.style.top = (ay - (col.top - fr.top) - name.offsetHeight / 2) + "px";
+      var nr = name.getBoundingClientRect();
+      var y = Math.round(ay) + 0.5;                 /* crisp 1px line */
+      var line = document.createElementNS(NS, "line");
+      line.setAttribute("x1", Math.round(ax)); line.setAttribute("y1", y);
+      line.setAttribute("x2", Math.round(nr.left - fr.left - GAP)); line.setAttribute("y2", y);
+      var dot = document.createElementNS(NS, "circle");
+      dot.setAttribute("cx", Math.round(ax)); dot.setAttribute("cy", y); dot.setAttribute("r", R);
+      svg.appendChild(line); svg.appendChild(dot);
+    });
+  }
+  var tick = false;
+  function schedule() { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; draw(); }); } }
+  if (img.complete) draw(); else img.addEventListener("load", draw);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  if (window.ResizeObserver) new ResizeObserver(schedule).observe(fig); else addEventListener("resize", schedule);
+})();

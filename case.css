@@ -441,8 +441,13 @@ body.case {
    top capture; pull it up past that strip so the two halves don't repeat it. */
 body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: -11%; }
 
-/* ---- Map figure: full mockup + side callouts anchored to baked connectors ---- */
+/* ---- Map figure: clean mockup + side callouts joined by hairline leaders ----
+   The leaders are drawn by case.js into .mapfig__leaders from each note's
+   data-anchor (x y as fractions of the mockup) to its title row, so they stay
+   exact at any width. On phones the notes stack below and numbered pins mark
+   the anchors instead. */
 .mapfig {
+  position: relative;
   margin-top: var(--s-3);
   display: grid;
   grid-template-columns: 1fr 216px;
@@ -454,20 +459,27 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   padding: var(--s-4) var(--s-4) 36px;            /* inside breathing room around the mockup + notes */
 }
 .mapfig__shot { min-width: 0; position: relative; }
-.mapfig__pin { display: none; }       /* phones only, see the 780px block */
 /* the mockup is white-flattened; multiply lets the card gradient show through its white
    areas so the phone sits on the gradient with no seam */
-.mapfig__shot img { display: block; width: 100%; height: auto; mix-blend-mode: multiply; }
+.mapfig__shot img { display: block; width: 72%; height: auto; mix-blend-mode: multiply; }
+.mapfig__leaders {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; overflow: visible;
+  color: var(--case-ink);
+}
+.mapfig__leaders line { stroke: currentColor; stroke-width: 1; }
+.mapfig__leaders circle { fill: currentColor; stroke: #fff; stroke-width: 2; }
+.mapfig__pin { display: none; }       /* phones only, see the 780px block */
 .mapfig__notes { position: relative; }
-.mapfig__note {                      /* top set inline = each connector's endpoint height;
-                                        the title row (not the block) sits on that line */
+.mapfig__note {                      /* top = the anchor's height; case.js re-centres the
+                                        title row on it once fonts are in */
   position: absolute;
   left: 0; right: 0;
-  transform: translateY(-11px);      /* lift so the .name row centers on the connector */
+  transform: translateY(-12px);
 }
 .mapfig__note .name {
   display: flex; align-items: center; gap: var(--s-1);
-  font-size: 16px; font-weight: 600; margin-bottom: 6px;
+  font-size: 16px; font-weight: 600; line-height: 24px; margin-bottom: 6px;
 }
 .mapfig__note .name svg { width: auto; height: 17px; flex: none; }
 .mapfig__note p { font-size: 14px; line-height: 1.5; color: var(--case-muted); }
@@ -867,31 +879,30 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   .shots2 { grid-template-columns: 1fr; }
   .feature { grid-template-columns: 1fr; gap: var(--s-3); margin-top: var(--s-7); }
   .feature--flip .feature__text { order: 0; }
-  /* Map: stack mockup, then callouts as a plain list (connectors point nowhere on mobile) */
+  /* Map: stack mockup, then callouts as a numbered list; pins mark the anchors */
   .mapfig { grid-template-columns: 1fr; }
-  /* the connectors are baked into the right third of the mockup image; crop to the phone */
-  .mapfig__shot { overflow: hidden; }
-  .mapfig__shot img { width: 148.4%; max-width: none; }
-  /* the cropped connectors end on numbered pins; the notes below carry the same numbers */
+  .mapfig__shot img { width: 100%; }
+  .mapfig__leaders { display: none; }
   .mapfig__pin {
-    position: absolute; right: 2px; transform: translateY(-50%);
+    position: absolute; transform: translate(-50%, -50%);
     display: flex; align-items: center; justify-content: center;
     width: 24px; height: 24px; border-radius: 50%;
-    background: #fff; color: #1d1d1f; border: 1.5px solid #1d1d1f;
-    font-size: 13px; font-weight: 600; line-height: 1;
+    background: #1d1d1f; color: #fff; border: 2px solid #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    font-size: 12px; font-weight: 600; line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   .mapfig__notes { padding: var(--s-3) 20px 20px; counter-reset: mapnote; }
+  .mapfig__note { position: static; transform: none; right: auto; }
+  .mapfig__note + .mapfig__note { margin-top: var(--s-2); }
   .mapfig__note .name svg { display: none; }
   .mapfig__note .name::before {
     counter-increment: mapnote; content: counter(mapnote);
     display: flex; align-items: center; justify-content: center; flex: none;
     width: 22px; height: 22px; border-radius: 50%;
-    background: #fff; color: #1d1d1f; border: 1.5px solid #1d1d1f;
+    background: #1d1d1f; color: #fff;
     font-size: 12px; font-weight: 600; line-height: 1;
   }
-  .mapfig__note { position: static; transform: none; right: auto; }
-  .mapfig__note + .mapfig__note { margin-top: var(--s-2); }
   .case-title { font-size: 30px; }
   .section-title { font-size: 24px; }
   .lead-p { font-size: 20px; }
