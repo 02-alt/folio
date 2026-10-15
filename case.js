@@ -720,6 +720,7 @@
       current = idx;
       links.forEach(function (a, i) {
         a.classList.toggle("is-active", i === idx);
+        a.style.setProperty("--d", Math.abs(i - idx));              // distance from the current section
         if (i === idx) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
       });
       count.textContent = (idx + 1) + " / " + targets.length;

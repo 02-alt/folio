@@ -753,8 +753,10 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 .toc__dash {
   position: relative;
   justify-self: end;
-  width: 8px; height: 1.5px; border-radius: 1px;
-  background: currentColor; opacity: .25;
+  /* a gradient out from the current section: --d is the distance in rows,
+     set by the script; the nearest dashes are a touch longer and darker */
+  width: calc(8px + max(0, 3 - var(--d, 9)) * 1.5px); height: 1.5px; border-radius: 1px;
+  background: currentColor; opacity: clamp(.12, .32 - var(--d, 9) * .05, .32);
   /* entrance: each dash draws in from the right, top to bottom */
   transform: scaleX(0); transform-origin: right center;
   transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease, transform .2s ease;
