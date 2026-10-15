@@ -741,8 +741,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 .toc__group:first-child { margin-top: 0; }
 .toc__link {
   display: grid; grid-template-columns: 16px 1fr 22px; align-items: center; gap: 8px;
-  min-height: 32px; padding: 0 8px;
-  border-radius: 8px;
+  min-height: 24px; padding: 0 8px;
+  border-radius: 6px;
   font-size: 13px; line-height: 1.25;
   color: var(--case-muted);
   text-decoration: none;
@@ -751,9 +751,10 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 .toc__num { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .7; }
 .toc__label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .toc__dash {
+  position: relative;
   justify-self: end;
-  width: 10px; height: 1.5px; border-radius: 1px;
-  background: currentColor; opacity: .45;
+  width: 8px; height: 1.5px; border-radius: 1px;
+  background: currentColor; opacity: .25;
   /* entrance: each dash draws in from the right, top to bottom */
   transform: scaleX(0); transform-origin: right center;
   transition: width .3s cubic-bezier(.2, .8, .25, 1), opacity .3s ease, transform .2s ease;
@@ -765,11 +766,22 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 }
 .toc__link:hover { color: var(--case-ink); background: var(--case-fill); }
 .toc__link.is-active { color: var(--case-ink); font-weight: 500; }
-.toc__link.is-active .toc__dash { width: 20px; opacity: 1; }
+.toc__link.is-active .toc__dash { width: 16px; opacity: .7; }
+.toc:hover .toc__link.is-active .toc__dash, .toc:focus-within .toc__link.is-active .toc__dash { opacity: 1; }
 .toc__link:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 1px; }
 /* At rest only the dashes show, like a minimap; hovering (or tabbing into) the
    menu brings the numbers and titles in, top to bottom. */
 @media (hover: hover) {
+  /* Only the strip of dashes takes the pointer at rest, so a cursor parked in
+     the gutter doesn't open the menu; once hovered, the whole menu is live. */
+  .toc { pointer-events: none; }
+  .toc:hover, .toc:focus-within { pointer-events: auto; }
+  .toc__dash { pointer-events: auto; }
+  .toc__dash::before { content: ""; position: absolute; inset: -11px -14px -11px -16px; }
+  /* Like an overlay scrollbar: once the scroll has rested, the dashes fade
+     to a ghost; scrolling or hovering brings them back. */
+  .toc.is-on.is-idle { opacity: .3; transition: opacity .8s ease .2s; }
+  .toc.is-on.is-idle:hover, .toc.is-on.is-idle:focus-within { opacity: 1; transition: opacity .2s ease; }
   .toc__count, .toc__group, .toc__num, .toc__label {
     opacity: 0; transform: translateX(-6px);
     transition: opacity .3s ease, transform .3s ease;
@@ -792,7 +804,8 @@ body[data-project="cyberchat"] .shots2--split .shotcard:last-child { padding-top
 }
 @media (max-width: 1359px) { .toc { display: none; } }
 @media (prefers-reduced-motion: reduce) {
-  .toc, .toc.is-on, .toc__link, .toc__dash, .toc.is-on .toc__dash,
+  .toc, .toc.is-on, .toc.is-on.is-idle, .toc.is-on.is-idle:hover, .toc.is-on.is-idle:focus-within,
+  .toc__link, .toc__dash, .toc.is-on .toc__dash,
   .toc__count, .toc__group, .toc__num, .toc__label,
   .toc:hover :is(.toc__count, .toc__group, .toc__num, .toc__label),
   .toc:focus-within :is(.toc__count, .toc__group, .toc__num, .toc__label),

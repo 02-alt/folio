@@ -670,9 +670,20 @@
   [].forEach.call(list.children, function (li, k) { li.style.setProperty("--i", k + 1); });
   document.body.appendChild(nav);
 
-  // Reaching a new section briefly shows its title (and its app's name when that
-  // changes too), then the menu settles back to its dashes. Waits for the scroll
-  // to rest on a section, so a long jump doesn't flash every title on the way.
+  // Like an overlay scrollbar: the dashes fade to a ghost once the scroll has
+  // rested; any scroll (or a hover, in CSS) brings them back.
+  var idleT = 0;
+  function goIdle() { nav.classList.add("is-idle"); }
+  function wake(delay) {
+    nav.classList.remove("is-idle");
+    clearTimeout(idleT);
+    idleT = setTimeout(goIdle, delay);
+  }
+
+  // The menu's first appearance, and reaching a new app, briefly show the
+  // current title (and the app's name), then the menu settles back to its
+  // dashes. Waits for the scroll to rest, so a long jump doesn't flash titles
+  // on the way. Moving between sections of the same app stays quiet.
   var peekT = 0, hideT = 0, peekedGroup = null;
   function unpeek() { [].forEach.call(nav.querySelectorAll(".is-peek"), function (e) { e.classList.remove("is-peek"); }); }
   function schedulePeek(delay) { clearTimeout(peekT); peekT = setTimeout(peek, delay); }
@@ -684,7 +695,8 @@
     if (g && g !== peekedGroup) g.classList.add("is-peek");
     peekedGroup = g;
     clearTimeout(hideT);
-    hideT = setTimeout(unpeek, 1800);
+    hideT = setTimeout(unpeek, 1200);
+    wake(1500);                                                      // stay lit until the title has gone
   }
 
   var hero = document.querySelector(".case-hero");
@@ -694,8 +706,10 @@
     // shown once the hero has mostly scrolled away
     var heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
     var on = heroBottom < innerHeight * 0.35;
-    if (on && !nav.classList.contains("is-on")) schedulePeek(450);   // after the dashes draw in
+    var first = on && !nav.classList.contains("is-on");
+    if (first) schedulePeek(450);                                    // after the dashes draw in
     nav.classList.toggle("is-on", on);
+    if (on) wake(1000);                                              // a scroll lights the dashes; rest fades them
     // active = last section whose block starts above 40% of the viewport
     var line = innerHeight * 0.4, idx = 0;
     targets.forEach(function (t, i) {
@@ -709,7 +723,7 @@
         if (i === idx) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
       });
       count.textContent = (idx + 1) + " / " + targets.length;
-      if (on) schedulePeek(200);
+      if (on && !first && groupOf[idx] !== peekedGroup) schedulePeek(200);
     }
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
