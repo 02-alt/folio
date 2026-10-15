@@ -76,12 +76,32 @@
   if (!back) return;
   var nativeVT = "CSSViewTransitionRule" in window;
 
-  back.addEventListener("click", function (e) {
+  // Floating chevron: once the top bar's Back has scrolled off, a small round
+  // button takes its place in the corner (the gutter, on wide screens), and
+  // goes back the same way.
+  var float = document.createElement("a");
+  float.className = "case-back case-back--float";
+  float.href = back.getAttribute("href") || "/";
+  float.setAttribute("aria-label", "Back");
+  var chev = back.querySelector("svg");
+  if (chev) float.appendChild(chev.cloneNode(true));
+  document.body.appendChild(float);
+  var fTick = false;
+  function floatUpdate() { fTick = false; float.classList.toggle("is-on", back.getBoundingClientRect().bottom < 0); }
+  function onFloatScroll() { if (!fTick) { fTick = true; requestAnimationFrame(floatUpdate); } }
+  addEventListener("scroll", onFloatScroll, { passive: true });
+  addEventListener("resize", onFloatScroll);
+  floatUpdate();
+
+  back.addEventListener("click", onBack);
+  float.addEventListener("click", onBack);
+  function onBack(e) {
     if (reduce) return; // let the link navigate normally
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault();
     var href = back.getAttribute("href") || "/";
     try { sessionStorage.setItem("back", "1"); } catch (e2) {}
+    float.classList.remove("is-on");   // the fixed button leaves with the page
 
     var go = function () {
       var fromFeed = false;
@@ -101,7 +121,7 @@
       wrap.style.opacity = "0";
       setTimeout(go, 200);
     }
-  });
+  }
 
   // A skipped transition rejects its promises; nothing to report.
   window.addEventListener("pageswap", function (e) {

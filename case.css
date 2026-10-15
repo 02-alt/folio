@@ -73,6 +73,38 @@ body.case {
 }
 .case-back:hover { color: var(--case-blue); }
 .case-back svg { width: 20px; height: 20px; }
+/* Floating chevron: takes over once the top bar's Back has scrolled off.
+   Same frosted material as the clip play button. */
+.case-back--float {
+  position: fixed; z-index: 20;
+  top: max(16px, env(safe-area-inset-top)); left: max(16px, env(safe-area-inset-left));
+  width: 40px; height: 40px; min-height: 0; padding: 0;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--clip-btn-bg, rgba(255, 255, 255, 0.82));
+  box-shadow: 0 0 0 1px var(--case-hair), 0 2px 8px rgba(0, 0, 0, 0.08);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  backdrop-filter: blur(8px) saturate(180%);
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s, color .2s ease, background-color .2s ease;
+}
+.case-back--float.is-on {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .25s ease, transform .35s cubic-bezier(.2, .8, .25, 1), visibility 0s, color .2s ease, background-color .2s ease;
+}
+.case-back--float:hover { background: var(--clip-btn-bg-hover, #fff); }
+.case-back--float:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 3px; }
+.case-back--float svg { margin-left: -2px; }   /* optical centre for the chevron */
+/* wide screens: in the gutter, above the side menu's dashes */
+@media (min-width: 1360px) {
+  .case-back--float { top: 24px; left: max(24px, calc(50% - var(--case-col) / 2 - 72px)); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .case-back--float { background: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-back--float, .case-back--float.is-on { transition: none; }
+}
 .case-eyebrow { font-size: 13px; line-height: 1.4; color: var(--case-muted); }   /* HIG Footnote */
 
 /* ---- Type scale: Apple HIG text styles, 8-pt rhythm ----
