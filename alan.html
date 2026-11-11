@@ -33,9 +33,11 @@
   <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
   <link rel="stylesheet" href="styles.css?v=14" />
   <link rel="stylesheet" href="case.css?v=51" />
+  <link rel="stylesheet" href="stage.css?v=3" />
+  <link rel="preload" href="fonts/MyHand.ttf" as="font" type="font/ttf" crossorigin />
 </head>
 <body class="case" data-project="alan">
-  <main class="case-wrap">
+  <main class="case-wrap stagecase">
 
     <div class="case-top">
       <a class="case-back" href="/">
@@ -45,109 +47,85 @@
       <span class="case-eyebrow">Alan · 2026 · Showcase</span>
     </div>
 
-    <div class="case-hero"><img src="images/alan.webp" data-dark="images/alan-dark.webp" alt="Alan: a hand holding a phone on the digital detox map" width="1024" height="576" fetchpriority="high" /></div>
-
     <h1 class="case-title">Alan</h1>
+    <p class="case-sub">Product designer, with a PM and engineers</p>
 
-    <p class="lead-p">Digital detox, gamified: turning “spend less time on your phone” into a daily journey of goals, streaks and rewards.</p>
+    <p class="intro">Alan wanted to help its members build a healthier relationship with their screens. I designed the experience from UX to visual design and prototype.</p>
 
-    <section class="meta">
-      <h2 class="visually-hidden">Project details</h2>
-      <div>
-        <div class="block">
-          <h3>My Role</h3>
-          <p class="lead"><b>Product designer</b>: UX Designer, Visual design, Prototype</p>
-        </div>
-        <div class="block">
-          <h3>Team</h3>
-          <p>1 PM, Engineers, 1 Product Designer</p>
-        </div>
-      </div>
-      <div class="overview">
-        <h3>Overview</h3>
-        <p>Alan wanted to help members build a healthier relationship with their screens. The challenge was turning a hard, abstract goal (spending less time on your phone) into something motivating, playful and easy to stick with.</p>
-        <p>Five final screens follow: the map, goal setting, the dashboard, quizzes and rewards.</p>
-      </div>
+    <figure>
+      <div class="case-hero"><img src="images/alan.webp" data-dark="images/alan-dark.webp" alt="Alan: a hand holding a phone on the digital detox map" width="1024" height="576" fetchpriority="high" /></div>
+      <figcaption>Digital detox, gamified.</figcaption>
+    </figure>
+
+    <p class="statement"><span aria-hidden="true">Less screen time is a <span class="edit"><s>sacrifice<svg viewBox="0 0 100 12" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path pathLength="1" d="M1 7.5C20 5 42 8.5 61 5.8S88 4.2 99 6.2"/></svg></s><span class="hand edit__new">streak</span><svg class="edit__caret" width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M1.5 8.5 7 1.8l5.5 6.4"/></svg></span>.</span><span class="visually-hidden">Less screen time is a streak, not a sacrifice.</span></p>
+    <p>Goals, a daily path, streaks and rewards. Five screens, in the order a member meets them.</p>
+
+    <section class="section">
+      <h2 class="section-title">Set your goal</h2>
+      <p>Onboarding opens with one question: what would your ideal daily screen time be?</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 380px">
+        <img class="phone" src="images/alan-goal.webp" alt="Alan onboarding: “Ok, et quel serait ton temps d’écran idéal ?” with a slider set to 6h00 next to today’s 8h" width="1035" height="1206" loading="lazy" style="left: 32px; top: 32px; width: 300px;" />
+        <svg class="arrows" viewBox="0 0 600 380" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 263.0C332.8 253.0 321.6 277.0 312.0 271.0"/><path pathLength="1" class="head" d="M321.0 271.3L312.0 271.0L316.2 278.9"/><path pathLength="1" d="M344.0 347.0C304.8 337.0 265.6 358.0 232.0 352.0"/><path pathLength="1" class="head" d="M240.5 348.9L232.0 352.0L238.9 357.8"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 252px;" aria-hidden="true">the gap, before<br>you commit</span>
+        <span class="hand cnote" style="left: 352px; top: 336px;" aria-hidden="true">your target</span>
+        </div></div>
+        <figcaption>A 6h00 target, right next to today's 8h.</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">The map</h2>
-      <p class="body-p">The heart of the experience: a day-by-day path where each validated day moves you forward, keeps the streak alive and unlocks the next step.</p>
-      <div class="mapfig">
-        <div class="mapfig__shot">
-          <img src="images/alan-map-clean.webp" alt="Alan: the day-by-day journey map, week 1" width="1077" height="2211" loading="lazy" />
-          <!-- phones: the notes stack below, so numbered pins sit on the anchors instead of leaders -->
-          <span class="mapfig__pin" style="left:58.7%; top:24.4%;" aria-hidden="true">1</span>
-          <span class="mapfig__pin" style="left:79.3%; top:50.1%;" aria-hidden="true">2</span>
-          <span class="mapfig__pin" style="left:91.3%; top:84%;" aria-hidden="true">3</span>
-        </div>
-        <!-- leaders are drawn here by case.js (one hairline per note, anchor → title row) -->
-        <svg class="mapfig__leaders" aria-hidden="true"></svg>
-        <div class="mapfig__notes">
-          <div class="mapfig__note" data-anchor="0.587 0.244" style="top:24.4%;">
-            <div class="name">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.4l2.4 2.4 4.6-5"/></svg>
-              Daily steps
-            </div>
-            <p>Each node is a day. Validate it to move forward and keep your streak alive.</p>
-          </div>
-          <div class="mapfig__note" data-anchor="0.793 0.501" style="top:50.1%;">
-            <div class="name">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4.5L3.5 6.7v13.8L9 18.3l6 2.2 5.5-2.2V4.5L15 6.7 9 4.5z"/><path d="M9 4.5v13.8M15 6.7v13.8"/></svg>
-              A visual path
-            </div>
-            <p>Progress becomes a journey you can see: the loop that keeps people coming back.</p>
-          </div>
-          <div class="mapfig__note" data-anchor="0.913 0.840" style="top:84%;">
-            <div class="name">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.4V12l3 1.9"/></svg>
-              Today at a glance
-            </div>
-            <p>Live screen time for the day, with a reward waiting at the finish.</p>
-          </div>
-        </div>
-      </div>
+      <h2 class="section-title">The map</h2>
+      <p>The heart of the experience: a day-by-day path.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 520px">
+        <img class="phone" src="images/alan-map-stage.webp" alt="Alan: the day-by-day journey map, week 1" width="1077" height="2211" loading="lazy" style="left: 32px; top: 32px; width: 260px;" />
+        <svg class="arrows" viewBox="0 0 600 520" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 161.0C292.2 151.0 240.4 168.0 196.0 162.0"/><path pathLength="1" class="head" d="M204.3 158.6L196.0 162.0L203.1 167.5"/><path pathLength="1" d="M344.0 257.0C298.5 247.0 253.0 268.0 214.0 262.0"/><path pathLength="1" class="head" d="M222.4 258.7L214.0 262.0L221.0 267.6"/><path pathLength="1" d="M344.0 463.0C315.3 453.0 286.6 492.0 262.0 486.0"/><path pathLength="1" class="head" d="M270.6 483.5L262.0 486.0L268.5 492.2"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 150px;" aria-hidden="true">each node is a day</span>
+        <span class="hand cnote" style="left: 352px; top: 246px;" aria-hidden="true">a path you can see</span>
+        <span class="hand cnote" style="left: 352px; top: 452px;" aria-hidden="true">today, live</span>
+        </div></div>
+        <figcaption>Validate a day to move forward and keep the streak alive.</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">Set your goal</h2>
-      <p class="body-p">Onboarding opens with one question: what would your ideal daily screen time be? A slider sets the target right next to today’s number, so the gap is visible before you commit.</p>
-      <div class="shotcard shotcard--flush">
-        <div class="shotcard__frame"><img src="images/alan-goal.webp" alt="Alan onboarding: “Ok, et quel serait ton temps d’écran idéal ?” with a slider set to 6h00 next to today’s 8h" width="1035" height="1206" loading="lazy" /></div>
-      </div>
-      <p class="caption">“So, what would your ideal screen time be?” Here, <span class="hl">a 6h00 target against today’s 8h</span>.</p>
+      <h2 class="section-title">Dashboard</h2>
+      <p>A place to reflect rather than scroll.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 330px">
+        <img class="phone" src="images/alan-dashboard.webp" alt="Alan dashboard, top: Thursday 9 January, 4h35 of screen time against a 6h00 goal" width="1038" height="1155" loading="lazy" style="left: 32px; top: 52px; width: 250px;" />
+        <img class="phone" src="images/alan-calendar.webp" alt="Alan dashboard, bottom: January 2026 calendar with each day marked by outcome" width="1029" height="1131" loading="lazy" style="left: 318px; top: 0px; width: 250px;" />
+        </div></div>
+        <figcaption>One screen, top and bottom: today's numbers, then the month, where patterns show up at a glance.</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">Dashboard</h2>
-      <p class="body-p">A place to reflect rather than scroll: today’s screen time against the daily goal, the running average, and a monthly calendar that marks each day by outcome.</p>
-      <div class="shots2 shots2--split">
-        <div class="shotcard">
-          <div class="shotcard__frame"><img src="images/alan-dashboard.webp" alt="Alan dashboard, top: Thursday 9 January, 4h35 of screen time against a 6h00 goal" width="1038" height="1155" loading="lazy" /></div>
-        </div>
-        <div class="shotcard">
-          <div class="shotcard__frame"><img src="images/alan-calendar.webp" alt="Alan dashboard, bottom: January 2026 calendar with each day marked by outcome" width="1029" height="1131" loading="lazy" /></div>
-        </div>
-      </div>
-      <p class="caption">One screen, top and bottom: <span class="hl">today’s numbers, then the calendar</span>, where patterns show up at a glance.</p>
+      <h2 class="section-title">Quiz</h2>
+      <p>Short true-or-false questions about screen habits, in the voice of Alan's health mission.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 360px">
+        <img class="phone" src="images/alan-quiz.webp" alt="Alan: a screen-health mini quiz card reading “Pour protéger ses yeux, il faut faire une pause toutes les 20 minutes.”" width="927" height="1089" loading="lazy" style="left: 32px; top: 32px; width: 300px;" />
+        <svg class="arrows" viewBox="0 0 600 360" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 249.0C325.8 239.0 307.6 258.0 292.0 252.0"/><path pathLength="1" class="head" d="M300.9 250.6L292.0 252.0L297.7 259.0"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 238px;" aria-hidden="true">true or false?</span>
+        </div></div>
+        <figcaption>“To protect your eyes, take a break every 20 minutes.”</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">Quiz</h2>
-      <p class="body-p">Learning disguised as a game: short true-or-false questions about screen habits, in the voice of Alan’s health mission.</p>
-      <div class="shotcard shotcard--flush">
-        <div class="shotcard__frame"><img src="images/alan-quiz.webp" alt="Alan: a screen-health mini quiz card reading “Pour protéger ses yeux, il faut faire une pause toutes les 20 minutes.”" width="927" height="1089" loading="lazy" /></div>
-      </div>
-      <p class="caption">“To protect your eyes, take a break every 20 minutes.” <span class="hl">True or false?</span></p>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title plain">Rewards</h2>
-      <p class="body-p">Progress pays in Alan’s own currency. Validated days and streaks unlock badges and Blueberries, so the effort stays worth it.</p>
-      <div class="shotcard shotcard--flush-top">
-        <div class="shotcard__frame"><img src="images/alan-rewards.webp" alt="Alan: “Badge 6h débloqué” with a +400 Blueberries reward" width="1284" height="1845" loading="lazy" /></div>
-      </div>
-      <p class="caption">“You cut your screen time by 6h this week.” <span class="hl">A badge and 400 Blueberries</span>, Alan’s in-app currency.</p>
+      <h2 class="section-title">Rewards</h2>
+      <p>Progress pays in Alan's own currency.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 380px">
+        <img class="phone" src="images/alan-rewards.webp" alt="Alan: “Badge 6h débloqué” with a +400 Blueberries reward" width="1284" height="1845" loading="lazy" style="left: 32px; top: -51px; width: 300px;" />
+        <svg class="arrows" viewBox="0 0 600 380" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 81.0C313.9 71.0 283.8 98.0 258.0 92.0"/><path pathLength="1" class="head" d="M266.6 89.4L258.0 92.0L264.6 98.1"/><path pathLength="1" d="M344.0 183.0C302.7 173.0 261.4 192.0 226.0 186.0"/><path pathLength="1" class="head" d="M234.4 182.9L226.0 186.0L232.9 191.7"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 70px;" aria-hidden="true">6h less,<br>one badge</span>
+        <span class="hand cnote" style="left: 352px; top: 172px;" aria-hidden="true">Blueberries,<br>Alan's currency</span>
+        </div></div>
+        <figcaption>“You cut your screen time by 6h this week.” A badge and 400 Blueberries.</figcaption>
+      </figure>
     </section>
 
     <footer class="case-footer">
@@ -164,5 +142,6 @@
   </main>
   <script src="data.js?v=6"></script>
   <script src="case.js?v=27"></script>
+  <script src="stage.js?v=3"></script>
 </body>
 </html>

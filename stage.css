@@ -5,7 +5,7 @@
    ============================================================ */
 @font-face { font-family: "MyHand"; src: url("fonts/MyHand.ttf") format("truetype"); font-display: swap; }
 
-body[data-project="ornikar"] { --case-col: 648px; }   /* 600px of text + the wrap's side padding */
+body[data-project="ornikar"], body[data-project="alan"] { --case-col: 648px; }   /* 600px of text + the wrap's side padding */
 
 .stagecase {
   --stage: var(--case-fill);
@@ -111,6 +111,18 @@ body[data-project="ornikar"] { --case-col: 648px; }   /* 600px of text + the wra
 .stp button:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 2px; }
 .player figcaption { min-height: 40px; margin-top: 12px; }
 
+/* Canvas: a fixed 600px composition (phones + handwritten notes pointing at the UI),
+   scaled down as one piece on narrow screens (stage.js sets --k and the stage height). */
+.canvas { position: relative; width: 600px; height: var(--h); transform-origin: 0 0; transform: scale(var(--k, 1)); }
+.canvas .phone { position: absolute; display: block; max-width: none; height: auto; }
+.canvas .arrows { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; color: var(--hand-ink); pointer-events: none; }
+.canvas .cnote { position: absolute; font-size: 19px; white-space: nowrap; }
+.canvas .arrows path { stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset .5s cubic-bezier(.3,.6,.2,1) .15s; }
+.canvas .arrows path.head { transition-duration: .2s; transition-delay: .6s; }
+.canvas .cnote { transition: opacity .4s ease .45s, transform .5s var(--stage-ease) .45s; }
+.canvas.is-waiting .arrows path { stroke-dashoffset: 1; transition: none; }
+.canvas.is-waiting .cnote { opacity: 0; transform: translateX(-4px); transition: none; }
+
 /* Process: one column per week */
 .weeks2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 24px; }
 .wk { background: var(--stage-card); border-radius: 14px; padding: 18px 20px 8px; box-shadow: 0 0 0 .5px var(--case-hair); }
@@ -128,7 +140,7 @@ body[data-project="ornikar"] { --case-col: 648px; }   /* 600px of text + the wra
 .list .muted { color: var(--case-muted); }
 
 /* The side menu fits beside the narrower column from 1100px */
-@media (min-width: 1100px) and (max-width: 1359px) { body[data-project="ornikar"] .toc { display: block; } }
+@media (min-width: 1100px) and (max-width: 1359px) { body[data-project="ornikar"] .toc, body[data-project="alan"] .toc { display: block; } }
 /* Margin notes need the right gutter; below that they sit under their text */
 @media (max-width: 1180px) {
   .margin { position: static; transform: none; margin-top: 12px; width: auto; }
@@ -149,6 +161,6 @@ body[data-project="ornikar"] { --case-col: 648px; }   /* 600px of text + the wra
   .stage .note--test { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scene, .scene .screen, .scene .note, .stp__thumb, .edit path, .edit__new { transition: none; }
+  .scene, .scene .screen, .scene .note, .stp__thumb, .edit path, .edit__new, .canvas .arrows path, .canvas .cnote { transition: none; }
   .scene .screen, .scene.on .screen, .scene .note { transform: none; }
 }

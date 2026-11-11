@@ -38,12 +38,23 @@
     }, { threshold: 0.6 }).observe(fig);
   }
 
-  // Correction: struck out and rewritten the first time it comes into view
-  if (!reduce) [].forEach.call(document.querySelectorAll(".edit"), function (m) {
+  // Canvases: keep the 600px composition, scaled as one piece to the stage's width
+  var canvases = [].slice.call(document.querySelectorAll(".canvas"));
+  var fit = function () {
+    canvases.forEach(function (c) {
+      var st = c.parentNode, k = Math.min(1, st.clientWidth / 600);
+      c.style.setProperty("--k", k);
+      st.style.height = (parseFloat(getComputedStyle(c).getPropertyValue("--h")) * k) + "px";
+    });
+  };
+  if (canvases.length) { fit(); addEventListener("resize", fit); }
+
+  // Hand-drawn bits (the correction, the notes on the canvases) draw in the first time they come into view
+  if (!reduce) [].forEach.call(document.querySelectorAll(".edit, .canvas"), function (m) {
     m.classList.add("is-waiting");
     var io = new IntersectionObserver(function (es) {
       if (es[0].isIntersecting) { m.classList.remove("is-waiting"); io.disconnect(); }
-    }, { threshold: 1 });
+    }, { threshold: m.classList.contains("canvas") ? 0.5 : 1 });
     io.observe(m);
   });
 })();
