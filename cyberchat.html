@@ -33,9 +33,11 @@
   <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
   <link rel="stylesheet" href="styles.css?v=14" />
   <link rel="stylesheet" href="case.css?v=51" />
+  <link rel="stylesheet" href="stage.css?v=4" />
+  <link rel="preload" href="fonts/MyHand.ttf" as="font" type="font/ttf" crossorigin />
 </head>
 <body class="case" data-project="cyberchat">
-  <main class="case-wrap">
+  <main class="case-wrap stagecase">
 
     <div class="case-top">
       <a class="case-back" href="/">
@@ -45,66 +47,92 @@
       <span class="case-eyebrow">CyberChat · 2026 · Showcase</span>
     </div>
 
-    <div class="case-hero"><img src="images/cyberchat.webp" data-dark="images/cyberchat-dark.webp" alt="CyberChat: anonymous messaging concept" /></div>
-
     <h1 class="case-title">CyberChat</h1>
+    <p class="case-sub">A messaging concept</p>
 
-    <p class="lead-p">Privacy by design: a messaging concept built around anonymity. No email, no phone number, just a unique key generated at onboarding.</p>
-    <p class="body-p">A retro-inspired identity modeled after the Signal Foundation. A showcase of the final screens.</p>
+    <p class="intro">A messaging app built around anonymity: no email, no phone number, just a unique key generated at onboarding. Its retro identity takes after the Signal Foundation.</p>
+
+    <figure>
+      <div class="case-hero"><img src="images/cyberchat.webp" data-dark="images/cyberchat-dark.webp" alt="CyberChat: anonymous messaging concept" /></div>
+      <figcaption>Privacy by design.</figcaption>
+    </figure>
+
+    <p class="statement"><span aria-hidden="true">Your identity is a <span class="edit"><s>phone number<svg viewBox="0 0 100 12" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path pathLength="1" d="M1 7.5C20 5 42 8.5 61 5.8S88 4.2 99 6.2"/></svg></s><span class="hand edit__new">key</span><svg class="edit__caret" width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M1.5 8.5 7 1.8l5.5 6.4"/></svg></span>.</span><span class="visually-hidden">Your identity is a key, not a phone number.</span></p>
+    <p>Five screens, from the first launch to the receipt.</p>
 
     <section class="section">
-      <h2 class="section-title plain">The ID key</h2>
-      <p class="body-p">The first screen: the app generates your unique identifier and hands it to you, your only way to reconnect. Store it somewhere safe.</p>
-      <div class="case-figure"><img src="images/cc-welcome.png" alt="CyberChat onboarding: “Welcome Matthieu! Join Cyberchat”" loading="lazy" /></div>
-      <div class="shotcard shotcard--flush">
-        <div class="shotcard__frame"><img src="images/cc-idkey.png" alt="CyberChat: ID key generation screen" loading="lazy" /></div>
-      </div>
-      <p class="caption">No email, no phone number: <span class="hl">your ID key is the only identity</span>, and the only way back into your session.</p>
+      <h2 class="section-title">The ID key</h2>
+      <p>The first thing the app does: generate your unique identifier and hand it to you.</p>
+      <figure>
+        <div class="stage"><img class="wide" src="images/cc-welcome.png" alt="CyberChat onboarding: “Welcome Matthieu! Join Cyberchat”" width="2838" height="1272" loading="lazy" /></div>
+        <figcaption>“Welcome Matthieu! Join Cyberchat.”</figcaption>
+      </figure>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 380px">
+        <img class="phone" src="images/cc-idkey.png" alt="CyberChat: ID key generation screen" width="1137" height="1422" loading="lazy" style="left: 32px; top: 32px; width: 300px;" />
+        <svg class="arrows" viewBox="0 0 600 380" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 255.0C323.0 245.0 302.0 266.0 284.0 260.0"/><path pathLength="1" class="head" d="M292.8 258.2L284.0 260.0L290.0 266.7"/><path pathLength="1" d="M344.0 337.0C324.4 327.0 304.8 356.0 288.0 350.0"/><path pathLength="1" class="head" d="M296.9 348.4L288.0 350.0L293.8 356.9"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 244px;" aria-hidden="true">store it<br>somewhere safe</span>
+        <span class="hand cnote" style="left: 352px; top: 326px;" aria-hidden="true">your only<br>identity</span>
+        </div></div>
+        <figcaption>Your ID key is the only way back into your session.</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">Chats &amp; Calls</h2>
-      <p class="body-p">Messaging at a glance: chats and calls live on the same page, accessible in one tap.</p>
-      <div class="shotcard shotcard--flush">
-        <div class="shotcard__frame"><img src="images/cc-chats.png" alt="CyberChat: chats list with read receipts and unread markers" loading="lazy" /></div>
-      </div>
-      <p class="caption">A stripped-back list: <span class="hl">status dots, timestamps and read receipts</span>, nothing else competing for attention.</p>
+      <h2 class="section-title">Chats &amp; calls</h2>
+      <p>Chats and calls live on the same page, one tap apart.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 320px">
+        <img class="phone" src="images/cc-chats.png" alt="CyberChat: chats list with read receipts and unread markers" width="1083" height="1041" loading="lazy" style="left: 32px; top: 32px; width: 300px;" />
+        <svg class="arrows" viewBox="0 0 600 320" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 147.0C330.0 137.0 316.0 156.0 304.0 150.0"/><path pathLength="1" class="head" d="M313.0 149.5L304.0 150.0L309.0 157.5"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 136px;" aria-hidden="true">read receipts</span>
+        </div></div>
+        <figcaption>Status dots, timestamps and read receipts, nothing else competing for attention.</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">Smart Context</h2>
-      <p class="body-p">A small info card under each contact shows encryption status and shared groups, so you always know who you’re talking to and what privacy conditions apply before you even type.</p>
-      <div class="shotcard shotcard--full">
-        <div class="shotcard__frame"><img src="images/cc-context.png" alt="CyberChat: conversation with a “Crypted chat · Member of 22 studio” context card" loading="lazy" /></div>
-      </div>
-      <p class="caption">The card confirms the chat is <span class="hl">crypted</span> and surfaces shared membership: trust conditions, visible before the first word.</p>
+      <h2 class="section-title">Smart context</h2>
+      <p>A small card under each contact shows encryption status and shared groups.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 420px">
+        <img class="phone" src="images/cc-context.png" alt="CyberChat: conversation with a “Crypted chat · Member of 22 studio” context card" width="1371" height="2799" loading="lazy" style="left: 32px; top: 28px; width: 240px;" />
+        <svg class="arrows" viewBox="0 0 600 420" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 197.0C303.4 187.0 262.8 213.0 228.0 207.0"/><path pathLength="1" class="head" d="M236.4 203.9L228.0 207.0L234.9 212.8"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 186px;" aria-hidden="true">who you're talking to,<br>before the first word</span>
+        </div></div>
+        <figcaption>“Crypted chat. Member of 22 studio.” Trust conditions, visible before you type.</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">Profile &amp; settings</h2>
-      <p class="body-p">Profile and settings live together: a dithered avatar, your join date, and quick access to privacy, linked devices and donations, all in one place.</p>
-      <div class="shotcard shotcard--flush">
-        <div class="shotcard__frame"><img src="images/cc-profile.png" alt="CyberChat: profile screen with privacy, linked devices and donate settings" loading="lazy" /></div>
-      </div>
-      <p class="caption">Everything that shapes your account is reachable from a single screen: <span class="hl">privacy, linked devices, donations</span>.</p>
+      <h2 class="section-title">Profile &amp; settings</h2>
+      <p>A dithered avatar, your join date, and everything that shapes your account.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 340px">
+        <img class="phone" src="images/cc-profile.png" alt="CyberChat: profile screen with privacy, linked devices and donate settings" width="1086" height="1185" loading="lazy" style="left: 32px; top: 32px; width: 300px;" />
+        <svg class="arrows" viewBox="0 0 600 340" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path pathLength="1" d="M342 233c3 -.3 5 .2 6 .3M348 233c.6 35 -.4 70 .3 104M348 337c-2 .4 -4 -.1 -6 .3"/></svg><span class="hand cnote" style="left: 364px; top: 270px;" aria-hidden="true">privacy, devices,<br>donations: one place</span></div></div>
+        <figcaption>Privacy, linked devices and donations, from a single screen.</figcaption>
+      </figure>
     </section>
 
     <section class="section">
-      <h2 class="section-title plain">Privacy over profit</h2>
-      <p class="body-p">A donation flow instead of ads or tracking: “privacy over profit”, funded by users, with no compromise.</p>
-      <div class="shots2 shots2--split">
-        <div class="shotcard">
-          <div class="shotcard__frame"><img src="images/cc-payment.png" alt="CyberChat: “Privacy over profit” donation screen, top: header, profile and pitch" loading="lazy" /></div>
-        </div>
-        <div class="shotcard">
-          <div class="shotcard__frame"><img src="images/cc-payment-bottom.png?v=7" alt="CyberChat: donation screen, bottom: preset amounts, custom field and Donate button" loading="lazy" /></div>
-        </div>
-      </div>
-      <p class="caption">“Private messaging, funded by you.” The same screen, top to bottom: a <span class="hl">one-off or recurring donation</span> replaces ads and tracking entirely.</p>
-      <div class="shotcard shotcard--flush">
-        <div class="shotcard__frame"><img src="images/cc-receipt.png" alt="CyberChat: payment receipt confirming a donation to the Cyberchat Association" loading="lazy" /></div>
-      </div>
-      <p class="caption">A plain-text receipt closes the loop: <span class="hl">clear, itemised, no dark patterns</span>.</p>
+      <h2 class="section-title">Privacy over profit</h2>
+      <p>Donations instead of ads or tracking: funded by users, with no compromise.</p>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 320px">
+        <img class="phone" src="images/cc-payment.png" alt="CyberChat: “Privacy over profit” donation screen, top: header, profile and pitch" width="1086" height="1173" loading="lazy" style="left: 32px; top: 50px; width: 250px;" />
+        <img class="phone" src="images/cc-payment-bottom.png?v=7" alt="CyberChat: donation screen, bottom: preset amounts, custom field and Donate button" width="479" height="517" loading="lazy" style="left: 318px; top: 0px; width: 250px;" />
+        </div></div>
+        <figcaption>“Private messaging, funded by you.” The same screen, top and bottom: a one-off or recurring donation.</figcaption>
+      </figure>
+      <figure>
+        <div class="stage"><div class="canvas" style="--h: 360px">
+        <img class="phone" src="images/cc-receipt.png" alt="CyberChat: payment receipt confirming a donation to the Cyberchat Association" width="912" height="1203" loading="lazy" style="left: 32px; top: 32px; width: 280px;" />
+        <svg class="arrows" viewBox="0 0 600 360" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M344.0 223.0C325.1 213.0 306.2 234.0 290.0 228.0"/><path pathLength="1" class="head" d="M298.9 226.5L290.0 228.0L295.7 234.9"/></svg>
+        <span class="hand cnote" style="left: 352px; top: 212px;" aria-hidden="true">plain, itemised,<br>no dark patterns</span>
+        </div></div>
+        <figcaption>A plain receipt closes the loop.</figcaption>
+      </figure>
     </section>
 
     <footer class="case-footer">
@@ -121,5 +149,6 @@
   </main>
   <script src="data.js?v=6"></script>
   <script src="case.js?v=27"></script>
+  <script src="stage.js?v=4"></script>
 </body>
 </html>
