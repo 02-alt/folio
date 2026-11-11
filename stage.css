@@ -1,0 +1,148 @@
+/* ============================================================
+   Stage layout (Ornikar case study). Narrow reading column, every
+   visual on the same quiet canvas with a caption under it, and
+   handwritten notes (MyHand) in the margin. Loaded after case.css.
+   ============================================================ */
+@font-face { font-family: "MyHand"; src: url("fonts/MyHand.ttf") format("truetype"); font-display: swap; }
+
+body[data-project="ornikar"] { --case-col: 648px; }   /* 600px of text + the wrap's side padding */
+
+.stagecase {
+  --stage: var(--case-fill);
+  --stage-card: #fff;
+  --hand-ink: #3a3a3c;
+  --faint: #aeaeb2;
+  --stage-ease: cubic-bezier(.32, .72, 0, 1);
+  font-size: 17px; line-height: 1.47; letter-spacing: -0.003em;
+}
+:root[data-theme="dark"] .stagecase { --stage-card: #2c2c2e; --hand-ink: #d1d1d6; --faint: #636366; }
+.stagecase p { text-wrap: pretty; }
+
+/* Header: small, the visuals carry the page */
+.stagecase .case-title { font-size: 17px; line-height: 1.3; letter-spacing: -0.01em; margin: 0; }
+.stagecase .case-sub { font-size: 15px; color: var(--case-muted); }
+.stagecase .intro { margin-top: var(--s-3); }
+
+/* Section heading: small, with a hairline running to the edge */
+.stagecase .section { margin-top: 88px; }
+.stagecase .section-title { font-size: 17px; line-height: 1.3; letter-spacing: -0.01em; gap: var(--s-2); margin-bottom: var(--s-3); }
+.stagecase .section-title::after { content: ""; flex: 1; height: 1px; background: var(--case-hair); }
+.stagecase .section > p + p { margin-top: var(--s-2); }
+
+/* Stage + caption */
+.stagecase figure { margin: var(--s-5) 0 0; }
+.stagecase figure + p, .stagecase figure + .list { margin-top: var(--s-5); }
+.stage { position: relative; background: var(--stage); border-radius: 20px; overflow: hidden; }
+.stagecase figcaption { max-width: 440px; margin: var(--s-2) auto 0; text-align: center; font-size: 14px; line-height: 1.42; color: var(--case-muted); text-wrap: balance; }
+.stagecase .case-hero { margin-bottom: 0; border-radius: 20px; }
+
+/* Handwriting, arrows, brackets */
+.hand { font-family: "MyHand", "Bradley Hand", cursive; font-size: 21px; line-height: 1.05; letter-spacing: .01em; color: var(--hand-ink); }
+.stagecase .tagh, .stagecase .note, .stagecase .margin { color: var(--hand-ink); }
+.stagecase .tagh svg, .stagecase .note svg, .stagecase .margin svg { flex: none; overflow: visible; }
+
+/* Highlighter: an uneven marker stroke, drawn in once. Painted on the text's own
+   line boxes (clone), so it follows the words when the sentence wraps. */
+.mark { color: #1d1d1f; padding: 0 7px; margin: 0 -7px;
+  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 40" preserveAspectRatio="none"%3E%3Cpath fill="%23ffe066" d="M7 10C58 5 128 9 206 6s136-3 188 1c4 7 1 16 5 26-70 3-148 0-220 2S62 38 4 35c3-8-2-17 3-25Z"/%3E%3Cpath fill="%23ffd84a" fill-opacity=".55" d="M12 13c70-4 150 1 230-2s110 0 150 1c1 5 0 11 2 17-66 1-128-1-196 1S70 33 9 31c2-6-1-12 3-18Z"/%3E%3C/svg%3E') 0 55% / 100% 92% no-repeat;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  transition: background-size .7s cubic-bezier(.3,.6,.2,1) .15s, color .3s ease .45s; }
+.mark.is-waiting { background-size: 0% 92%; color: var(--case-ink); transition: none; }   /* readable on dark until the marker is under it */
+.statement { position: relative; font-size: 22px; line-height: 1.36; letter-spacing: -0.012em; font-weight: 500; margin-top: var(--s-6); }
+.statement + p { margin-top: var(--s-2); }
+.noted { position: relative; }
+.margin { position: absolute; left: calc(100% + 28px); top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 14px; width: 300px; }
+
+/* Research: a conversation, the finding written by hand */
+.chat { padding: 32px 32px 28px; display: grid; gap: 18px; }
+.msg { display: grid; grid-template-columns: 30px 340px auto; gap: 10px; align-items: end; }
+.av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 600; color: #fff; background: linear-gradient(180deg, #a5a5ab, #8e8e93); }
+.who { font-size: 12px; color: var(--case-muted); margin: 0 0 3px 12px; }
+.bub { width: fit-content; background: var(--stage-card); border-radius: 18px 18px 18px 6px; padding: 9px 14px; font-size: 15px; line-height: 1.4; box-shadow: 0 0 0 .5px var(--case-hair); }
+.tagh { display: flex; align-items: center; gap: 6px; padding-bottom: 6px; white-space: nowrap; }
+.tagh svg { transform: scaleX(.8); transform-origin: left; }
+
+/* Faux window on a stage */
+.win { position: absolute; background: var(--stage-card); border-radius: 12px; box-shadow: 0 0 0 .5px var(--case-hair), 0 12px 32px -8px rgba(0,0,0,.14); overflow: hidden; }
+.win__bar { height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1px solid var(--case-hair); }
+.win__bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--case-hair); }
+.win__bar span { margin-left: 10px; font-size: 11px; color: var(--faint); }
+.win > img { display: block; width: 100%; }
+.task { display: grid; grid-template-columns: 22px 1fr 44px; gap: 12px; align-items: center; padding: 11px 18px; border-bottom: 1px solid var(--case-hair); font-size: 14px; }
+.task:last-child { border-bottom: 0; }
+.task em { font-style: normal; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 600; background: var(--stage); color: var(--case-muted); }
+.task u { display: block; height: 6px; border-radius: 3px; background: var(--stage); text-decoration: none; }
+
+/* Solution player: same phone width and position for every step */
+.player .stage { height: 296px; }
+.scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .5s var(--stage-ease), visibility 0s .5s; }
+.scene.on { opacity: 1; visibility: visible; transition: opacity .5s var(--stage-ease); }
+.scene .screen { position: absolute; left: 32px; width: 340px; transform: translateY(8px); transition: transform .6s var(--stage-ease); }
+.scene.on .screen { transform: none; }
+.scene .screen > img, .scene .screen > .spot { display: block; width: 100%; }
+.spot { position: relative; }
+.spot img { display: block; width: 100%; }
+.spot .hi { position: absolute; }
+.spot--onb .hi { left: 8.6%; top: 27.9%; width: 82.5%; }
+.spot--after .hi { left: 7.44%; top: 30.72%; width: 83.81%; }
+.note { position: absolute; display: flex; align-items: flex-start; gap: 8px; }
+.scene .note { left: 380px; opacity: 0; transform: translateX(-6px); transition: opacity .4s var(--stage-ease) .25s, transform .5s var(--stage-ease) .25s; }
+.scene.on .note { opacity: 1; transform: none; }
+.note .hand { font-size: 19px; margin-top: 12px; white-space: nowrap; }
+
+/* Step control: an iOS segmented control, with the autoplay progress in the thumb */
+.controls { display: flex; justify-content: center; margin-top: var(--s-2); }
+.stp { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); padding: 2px; border-radius: 10px; background: rgba(118,118,128,.12); --i: 0; }
+.stp__thumb { position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc((100% - 4px) / 4); border-radius: 8px; background: var(--stage-card); box-shadow: 0 3px 8px rgba(0,0,0,.12), 0 3px 1px rgba(0,0,0,.04), 0 0 0 .5px rgba(0,0,0,.04); transform: translateX(calc(100% * var(--i))); transition: transform .35s var(--stage-ease); overflow: hidden; }
+.stp__thumb::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 3px; height: 2px; border-radius: 1px; background: currentColor; opacity: .14; transform: scaleX(0); transform-origin: left; }
+.stp.playing .stp__thumb::after { animation: stp-fill var(--dur, 3.6s) linear forwards; }
+@keyframes stp-fill { to { transform: scaleX(1); } }
+.stp button { position: relative; z-index: 1; font: inherit; font-size: 14px; font-weight: 500; color: var(--case-ink); background: none; border: 0; padding: 0 16px; min-height: 32px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+.stp button b { font-weight: 500; color: var(--faint); margin-right: 5px; transition: color .2s; }
+.stp button.on b { color: var(--case-muted); }
+.stp button:not(.on):hover { background: rgba(118,118,128,.08); }
+.stp button:active { transform: scale(.96); transition: transform .1s; }
+.stp button:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 2px; }
+.player figcaption { min-height: 40px; margin-top: 12px; }
+
+/* Process: one column per week */
+.weeks2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 24px; }
+.wk { background: var(--stage-card); border-radius: 14px; padding: 18px 20px 8px; box-shadow: 0 0 0 .5px var(--case-hair); }
+.wk__h { font-size: 13px; font-weight: 500; color: var(--case-muted); margin-bottom: 4px; }
+.st { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: start; padding: 12px 0; border-top: 1px solid var(--case-hair); }
+.st:first-of-type { border-top: 0; }
+.st .sf { display: flex; justify-content: center; padding-top: 2px; }
+.st .sf svg { height: 17px; width: auto; fill: currentColor; }
+.st b { display: block; font-size: 15px; font-weight: 600; }
+.st span:not(.sf) { display: block; font-size: 14px; color: var(--case-muted); }
+
+.list { border-top: 1px solid var(--case-hair); }
+.list > div { display: grid; grid-template-columns: 180px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--case-hair); font-size: 15px; line-height: 1.42; }
+.list b { font-weight: 600; }
+.list .muted { color: var(--case-muted); }
+
+/* The side menu fits beside the narrower column from 1100px */
+@media (min-width: 1100px) and (max-width: 1359px) { body[data-project="ornikar"] .toc { display: block; } }
+/* Margin notes need the right gutter; below that they sit under their text */
+@media (max-width: 1180px) {
+  .margin { position: static; transform: none; margin-top: 12px; width: auto; }
+  .margin svg { display: none; }
+}
+@media (max-width: 680px) {
+  .chat { padding: 24px 16px; }
+  .msg { grid-template-columns: 30px 1fr; }
+  .tagh { grid-column: 2; padding: 0 0 0 4px; }
+  .tagh svg { display: none; }
+  .player .stage { height: 300px; }
+  .scene .screen { left: 50%; margin-left: -150px; width: 300px; }
+  .scene .note { display: none; }
+  .weeks2 { grid-template-columns: 1fr; }
+  .list > div { grid-template-columns: 1fr; gap: 2px; }
+  .stp button { padding: 0 10px; font-size: 13px; }
+  .stage .win[data-wide] { left: 16px !important; }
+  .stage .note--test { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene, .scene .screen, .scene .note, .stp__thumb, .mark { transition: none; }
+  .scene .screen, .scene.on .screen, .scene .note { transform: none; }
+}
