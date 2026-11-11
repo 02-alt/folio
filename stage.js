@@ -1,4 +1,4 @@
-/* Stage layout (Ornikar): the step player and the highlighter. */
+/* Stage layout (Ornikar): the step player and the hand-drawn correction. */
 (function () {
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -38,8 +38,8 @@
     }, { threshold: 0.6 }).observe(fig);
   }
 
-  // Highlighter: drawn left to right the first time it comes into view
-  if (!reduce) [].forEach.call(document.querySelectorAll(".mark"), function (m) {
+  // Correction: struck out and rewritten the first time it comes into view
+  if (!reduce) [].forEach.call(document.querySelectorAll(".edit"), function (m) {
     m.classList.add("is-waiting");
     var io = new IntersectionObserver(function (es) {
       if (es[0].isIntersecting) { m.classList.remove("is-waiting"); io.disconnect(); }

@@ -41,14 +41,20 @@ body[data-project="ornikar"] { --case-col: 648px; }   /* 600px of text + the wra
 .stagecase .tagh, .stagecase .note, .stagecase .margin { color: var(--hand-ink); }
 .stagecase .tagh svg, .stagecase .note svg, .stagecase .margin svg { flex: none; overflow: visible; }
 
-/* Highlighter: an uneven marker stroke, drawn in once. Painted on the text's own
-   line boxes (clone), so it follows the words when the sentence wraps. */
-.mark { color: #1d1d1f; padding: 0 7px; margin: 0 -7px;
-  background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 40" preserveAspectRatio="none"%3E%3Cpath fill="%23ffe066" d="M7 10C58 5 128 9 206 6s136-3 188 1c4 7 1 16 5 26-70 3-148 0-220 2S62 38 4 35c3-8-2-17 3-25Z"/%3E%3Cpath fill="%23ffd84a" fill-opacity=".55" d="M12 13c70-4 150 1 230-2s110 0 150 1c1 5 0 11 2 17-66 1-128-1-196 1S70 33 9 31c2-6-1-12 3-18Z"/%3E%3C/svg%3E') 0 55% / 100% 92% no-repeat;
-  -webkit-box-decoration-break: clone; box-decoration-break: clone;
-  transition: background-size .7s cubic-bezier(.3,.6,.2,1) .15s, color .3s ease .45s; }
-.mark.is-waiting { background-size: 0% 92%; color: var(--case-ink); transition: none; }   /* readable on dark until the marker is under it */
-.statement { position: relative; font-size: 22px; line-height: 1.36; letter-spacing: -0.012em; font-weight: 500; margin-top: var(--s-6); }
+/* Correction: the first diagnosis struck out by hand, the real one written above
+   it, like a proofreading mark. Drawn in once: strike, caret, then the word. */
+.stagecase figure + .statement { margin-top: 80px; }   /* room for the handwritten word above */
+.edit { position: relative; display: inline-block; margin-left: 2px; color: var(--hand-ink); }
+.edit s { position: relative; text-decoration: none; color: var(--faint); }
+.edit s svg { position: absolute; left: -4px; top: 46%; width: calc(100% + 8px); height: 12px; overflow: visible; }
+.edit__new { position: absolute; left: 50%; bottom: 86%; transform: translateX(-38%) rotate(-3deg); font-size: 28px; white-space: nowrap; }
+.edit__caret { position: absolute; left: 50%; top: 96%; transform: translateX(-50%); overflow: visible; }
+.edit path { stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset .45s cubic-bezier(.3,.6,.2,1); }
+.edit__caret path { transition-delay: .4s; }
+.edit__new { transition: opacity .35s ease .6s, transform .5s var(--stage-ease) .6s; }
+.edit.is-waiting path { stroke-dashoffset: 1; transition: none; }
+.edit.is-waiting .edit__new { opacity: 0; transform: translateX(-38%) translateY(4px) rotate(-3deg); transition: none; }
+.statement { position: relative; font-size: 22px; line-height: 1.36; letter-spacing: -0.012em; font-weight: 500; }
 .statement + p { margin-top: var(--s-2); }
 .noted { position: relative; }
 .margin { position: absolute; left: calc(100% + 28px); top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 14px; width: 300px; }
@@ -143,6 +149,6 @@ body[data-project="ornikar"] { --case-col: 648px; }   /* 600px of text + the wra
   .stage .note--test { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scene, .scene .screen, .scene .note, .stp__thumb, .mark { transition: none; }
+  .scene, .scene .screen, .scene .note, .stp__thumb, .edit path, .edit__new { transition: none; }
   .scene .screen, .scene.on .screen, .scene .note { transform: none; }
 }
