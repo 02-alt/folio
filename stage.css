@@ -23,10 +23,10 @@ body[data-project="ornikar"], body[data-project="alan"], body[data-project="cybe
 .stagecase .case-sub { font-size: 15px; color: var(--case-muted); }
 .stagecase .intro { margin-top: var(--s-3); }
 
-/* Section heading: small, with a hairline running to the edge */
-.stagecase .section { margin-top: 88px; }
-.stagecase .section-title { font-size: 17px; line-height: 1.3; letter-spacing: -0.01em; gap: var(--s-2); margin-bottom: var(--s-3); }
-.stagecase .section-title::after { content: ""; flex: 1; height: 1px; background: var(--case-hair); }
+/* Section heading: a clear title, and more space between sections than inside one,
+   so each part reads as its own block */
+.stagecase .section { margin-top: 136px; }
+.stagecase .section-title { font-size: 28px; line-height: 1.15; letter-spacing: -0.022em; margin-bottom: 12px; }
 .stagecase .section > p + p { margin-top: var(--s-2); }
 
 /* Stage + caption */
