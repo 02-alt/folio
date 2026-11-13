@@ -85,9 +85,18 @@
   float.setAttribute("aria-label", "Back");
   var chev = back.querySelector("svg");
   if (chev) float.appendChild(chev.cloneNode(true));
+  // a ring around it fills as the page is read
+  float.insertAdjacentHTML("beforeend",
+    '<svg class="case-back__ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" pathLength="1"/></svg>');
+  var ring = float.querySelector(".case-back__ring circle");
   document.body.appendChild(float);
   var fTick = false;
-  function floatUpdate() { fTick = false; float.classList.toggle("is-on", back.getBoundingClientRect().bottom < 0); }
+  function floatUpdate() {
+    fTick = false;
+    float.classList.toggle("is-on", back.getBoundingClientRect().bottom < 0);
+    var max = document.documentElement.scrollHeight - innerHeight;
+    ring.style.strokeDashoffset = String(1 - (max > 0 ? Math.min(1, scrollY / max) : 1));
+  }
   function onFloatScroll() { if (!fTick) { fTick = true; requestAnimationFrame(floatUpdate); } }
   addEventListener("scroll", onFloatScroll, { passive: true });
   addEventListener("resize", onFloatScroll);

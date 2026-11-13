@@ -2,6 +2,18 @@
 (function () {
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Reading time beside the subtitle: ~220 words a minute, plus a few seconds per visual
+  var sub = document.querySelector(".stagecase .case-sub"), main = document.querySelector(".stagecase");
+  if (sub && main) {
+    var words = (main.innerText || "").split(/\s+/).filter(Boolean).length;
+    var figs = main.querySelectorAll("figure").length;
+    var min = Math.max(1, Math.round(words / 220 + figs * 8 / 60));
+    var rt = document.createElement("span");
+    rt.className = "case-readtime";
+    rt.textContent = " · " + min + " min read";
+    sub.appendChild(rt);
+  }
+
   // Step player: plays on its own while it's on screen; a tap on a step hands control to the visitor.
   var fig = document.getElementById("player");
   if (fig) {
