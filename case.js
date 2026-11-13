@@ -803,10 +803,18 @@
   a.className = "pnext";
   a.href = next.page;
   if (next.accent) a.style.setProperty("--accent", next.accent);
+  var dark = document.documentElement.dataset.theme === "dark" && next.imageDark;
   a.innerHTML =
-    '<span class="pnext__label">Next project</span>' +
-    '<span class="pnext__name">' + next.name + '</span>' +
-    '<span class="pnext__arrowbox"><svg class="pnext__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+    '<span class="pnext__txt">' +
+      '<span class="pnext__label">Next project</span>' +
+      '<span class="pnext__name"></span>' +
+      '<span class="pnext__tag"></span>' +
+    '</span>' +
+    '<span class="pnext__media"><img alt="" loading="lazy" decoding="async"></span>' +
+    '<span class="pnext__arrowbox" aria-hidden="true"><svg class="pnext__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  a.querySelector(".pnext__name").textContent = next.name;
+  a.querySelector(".pnext__tag").textContent = next.tagline || "";
+  a.querySelector("img").src = dark ? next.imageDark : next.image;
   wrap.insertBefore(a, footer);
 
   // Replace the current project in history instead of pushing a new entry, so

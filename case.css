@@ -507,37 +507,58 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   margin-top: var(--s-14);
 }
 
-/* ---- Next-project link (foot of every case page) — minimalist, right-aligned ---- */
+/* ---- Next-project card (foot of every case page): the next project's image,
+   name and tagline, on the same quiet fill as the stages ---- */
 .pnext {
-  display: flex;
-  justify-content: flex-end;      /* sits on the right */
-  align-items: center;
-  gap: var(--s-1);
+  display: grid;
+  grid-template-columns: 1fr 44%;
+  grid-template-areas: "txt media" "arrow media";
+  grid-template-rows: 1fr auto;
   margin-top: var(--s-12);
-  padding-top: 26px;
-  border-top: 1px solid var(--case-hair);
-  font-size: 17px;
-  text-decoration: none;
-  color: var(--case-muted);
-}
-.pnext__label { color: var(--case-muted); }
-.pnext__name { color: var(--case-ink); font-weight: 600; transition: color .2s ease; }
-/* arrow loops on hover: slides out right, a fresh one glides in from the left */
-.pnext__arrowbox {
-  width: 17px; height: 15px;
+  border-radius: 20px;
   overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--case-fill);
+  text-decoration: none;
+  color: var(--case-ink);
+  transition: transform .2s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
 }
-.pnext__arrow { width: 15px; height: 15px; display: block; color: var(--case-muted); transition: color .2s ease, transform .25s var(--ease-out); }
-.pnext:hover .pnext__name,
-.pnext:hover .pnext__arrow { color: var(--accent, var(--case-blue)); }
-@media (hover: hover) { .pnext:hover .pnext__arrow { transform: translateX(3px); } }   /* a nudge, not a loop */
-.pnext + .case-footer { margin-top: var(--s-7); }
+.pnext:active { transform: scale(.985); }
+.pnext:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 3px; }
+.pnext__txt { grid-area: txt; display: flex; flex-direction: column; padding: 28px 28px 0; }
+.pnext__label { font-size: 13px; color: var(--case-muted); }
+.pnext__name { font-size: 28px; line-height: 1.15; font-weight: 600; letter-spacing: -0.022em; margin-top: 4px; transition: color .2s ease; }
+.pnext__tag { font-size: 15px; line-height: 1.4; color: var(--case-muted); margin-top: 6px; text-wrap: pretty; }
+.pnext__media { grid-area: media; position: relative; min-height: 176px; overflow: hidden; }
+.pnext__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease-out); }
+.pnext__arrowbox {
+  grid-area: arrow;
+  width: 36px; height: 36px; margin: 20px 28px 24px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--case-ink);
+  transition: background-color .2s ease;
+}
+.pnext__arrow { width: 16px; height: 16px; display: block; color: var(--bg); transition: transform .25s var(--ease-out); }
+@media (hover: hover) {
+  .pnext:hover .pnext__name { color: var(--accent, var(--case-blue)); }
+  .pnext:hover .pnext__arrowbox { background: var(--accent, var(--case-blue)); }
+  .pnext:hover .pnext__arrow { transform: translateX(2px); }
+  .pnext:hover .pnext__media img { transform: scale(1.03); }
+}
+:root[data-theme="dark"] .pnext:hover .pnext__name { color: var(--case-ink); }
+:root[data-theme="dark"] .pnext:hover .pnext__arrowbox { background: var(--case-ink); }
+@media (max-width: 560px) {
+  .pnext { grid-template-columns: 1fr 40%; }
+  .pnext__txt { padding: 20px 20px 0; }
+  .pnext__name { font-size: 22px; }
+  .pnext__arrowbox { margin: 16px 20px 20px; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .pnext__arrow { transition: color .2s ease; }
+  .pnext, .pnext__arrow, .pnext__media img { transition: none; }
+  .pnext:hover .pnext__media img { transform: none; }
 }
+.pnext + .case-footer { margin-top: var(--s-7); }
 
 /* ---- Feature rows: a title + text beside one screen recording; .feature--flip
    puts the phone on the left so consecutive rows alternate ---- */

@@ -32,8 +32,8 @@
   <!-- Apply the saved appearance before first paint (no light flash in dark mode) -->
   <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
   <link rel="stylesheet" href="styles.css?v=14" />
-  <link rel="stylesheet" href="case.css?v=51" />
-  <link rel="stylesheet" href="stage.css?v=6" />
+  <link rel="stylesheet" href="case.css?v=52" />
+  <link rel="stylesheet" href="stage.css?v=7" />
   <link rel="preload" href="fonts/MyHand.ttf" as="font" type="font/ttf" crossorigin />
 </head>
 <body class="case" data-project="alan">
@@ -128,6 +128,17 @@
       </figure>
     </section>
 
+    <section class="section">
+      <h2 class="section-title" id="team">Team</h2>
+      <div class="stage team">
+        <ul class="team__list">
+            <li><span class="team__av" aria-hidden="true">PM</span><span><b>Product manager</b> <span class="team__role">at Alan</span></span></li>
+            <li><span class="team__av" aria-hidden="true">E</span><span><b>Engineers</b> <span class="team__role">at Alan</span></span></li>
+            <li><span class="team__av" aria-hidden="true">M</span><span><b>Matthieu</b> <span class="team__role">Product designer</span></span></li>
+        </ul>
+      </div>
+    </section>
+
     <footer class="case-footer">
       <a class="btn btn--primary" href="mailto:matthieu.coma@pm.me">
         <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
@@ -141,7 +152,7 @@
 
   </main>
   <script src="data.js?v=6"></script>
-  <script src="case.js?v=27"></script>
+  <script src="case.js?v=28"></script>
   <script src="stage.js?v=4"></script>
 </body>
 </html>

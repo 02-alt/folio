@@ -124,6 +124,15 @@ body[data-project="ornikar"], body[data-project="alan"], body[data-project="cybe
 .canvas.is-waiting .arrows path { stroke-dashoffset: 1; transition: none; }
 .canvas.is-waiting .cnote { opacity: 0; transform: translateX(-4px); transition: none; }
 
+/* Team: who made it, as a row of people */
+.team { padding: 24px 28px; }
+.team__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.team__list li { display: flex; align-items: center; gap: 14px; font-size: 15px; line-height: 1.35; }
+.team__list b { font-weight: 600; }
+.team__role { color: var(--case-muted); }
+.team__av { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 600; color: #fff; background: linear-gradient(180deg, #6e6e73, #58585d); }
+.team__list li:last-child .team__av { background: var(--case-ink); color: var(--bg); }
+
 /* Process: one column per week */
 .weeks2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 24px; }
 .wk { background: var(--stage-card); border-radius: 14px; padding: 18px 20px 8px; box-shadow: 0 0 0 .5px var(--case-hair); }
