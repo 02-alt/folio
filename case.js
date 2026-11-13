@@ -636,12 +636,18 @@
     });
   });
 
-  zoom.addEventListener("click", function (e) { e.stopPropagation(); close(); });
+  zoom.addEventListener("click", function (e) { e.stopPropagation(); if (e.target.closest(".zoom__ui")) return; close(); });
   zoom.addEventListener("touchmove", function (e) { e.preventDefault(); }, { passive: false });   // keep the page still
   document.addEventListener("keydown", function (e) {
     if (!isOpen) return;
-    if (e.key === "Escape" || ((e.key === "Enter" || e.key === " ") && document.activeElement !== closeBtn)) { e.preventDefault(); close(); }
-    else if (e.key === "Tab") { e.preventDefault(); closeBtn.focus(); }   // the close button is the only stop
+    var inUi = document.activeElement && document.activeElement.closest && document.activeElement.closest(".zoom__ui");
+    if (e.key === "Escape" || ((e.key === "Enter" || e.key === " ") && document.activeElement !== closeBtn && !inUi)) { e.preventDefault(); close(); }
+    else if (e.key === "Tab") {   // focus stays in the overlay: the close button, plus any controls a page adds (.zoom__ui)
+      e.preventDefault();
+      var stops = [closeBtn].concat([].filter.call(zoom.querySelectorAll(".zoom__ui button"), function (b) { return b.offsetParent && !b.closest("[inert]"); }));
+      var i = stops.indexOf(document.activeElement);
+      stops[(i + (e.shiftKey ? -1 : 1) + stops.length) % stops.length].focus();
+    }
   });
   addEventListener("resize", function () {
     if (!el || !isOpen) return;

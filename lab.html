@@ -33,6 +33,74 @@
   <script>try{var t=new URLSearchParams(location.search).get("theme")||localStorage.getItem("theme");if(t==="dark")document.documentElement.dataset.theme="dark";}catch(e){}</script>
   <link rel="stylesheet" href="styles.css?v=14" />
   <link rel="stylesheet" href="case.css?v=53" />
+
+  <style>
+    /* Curation Studio: a web app, so the screen is the browser page itself (no wallpaper) */
+    .studio { margin: 0; }
+    .studio-say { min-height: calc(2 * 1.5em); }   /* the line changes with the view: keep two lines so the Mac never jumps */
+    .studio .clip__card { position: relative; padding-bottom: 16px; }   /* 16px from the edge, like the switch at the top */
+    .studio-seg { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 3; }
+    .studio__screen { background: #fff; }
+    .studio__screen::before { display: none; }
+    .studio__shot { position: absolute; left: 0; top: 0; width: 100%; height: auto; opacity: 0; transition: opacity .3s var(--ease-out); }
+    .studio__shot.is-on { opacity: 1; }
+    /* the second row: a few states to try, as the same segmented control as the switch above
+       (HIG: one control style per kind of choice, capsules nested concentrically). No visible label:
+       Daylight / Evening / Night say what they are, and the line above the Mac names the tool. */
+    .studio-try { display: flex; justify-content: center; margin-top: 28px; min-height: 32px; }
+    .studio-try[hidden] { display: flex; visibility: hidden; }
+    .studio-try__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* the choices name themselves; the label stays for screen readers */
+    .studio-try__chips { display: inline-flex; padding: 2px; gap: 0; border-radius: 999px; background: var(--seg-bg, rgba(0,0,0,.06)); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+    .studio-try__chips::-webkit-scrollbar { display: none; }
+    .studio-chip { position: relative; flex: none; min-width: 64px; height: 28px; padding: 0 12px; border: 0; border-radius: 999px; background: none;
+      font: 500 13px/1 var(--sans); color: var(--case-muted); cursor: pointer; -webkit-tap-highlight-color: transparent;
+      transition: color .2s ease, background-color .2s ease, box-shadow .2s ease; }
+    .studio-chip::before { content: ""; position: absolute; inset: -8px 0; }   /* 44pt hit area on a 28pt control */
+    .studio-chip:hover { color: var(--case-ink); }
+    .studio-chip[aria-pressed="true"] { color: var(--case-ink); background: var(--seg-thumb, #fff); box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 0 0 .5px rgba(0,0,0,.04); }
+    .studio-chip:active { transform: scale(.96); }
+    .studio-chip:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 1px; }
+    :root[data-theme="dark"] .studio-try__chips { --seg-bg: rgba(255,255,255,.08); }
+    :root[data-theme="dark"] .studio-chip { --seg-thumb: #3a3a3c; }
+    @media (prefers-reduced-motion: reduce) { .studio__shot, .studio-chip { transition: none; } }
+    /* Full screen: a Dynamic Island at the top. Collapsed it names what's on screen;
+       tapped, it grows into the four tools and four states to try (never more). */
+    .island { position: fixed; z-index: 3; top: max(18px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%) translateY(-12px) scale(.9);
+      opacity: 0; pointer-events: none; color: #f5f5f7; font-family: var(--sans);
+      transition: opacity .25s ease, transform .5s cubic-bezier(.32,.72,0,1); }
+    .zoom.is-open .island.is-ready { opacity: 1; transform: translateX(-50%); pointer-events: auto; }
+    .island__shape { position: relative; background: #000; border-radius: 22px; overflow: hidden;
+      box-shadow: 0 0 0 .5px rgba(255,255,255,.12), 0 12px 32px rgba(0,0,0,.45);
+      width: var(--w, 220px); height: var(--h, 44px);
+      transition: width .5s cubic-bezier(.32,.72,0,1), height .5s cubic-bezier(.32,.72,0,1), border-radius .5s cubic-bezier(.32,.72,0,1); }
+    .island.is-open .island__shape { border-radius: 30px; }   /* 14px padding inside: inner corners 16px, concentric */
+    .island__pill { position: absolute; left: 0; top: 0; height: 44px; width: max-content; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 6px;
+      font: inherit; font-size: 14px; font-weight: 500; color: inherit; background: none; border: 0; cursor: pointer; white-space: nowrap;
+      transition: opacity .2s ease; }
+    .island__dot { flex: none; width: 32px; height: 32px; border-radius: 50%; background-repeat: no-repeat; box-shadow: 0 0 0 .5px rgba(255,255,255,.2); }
+    .island__pill b { font-weight: 600; }
+    .island__pill span.muted { color: rgba(255,255,255,.55); }
+    .island__chev { width: 12px; height: 12px; margin-left: auto; opacity: .6; transition: transform .4s cubic-bezier(.32,.72,0,1); }
+    .island.is-open .island__pill { opacity: 0; pointer-events: none; }
+    .island__body { position: absolute; left: 0; top: 0; width: 440px; padding: 14px; opacity: 0; transform: scale(.96); transform-origin: 50% 0;
+      transition: opacity .2s ease, transform .4s cubic-bezier(.32,.72,0,1); }
+    .island.is-open .island__body { opacity: 1; transform: none; transition-delay: .12s, .05s; }
+    .island__tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 2px; border-radius: 999px; background: rgba(255,255,255,.1); }
+    .island__tools button { font: inherit; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.7); background: none; border: 0; height: 28px; border-radius: 999px; cursor: pointer; }
+    .island__tools button[aria-pressed="true"] { background: rgba(255,255,255,.2); color: #fff; }
+    .island__opts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; min-height: 92px; }
+    .island__opt { font: inherit; color: rgba(255,255,255,.75); background: none; border: 0; padding: 0; cursor: pointer; text-align: center; }
+    .island__thumb { display: block; width: 100%; aspect-ratio: 4 / 3; border-radius: 16px; background-color: #1c1c1e; background-repeat: no-repeat;
+      box-shadow: inset 0 0 0 .5px rgba(255,255,255,.14); transition: box-shadow .2s ease, transform .2s ease; }
+    .island__opt span { display: block; font-size: 12px; font-weight: 500; margin-top: 6px; margin-bottom: 2px; }
+    .island__opt[aria-pressed="true"] { color: #fff; }
+    .island__opt[aria-pressed="true"] .island__thumb { box-shadow: 0 0 0 2px #fff; }
+    .island__opt:active .island__thumb, .island__tools button:active { transform: scale(.96); }
+    .island__empty { grid-column: 1 / -1; align-self: center; text-align: center; font-size: 13px; color: rgba(255,255,255,.55); }
+    .island button:focus-visible { outline: 2px solid #4da3ff; outline-offset: 2px; }
+    @media (max-width: 520px) { .island__body { width: calc(100vw - 32px); } }
+    @media (prefers-reduced-motion: reduce) { .island, .island__shape, .island__body, .island__pill { transition: opacity .15s ease; } }
+  </style>
 </head>
 <body class="case" data-project="vibe-coding">
   <main class="case-wrap">
@@ -212,6 +280,45 @@
       </div>
     </section>
 
+    <section class="section">
+      <h2 class="section-title plain">Curation Studio</h2>
+      <p class="body-p">The tool behind the curation on builtoberemembered, built for the web. Write a topic once, publish it with one button, then turn it into an Instagram carousel or a Reel. Every topic on the site so far has gone out through it.</p>
+      <a class="btn btn--secondary case-cta" href="https://buildtoberemembered.com/curation/" target="_blank" rel="noopener">
+        <span>See the curation</span>
+        <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        <span class="visually-hidden"> (opens in new tab)</span>
+      </a>
+      <div class="feature feature--wide">
+        <div class="feature__text">
+          <p class="feature__devices">Web</p>
+          <h3 class="feature__title">Four tools, one topic</h3>
+          <p class="body-p studio-say" aria-live="polite"><span class="hl">Write</span>: a page you write on, built from blocks (text, boards of photos, quotes, video, handwriting), with every setting in one side panel.</p>
+        </div>
+        <figure class="studio">
+          <div class="clip__card clip__card--mac">
+            <div class="seg studio-seg" role="tablist" aria-label="Studio views">
+              <span class="seg__thumb" aria-hidden="true"></span>
+              <button type="button" class="seg__btn" role="tab" data-v="write" aria-selected="true">Write</button>
+              <button type="button" class="seg__btn" role="tab" data-v="topics" aria-selected="false">Topics</button>
+              <button type="button" class="seg__btn" role="tab" data-v="instagram" aria-selected="false">Instagram</button>
+              <button type="button" class="seg__btn" role="tab" data-v="reel" aria-selected="false">Reel</button>
+            </div>
+            <div class="device device--mac">
+              <div class="device__screen studio__screen">
+                <img class="studio__shot is-on" src="images/studio-w-text.webp" alt="Curation Studio, Write: a topic open in the editor, settings in the side panel" />
+                <img class="studio__shot" src="" alt="" aria-hidden="true" />
+              </div>
+              <img class="device__frame" src="images/bezel-mbp14.webp?v=2" alt="" aria-hidden="true" />
+            </div>
+            <div class="studio-try" role="group" aria-label="Try it">
+              <span class="studio-try__label"></span>
+              <div class="studio-try__chips" role="group"></div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
     <footer class="case-footer">
       <a class="btn btn--primary" href="mailto:matthieu.coma@pm.me">
         <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
@@ -227,6 +334,176 @@
 
   <script src="data.js?v=6"></script>
 
-  <script src="case.js?v=29"></script>
+  <script src="case.js?v=30"></script>
+  <script>
+  /* Curation Studio: four views, and in each one a few real states to try (blocks, covers, lights).
+     Every state is a capture of the real tool; images load the first time a view is opened. */
+  (function () {
+    var fig = document.querySelector(".studio"); if (!fig) return;
+    var seg = fig.querySelector(".studio-seg"), thumb = seg.querySelector(".seg__thumb");
+    var tabs = [].slice.call(seg.querySelectorAll(".seg__btn"));
+    var shots = [].slice.call(fig.querySelectorAll(".studio__shot")), front = 0;
+    var tray = fig.querySelector(".studio-try"), label = tray.querySelector(".studio-try__label"), chips = tray.querySelector(".studio-try__chips");
+    var say = document.querySelector(".studio-say");
+    tray.addEventListener("click", function (e) { e.stopPropagation(); });   // trying a state is not a click to enlarge the Mac
+    var V = {
+      write: { line: '<span class="hl">Write</span>: a page you write on, built from blocks (text, boards of photos, quotes, video, handwriting), with every setting in one side panel.',
+        label: "Blocks", alt: "Curation Studio, Write: the editor showing a ",
+        opts: [["text", "Text"], ["board", "Board"], ["hand", "Handwriting"]], more: [["quote", "Quote"]], img: function (k) { return "images/studio-w-" + k + ".webp"; } },
+      topics: { line: '<span class="hl">Topics</span>: everything published, numbered, one click from editing it again or turning it into a post or a reel.',
+        alt: "Curation Studio, Topics: the published topics with Instagram and Reel shortcuts", img: function () { return "images/studio-topics.webp"; } },
+      instagram: { line: '<span class="hl">Instagram</span>: the carousel previewed live on a phone, ten cover styles, words you can edit per slide, and the caption ready to copy.',
+        label: "Cover", alt: "Curation Studio, Instagram: the carousel with the cover style ",
+        opts: [["museum", "Museum"], ["tunnel", "Tunnel"], ["ink", "Ink"]], more: [["grid", "Grid"]],
+        img: function (k) { return "images/studio-ig-" + k + ".webp"; } },
+      reel: { line: '<span class="hl">Reel</span>: the topic walked through like a gallery, stop by stop, with pace, lights and music, exported as an MP4.',
+        label: "Light", alt: "Curation Studio, Reel: a photo stop in the gallery, light set to ",
+        opts: [["day", "Daylight"], ["evening", "Evening"], ["night", "Night"]], more: [["white", "White"]], img: function (k) { return "images/studio-rl-" + k + ".webp"; } }
+    };
+    var cur = { view: "write", key: "text" };
+    var loaded = {};
+    function preload(v) { if (loaded[v]) return; loaded[v] = 1; (V[v].opts || [[""]]).forEach(function (o) { var im = new Image(); im.decoding = "async"; im.src = V[v].img(o[0]); }); }
+    function show(src, alt) {
+      var back = shots[1 - front];
+      var swap = function () { back.classList.add("is-on"); back.removeAttribute("aria-hidden"); back.alt = alt;
+        shots[front].classList.remove("is-on"); shots[front].setAttribute("aria-hidden", "true"); shots[front].alt = ""; front = 1 - front; };
+      if (back.getAttribute("src") === src && back.complete) { swap(); return; }
+      back.onload = swap; back.src = src;
+    }
+    function place(b) { thumb.style.width = b.offsetWidth + "px"; thumb.style.transform = "translateX(" + b.offsetLeft + "px)"; }
+    function setKey(k) {
+      var v = V[cur.view]; cur.key = k;
+      [].forEach.call(chips.children, function (c) { c.setAttribute("aria-pressed", String(c.dataset.k === k)); });
+      var name = (v.opts || []).concat(v.more || []).filter(function (o) { return o[0] === k; })[0];
+      show(v.img(k), v.alt + (name ? name[1].toLowerCase() + (cur.view === "write" ? " block" : "") : ""));
+    }
+    function setView(view) {
+      var v = V[view]; cur.view = view; preload(view);
+      tabs.forEach(function (t) { var on = t.dataset.v === view; t.setAttribute("aria-selected", String(on)); t.setAttribute("aria-pressed", String(on)); if (on) place(t); });
+      if (say) say.innerHTML = v.line;
+      chips.innerHTML = "";
+      if (v.opts) {
+        tray.hidden = false; label.textContent = v.label; chips.setAttribute("aria-label", v.label);
+        v.opts.forEach(function (o) {
+          var c = document.createElement("button"); c.type = "button"; c.className = "studio-chip"; c.dataset.k = o[0]; c.textContent = o[1];
+          c.addEventListener("click", function () { setKey(o[0]); });
+          chips.appendChild(c);
+        });
+        setKey(v.opts[0][0]);
+      } else { tray.hidden = true; show(v.img(), v.alt); }
+    }
+    tabs.forEach(function (t) {
+      t.addEventListener("click", function () { if (t.dataset.v !== cur.view) setView(t.dataset.v); });
+      t.addEventListener("pointerenter", function () { preload(t.dataset.v); });
+    });
+    // first view without a fade
+    preload("write");
+    tabs[0].setAttribute("aria-pressed", "true");
+    var v0 = V.write; label.textContent = v0.label; chips.setAttribute("aria-label", v0.label);
+    v0.opts.forEach(function (o) { var c = document.createElement("button"); c.type = "button"; c.className = "studio-chip"; c.dataset.k = o[0]; c.textContent = o[1]; c.setAttribute("aria-pressed", String(o[0] === "text")); c.addEventListener("click", function () { setKey(o[0]); }); chips.appendChild(c); });
+    function replace() { place(tabs.filter(function (t) { return t.getAttribute("aria-selected") === "true"; })[0]); }
+    // for the full-screen island
+    window.studio = { V: V, cur: cur, go: function (view, key) { if (view !== cur.view) setView(view); if (key && key !== cur.key) setKey(key); document.dispatchEvent(new CustomEvent("studio:change")); } };
+    tabs.forEach(function (t) { t.addEventListener("click", function () { document.dispatchEvent(new CustomEvent("studio:change")); }); });
+    chips.addEventListener("click", function () { document.dispatchEvent(new CustomEvent("studio:change")); });
+    replace(); addEventListener("resize", replace);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(replace);
+  })();
+  </script>
+  <script>
+  /* Full-screen Dynamic Island for the Curation Studio (see the CSS above) */
+  (function () {
+    var zoom = document.querySelector(".zoom"), S = window.studio;
+    if (!zoom || !S) return;
+    // four states per tool in full screen: the three on the page, plus one
+    var PICK = { write: ["text", "board", "quote", "hand"], instagram: ["museum", "tunnel", "grid", "ink"], reel: ["day", "evening", "night", "white"] };
+    var NAME = { write: "Write", topics: "Topics", instagram: "Instagram", reel: "Reel" };
+    // crop of each capture (2400 x 1500) used as a thumbnail: x, y, w, h
+    var CROP = { write: [520, 160, 1000, 750], instagram: [990, 250, 420, 315], reel: [915, 330, 570, 428], topics: [900, 470, 600, 450],
+      "write/quote": [380, 40, 720, 540], "write/hand": [620, 1000, 680, 500] };
+    function label(view, key) { var v = S.V[view]; var o = (v.opts || []).concat(v.more || []).filter(function (x) { return x[0] === key; })[0]; return o ? o[1] : ""; }
+    function paint(el, view, key, w, h) {
+      var c = CROP[view + "/" + key] || CROP[view], k = Math.max(w / c[2], h / c[3]);
+      el.style.backgroundImage = "url(" + S.V[view].img(key) + ")";
+      el.style.backgroundSize = (2400 * k) + "px auto";
+      el.style.backgroundPosition = (-c[0] * k + (w - c[2] * k) / 2) + "px " + (-c[1] * k + (h - c[3] * k) / 2) + "px";
+    }
+
+    var ui = document.createElement("div");
+    ui.className = "zoom__ui island";
+    ui.innerHTML =
+      '<div class="island__shape">' +
+        '<button type="button" class="island__pill" aria-expanded="false" aria-controls="islandBody"><span class="island__dot"></span><span class="island__txt"></span>' +
+          '<svg class="island__chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>' +
+        '<div class="island__body" id="islandBody" inert>' +
+          '<div class="island__tools" role="group" aria-label="Tool"></div>' +
+          '<div class="island__opts" role="group" aria-label="State"></div>' +
+        '</div>' +
+      '</div>';
+    zoom.appendChild(ui);
+    var shape = ui.querySelector(".island__shape"), pill = ui.querySelector(".island__pill"), body = ui.querySelector(".island__body");
+    var dot = ui.querySelector(".island__dot"), txt = ui.querySelector(".island__txt");
+    var tools = ui.querySelector(".island__tools"), opts = ui.querySelector(".island__opts");
+    var view = null, open = false;
+
+    Object.keys(NAME).forEach(function (v) {
+      var b = document.createElement("button"); b.type = "button"; b.dataset.v = v; b.textContent = NAME[v];
+      b.addEventListener("click", function () { view = v; renderOpts(); });
+      tools.appendChild(b);
+    });
+    function renderOpts() {
+      [].forEach.call(tools.children, function (b) { b.setAttribute("aria-pressed", String(b.dataset.v === view)); });
+      opts.innerHTML = "";
+      if (!PICK[view]) {
+        S.go(view);
+        opts.innerHTML = '<p class="island__empty">Nine topics, each one click from a post or a reel.</p>';
+        return;
+      }
+      PICK[view].forEach(function (k) {
+        var b = document.createElement("button"); b.type = "button"; b.className = "island__opt"; b.dataset.k = k;
+        b.innerHTML = '<span class="island__thumb"></span><span></span>';
+        b.lastChild.textContent = label(view, k);
+        b.setAttribute("aria-pressed", String(S.cur.view === view && S.cur.key === k));
+        b.addEventListener("click", function () { S.go(view, k); });
+        opts.appendChild(b);
+        requestAnimationFrame(function () { var t = b.firstChild; paint(t, view, k, t.offsetWidth || 96, t.offsetHeight || 72); });
+      });
+    }
+    function sync() {
+      var v = S.cur.view, k = S.cur.key;
+      txt.innerHTML = "<b></b> <span class='muted'></span>";
+      txt.firstChild.textContent = NAME[v];
+      txt.lastChild.textContent = PICK[v] ? label(v, k) : "9 topics";
+      paint(dot, v, PICK[v] ? k : null, 32, 32);
+      if (!open) size(false);
+      [].forEach.call(opts.children, function (b) { if (b.dataset.k) b.setAttribute("aria-pressed", String(S.cur.view === view && S.cur.key === b.dataset.k)); });
+    }
+    function size(isOpen) {
+      if (isOpen) { shape.style.setProperty("--w", body.offsetWidth + "px"); shape.style.setProperty("--h", body.offsetHeight + "px"); }
+      else { shape.style.setProperty("--w", Math.ceil(pill.offsetWidth) + "px"); shape.style.setProperty("--h", "44px"); }
+    }
+    var byKey = false;
+    function setOpen(v) {
+      open = v; ui.classList.toggle("is-open", v); pill.setAttribute("aria-expanded", String(v));
+      if (v) { body.removeAttribute("inert"); view = S.cur.view; renderOpts(); }
+      else body.setAttribute("inert", "");
+      requestAnimationFrame(function () { size(v); if (!byKey) return; if (v) { var on = opts.querySelector('[aria-pressed="true"]') || tools.querySelector('[aria-pressed="true"]'); on && on.focus({ preventScroll: true }); } else pill.focus({ preventScroll: true }); });
+    }
+    pill.addEventListener("click", function (e) { byKey = e.detail === 0; setOpen(true); });   // focus moves in only when opened from the keyboard
+    // a tap outside the island, or Esc, folds it before it closes the full screen
+    ui.addEventListener("click", function (e) { e.stopPropagation(); });
+    zoom.addEventListener("click", function (e) { if (open && !e.target.closest(".island")) { e.stopImmediatePropagation(); setOpen(false); } }, true);
+    document.addEventListener("keydown", function (e) { if (open && e.key === "Escape") { e.stopImmediatePropagation(); e.preventDefault(); byKey = true; setOpen(false); } }, true);
+    document.addEventListener("studio:change", sync);
+
+    // only for the Studio's Mac: show when it's the one enlarged
+    new MutationObserver(function () {
+      var mine = zoom.classList.contains("is-on") && zoom.querySelector(".zoom__layer .studio__screen");
+      ui.classList.toggle("is-ready", !!mine);
+      if (mine) sync(); else if (open) setOpen(false);
+    }).observe(zoom, { attributes: true, attributeFilter: ["class"] });
+    sync();
+  })();
+  </script>
 </body>
 </html>
