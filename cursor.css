@@ -1,0 +1,78 @@
+/* ============================================================
+   Pointer layer (cursor.js): the capsule that names what's under the
+   pointer, the project context menu, and the edge tabs on case pages.
+   Pointer-only: nothing here shows on touch screens.
+   ============================================================ */
+
+/* Capsule: black on light pages, light on dark ones */
+.cx-cap {
+  position: fixed; left: 0; top: 0; z-index: 1200;
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 32px; padding: 0 14px; border-radius: 999px;
+  background: rgba(17, 17, 17, 0.92); color: #fff;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  font: 500 13px/1 "Inter", system-ui, sans-serif; letter-spacing: 0; white-space: nowrap;
+  pointer-events: none;
+  opacity: 0; transform: scale(0.94);
+  transition: opacity .16s ease, transform .24s cubic-bezier(.2, .9, .25, 1.1);
+}
+.cx-cap.is-on { opacity: 1; transform: none; }
+.cx-cap .cx-mute { color: rgba(255, 255, 255, 0.55); }
+.cx-cap .cx-div { width: 1px; height: 14px; background: rgba(255, 255, 255, 0.22); }
+.cx-cap .cx-key {
+  display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; margin-right: -6px;
+  border-radius: 6px; background: rgba(255, 255, 255, 0.16); font-size: 11px; font-weight: 600;
+}
+.cx-cap .cx-thumb { width: 40px; height: 24px; margin-left: -10px; border-radius: 999px 6px 6px 999px; object-fit: cover; display: block; }
+.cx-cap svg { display: block; flex: none; }
+:root[data-theme="dark"] .cx-cap { background: rgba(245, 245, 247, 0.94); color: #111; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+:root[data-theme="dark"] .cx-cap .cx-mute { color: rgba(0, 0, 0, 0.5); }
+:root[data-theme="dark"] .cx-cap .cx-div { background: rgba(0, 0, 0, 0.16); }
+:root[data-theme="dark"] .cx-cap .cx-key { background: rgba(0, 0, 0, 0.08); }
+
+/* Context menu (right-click on a project card) */
+.cx-menu {
+  position: fixed; left: 0; top: 0; z-index: 1200;
+  min-width: 220px; padding: 5px; border-radius: 12px;
+  background: rgba(246, 246, 246, 0.84);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8); backdrop-filter: blur(24px) saturate(1.8);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.18), 0 10px 36px rgba(0, 0, 0, 0.18);
+  font: 400 13.5px/1 "Inter", system-ui, sans-serif; color: #111;
+  visibility: hidden; opacity: 0; transform: scale(0.96);
+  transition: opacity .12s ease, transform .18s cubic-bezier(.2, .9, .25, 1.1), visibility 0s .18s;
+}
+.cx-menu.is-on { visibility: visible; opacity: 1; transform: none; transition: opacity .12s ease, transform .18s cubic-bezier(.2, .9, .25, 1.1); }
+.cx-item {
+  display: flex; align-items: center; gap: 10px; width: 100%; height: 28px; padding: 0 10px;
+  border: 0; border-radius: 7px; background: none; color: inherit; font: inherit; text-align: left; cursor: default;
+}
+.cx-item svg { width: 15px; height: 15px; flex: none; }
+.cx-item:hover, .cx-item:focus { outline: none; background: #2f6bf0; color: #fff; }
+.cx-menu hr { border: 0; height: 1px; margin: 5px 10px; background: rgba(0, 0, 0, 0.1); }
+:root[data-theme="dark"] .cx-menu { background: rgba(44, 44, 46, 0.84); color: #f5f5f7; box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.14), 0 10px 36px rgba(0, 0, 0, 0.5); }
+:root[data-theme="dark"] .cx-menu hr { background: rgba(255, 255, 255, 0.12); }
+
+/* Edge tabs on case pages: back to the feed (left), next project (right) */
+.cx-edge {
+  position: fixed; top: 0; z-index: 900;
+  width: 40px; height: 88px; padding: 0; border: 0; border-radius: 999px; -webkit-appearance: none; appearance: none;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.92); color: #111;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.1);
+  cursor: pointer; opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, transform .34s cubic-bezier(.2, .9, .25, 1.1);
+}
+.cx-edge svg { width: 12px; height: 20px; display: block; }
+.cx-edge--l { left: 10px; transform: translate(-56px, var(--y, 50vh)); }
+.cx-edge--r { right: 10px; transform: translate(56px, var(--y, 50vh)); }
+.cx-edge.is-on { opacity: 1; pointer-events: auto; transform: translate(0, var(--y, 50vh)); }
+.cx-edge:active { transform: translate(0, var(--y, 50vh)) scale(0.94); }
+:root[data-theme="dark"] .cx-edge { background: rgba(44, 44, 46, 0.92); color: #f5f5f7; box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.14), 0 8px 24px rgba(0, 0, 0, 0.5); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cx-cap, .cx-cap.is-on, .cx-menu, .cx-menu.is-on { transform: none; transition: opacity .12s ease; }
+  .cx-edge { transition: opacity .12s ease; }
+}
+.cx-menu:focus { outline: none; }

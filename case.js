@@ -502,7 +502,8 @@
     var view = c.dataset.view, portrait = innerWidth < 700 && innerHeight > innerWidth;
     if (!portrait || !c.querySelector(".device--mac")) return { view: view, dive: false, focus: null };
     if (view === "iphone") return { view: view, dive: false, focus: ".device--iphone" };
-    return { view: view === "both" ? "mac" : view, dive: true, focus: ".device__win" };
+    // a recording sits in a window (.device__win); a still of a web app fills the screen itself
+    return { view: view === "both" ? "mac" : view, dive: true, focus: c.querySelector(".device__win") ? ".device__win" : ".device__screen" };
   }
   function setState(m) {
     if (m.view) layer.dataset.view = m.view; else delete layer.dataset.view;
@@ -682,6 +683,20 @@
   });
   if (targets.length < 2) return;
 
+  // Reading time left from each section to the end (same rate as the page's
+  // "N min read": ~220 words a minute, plus a few seconds per visual)
+  function blockOf(t) { return t.closest(".feature") || t.closest(".section") || t; }
+  var minsLeft = [], acc = 0;
+  for (var bi = targets.length - 1; bi >= 0; bi--) {
+    var blk = blockOf(targets[bi]);
+    acc += (blk.innerText || "").split(/\s+/).filter(Boolean).length / 220 + blk.querySelectorAll("figure").length * 8 / 60;
+    minsLeft[bi] = acc;
+  }
+  function countText(i) {
+    var m = minsLeft[i];
+    return (i + 1) + " / " + targets.length + " · " + (m < 0.75 ? "< 1" : Math.round(m)) + " min left";
+  }
+
   function slug(s) { return s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
   var nav = document.createElement("nav");
   nav.className = "toc";
@@ -711,6 +726,8 @@
       t.setAttribute("tabindex", "-1");
       t.focus({ preventScroll: true });
     });
+    // hovering a row previews where that jump lands: "4 / 6 · 1 min left"
+    a.addEventListener("mouseenter", function () { count.textContent = countText(i); });
     li.appendChild(a);
     if (groups[i] != null) {
       var g = document.createElement("li");
@@ -726,6 +743,7 @@
   });
   nav.appendChild(count);
   nav.appendChild(list);
+  list.addEventListener("mouseleave", function () { if (current >= 0) count.textContent = countText(current); });
   // row index, for the staggered entrance and hover reveal
   [].forEach.call(list.children, function (li, k) { li.style.setProperty("--i", k + 1); });
   document.body.appendChild(nav);
@@ -783,7 +801,7 @@
         a.style.setProperty("--d", Math.abs(i - idx));              // distance from the current section
         if (i === idx) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
       });
-      count.textContent = (idx + 1) + " / " + targets.length;
+      if (!list.matches(":hover")) count.textContent = countText(idx);
       if (on && !first && groupOf[idx] !== peekedGroup) schedulePeek(200);
     }
   }
@@ -794,50 +812,106 @@
 })();
 
 /* ============================================================
-   Next-project link at the foot of every case page.
-   Data-driven from window.PROJECTS; cycles to the next project.
+   More projects at the foot of every case page: the other projects as a
+   tvOS-style focus list, starting with the next one. The pointer or ↑ ↓
+   moves the focus; ↵ opens; ⌘C copies the link. A legend names the keys
+   for the row in focus. Data-driven from window.PROJECTS.
    ============================================================ */
 (function () {
   var wrap = document.querySelector(".case-wrap");
   var footer = wrap && wrap.querySelector(".case-footer");
-  var list = window.PROJECTS;
-  if (!wrap || !footer || !list || !list.length) return;
+  var all = window.PROJECTS;
+  if (!wrap || !footer || !all || !all.length) return;
 
   var id = document.body.dataset.project || "";
-  var here = list.findIndex(function (p) { return p.id === id; });
+  var here = all.findIndex(function (p) { return p.id === id; });
   if (here < 0) return;
-
-  var next = null;
-  for (var k = 1; k <= list.length; k++) {
-    var cand = list[(here + k) % list.length];
-    if (cand.page && cand.id !== id) { next = cand; break; }
+  var items = [];
+  for (var k = 1; k < all.length; k++) {                     // cyclic, so the next project comes first
+    var p = all[(here + k) % all.length];
+    if (p.page && p.id !== id) items.push(p);
   }
-  if (!next) return;
+  if (!items.length) return;
 
-  var a = document.createElement("a");
-  a.className = "pnext";
-  a.href = next.page;
-  if (next.accent) a.style.setProperty("--accent", next.accent);
-  var dark = document.documentElement.dataset.theme === "dark" && next.imageDark;
-  a.innerHTML =
-    '<span class="pnext__txt">' +
-      '<span class="pnext__label">Next project</span>' +
-      '<span class="pnext__name"></span>' +
-      '<span class="pnext__tag"></span>' +
-    '</span>' +
-    '<span class="pnext__media"><img alt="" loading="lazy" decoding="async"></span>' +
-    '<span class="pnext__arrowbox" aria-hidden="true"><svg class="pnext__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
-  a.querySelector(".pnext__name").textContent = next.name;
-  a.querySelector(".pnext__tag").textContent = next.tagline || "";
-  a.querySelector("img").src = dark ? next.imageDark : next.image;
-  wrap.insertBefore(a, footer);
-
-  // Replace the current project in history instead of pushing a new entry, so
-  // chaining "Next project" never stacks up — Back always returns to the feed.
-  a.addEventListener("click", function (e) {
-    e.preventDefault();
-    location.replace(a.href);
+  var dark = document.documentElement.dataset.theme === "dark";
+  var sec = document.createElement("nav");
+  sec.className = "pmore";
+  sec.setAttribute("aria-label", "More projects");
+  sec.innerHTML = '<p class="pmore__label" aria-hidden="true">More projects</p><ul class="pmore__list"></ul>' +
+    '<p class="pmore__legend" aria-hidden="true">' +
+      '<span><span class="pmore__key">↵</span><span class="pmore__open"></span></span>' +
+      '<span><span class="pmore__key">↑↓</span>Move</span>' +
+      '<span class="pmore__copy"><span class="pmore__key">⌘C</span><span>Copy link</span></span>' +
+    "</p>";
+  var ul = sec.querySelector("ul");
+  var rows = items.map(function (p) {
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.className = "pmore__row";
+    a.href = p.page;
+    a.innerHTML =
+      '<span class="pmore__media"><img alt="" loading="lazy" decoding="async"></span>' +
+      '<span class="pmore__txt"><span class="pmore__name"></span><span class="pmore__tag"></span></span>' +
+      '<span class="pmore__badge"></span>';
+    a.querySelector(".pmore__name").textContent = p.name;
+    a.querySelector(".pmore__tag").textContent = p.tagline || "";
+    a.querySelector(".pmore__badge").textContent = p.badge || "Case study";
+    var img = a.querySelector("img");
+    img.src = dark && p.imageDark ? p.imageDark : p.image;
+    if (p.imageDark) { img.dataset.light = p.image; img.dataset.dark = p.imageDark; }
+    // Replace the current project in history instead of pushing a new entry, so
+    // chaining projects never stacks up — Back always returns to the feed.
+    a.addEventListener("click", function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      location.replace(a.href);
+    });
+    li.appendChild(a);
+    ul.appendChild(li);
+    return a;
   });
+  wrap.insertBefore(sec, footer);
+
+  var open = sec.querySelector(".pmore__open"), copyLbl = sec.querySelector(".pmore__copy span:last-child");
+  var hl = -1;
+  function focusRow(i) {
+    if (i === hl) return;
+    hl = i;
+    rows.forEach(function (r, j) {
+      r.classList.toggle("is-hl", j === i);
+      r.tabIndex = j === i ? 0 : -1;                         // one tab stop; ↑ ↓ move within
+    });
+    var p = items[i];
+    open.textContent = "Open " + p.name;
+  }
+  focusRow(0);
+
+  rows.forEach(function (r, i) {
+    r.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") focusRow(i); });
+    r.addEventListener("focus", function () { focusRow(i); });
+  });
+  ul.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      var n = Math.max(0, Math.min(rows.length - 1, hl + (e.key === "ArrowDown" ? 1 : -1)));
+      focusRow(n);
+      rows[n].focus();
+    } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c" && !String(getSelection())) {
+      e.preventDefault();
+      var url = rows[hl].href;
+      var done = function () {
+        copyLbl.textContent = "Link copied";
+        clearTimeout(copyLbl._t);
+        copyLbl._t = setTimeout(function () { copyLbl.textContent = "Copy link"; }, 1400);
+      };
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () {});
+    }
+  });
+  // theme switch while on the page: swap thumbnails
+  new MutationObserver(function () {
+    var d = document.documentElement.dataset.theme === "dark";
+    rows.forEach(function (r) { var im = r.querySelector("img"); if (im.dataset.dark) im.src = d ? im.dataset.dark : im.dataset.light; });
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 })();
 
 /* ============================================================

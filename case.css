@@ -510,58 +510,57 @@ body[data-project="alan"] .shots2--split .shotcard:last-child img { margin-top: 
   margin-top: var(--s-14);
 }
 
-/* ---- Next-project card (foot of every case page): the next project's image,
-   name and tagline, on the same quiet fill as the stages ---- */
-.pnext {
-  display: grid;
-  grid-template-columns: 1fr 44%;
-  grid-template-areas: "txt media" "arrow media";
-  grid-template-rows: 1fr auto;
-  margin-top: var(--s-12);
-  border-radius: 20px;
-  overflow: hidden;
-  background: var(--case-fill);
-  text-decoration: none;
-  color: var(--case-ink);
-  transition: transform .2s var(--ease-out);
+/* ---- More projects (foot of every case page): the other projects as a
+   focus list, tvOS-style. One row is always in focus (the next project to
+   start with); the pointer or ↑ ↓ moves it, and a legend names the keys
+   for the row in focus. ---- */
+.pmore { margin-top: var(--s-12); --pmore-hl: #fff; }
+:root[data-theme="dark"] .pmore { --pmore-hl: #2c2c2e; }
+.pmore__label { font-size: 13px; color: var(--case-muted); margin: 0 0 12px 4px; }
+.pmore__list { list-style: none; margin: 0; padding: 8px; border-radius: 20px; background: var(--case-fill); display: grid; gap: 4px; }
+.pmore__row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px 16px 10px 10px; border-radius: 14px;
+  color: var(--case-ink); text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  transition: transform .35s cubic-bezier(.2, .9, .25, 1.12), box-shadow .2s ease, background-color .2s ease;
 }
-.pnext:active { transform: scale(.985); }
-.pnext:focus-visible { outline: 2px solid var(--case-blue); outline-offset: 3px; }
-.pnext__txt { grid-area: txt; display: flex; flex-direction: column; padding: 28px 28px 0; }
-.pnext__label { font-size: 13px; color: var(--case-muted); }
-.pnext__name { font-size: 28px; line-height: 1.15; font-weight: 600; letter-spacing: -0.022em; margin-top: 4px; transition: color .2s ease; }
-.pnext__tag { font-size: 15px; line-height: 1.4; color: var(--case-muted); margin-top: 6px; text-wrap: pretty; }
-.pnext__media { grid-area: media; position: relative; min-height: 176px; overflow: hidden; }
-.pnext__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease-out); }
-.pnext__arrowbox {
-  grid-area: arrow;
-  width: 36px; height: 36px; margin: 20px 28px 24px;
-  border-radius: 50%;
-  display: grid; place-items: center;
-  background: var(--case-ink);
-  transition: background-color .2s ease;
+.pmore__row:focus-visible { outline: none; }
+.pmore__media { width: 120px; aspect-ratio: 16 / 9; flex: none; border-radius: 10px; overflow: hidden; background: var(--case-fill-2); box-shadow: 0 0 0 1px var(--case-hair); }
+.pmore__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pmore__txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pmore__name { font-size: 17px; line-height: 1.25; font-weight: 600; letter-spacing: -0.012em; }
+.pmore__tag { font-size: 14px; line-height: 1.35; color: var(--case-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pmore__badge { margin-left: auto; flex: none; font-size: 10.5px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--case-muted); border: 1px solid var(--case-hair); border-radius: 999px; padding: 4px 9px; }
+.pmore__row:active { transform: scale(.985); }
+/* the row in focus lifts out of the list */
+.pmore__row.is-hl { background: var(--pmore-hl); transform: scale(1.015); box-shadow: 0 0 0 2px var(--case-ink), 0 12px 30px rgba(0, 0, 0, .08); }
+.pmore__row.is-hl:active { transform: scale(1); }
+/* the legend: what the keys do for the row in focus */
+.pmore__legend {
+  display: none; width: fit-content; margin: 16px auto 0;
+  align-items: center; gap: 14px; padding: 6px 14px 6px 6px; border-radius: 999px;
+  background: rgba(17, 17, 17, .92); color: #fff;
+  font-size: 12.5px; font-weight: 500; line-height: 1; white-space: nowrap;
 }
-.pnext__arrow { width: 16px; height: 16px; display: block; color: var(--bg); transition: transform .25s var(--ease-out); }
-@media (hover: hover) {
-  .pnext:hover .pnext__name { color: var(--accent, var(--case-blue)); }
-  .pnext:hover .pnext__arrowbox { background: var(--accent, var(--case-blue)); }
-  .pnext:hover .pnext__arrow { transform: translateX(2px); }
-  .pnext:hover .pnext__media img { transform: scale(1.03); }
+.pmore__legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.pmore__key { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: #fff; color: #111; font-size: 11px; font-weight: 700; }
+:root[data-theme="dark"] .pmore__legend { background: rgba(245, 245, 247, .94); color: #111; }
+:root[data-theme="dark"] .pmore__key { background: #111; color: #fff; }
+@media (hover: hover) and (pointer: fine) { .pmore__legend { display: flex; } }
+/* on touch every row is equal: there is no pointer to follow */
+@media not ((hover: hover) and (pointer: fine)) {
+  .pmore__row.is-hl { background: none; transform: none; box-shadow: none; }
 }
-:root[data-theme="dark"] .pnext:hover .pnext__name { color: var(--case-ink); }
-:root[data-theme="dark"] .pnext:hover .pnext__arrowbox { background: var(--case-ink); }
 @media (max-width: 560px) {
-  .pnext { grid-template-columns: 1fr 40%; }
-  .pnext__txt { padding: 20px 20px 0; }
-  .pnext__name { font-size: 22px; }
-  .pnext__arrowbox { margin: 16px 20px 20px; }
+  .pmore__media { width: 88px; }
+  .pmore__badge { display: none; }
+  .pmore__row { padding-right: 10px; gap: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pnext, .pnext__arrow, .pnext__media img { transition: none; }
-  .pnext:hover .pnext__media img { transform: none; }
+  .pmore__row, .pmore__row.is-hl, .pmore__row:active { transition: none; transform: none; }
 }
-.pnext + .case-footer { margin-top: var(--s-7); }
+.pmore + .case-footer { margin-top: var(--s-7); }
 
 /* ---- Feature rows: a title + text beside one screen recording; .feature--flip
    puts the phone on the left so consecutive rows alternate ---- */
