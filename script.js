@@ -56,22 +56,38 @@ list.addEventListener("click", (e) => {
   openProject(card.dataset.id);
 });
 
-// ---- Live preview: hovering a card with a `preview` (data.js) plays its real
-// recordings inside the phone of the card image, a few seconds each, with a
-// capsule naming the clip. Pointer devices only; off for reduced motion and
-// Save-Data. Leaving pauses it; coming back resumes where it stopped.
+// ---- Live preview: hovering a card with a `preview` (data.js) brings it to
+// life, with a capsule naming what's shown and a bar per item.
+//   clips:  real recordings play inside the phone of the card image (6s each)
+//   stills: the app's key screens replace the card image in turn
+// Pointer devices only; off for reduced motion and Save-Data. Leaving pauses
+// it; coming back resumes where it stopped.
 (function () {
   if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   if (navigator.connection && navigator.connection.saveData) return;
-  const SEG = 6000;
-  window.PROJECTS.forEach((p) => {
-    const pv = p.preview;
-    const card = pv && list.querySelector('.project[data-id="' + p.id + '"]');
-    const box = card && card.querySelector(".project__image");
-    if (!box) return;
-    let screen, video, label, bars, i = 0, on = false, wait = 0, timer = 0, startT = 0, left = SEG;
 
+  function capsule(box, pv, items, seg) {
+    const cap = document.createElement("div");
+    cap.className = "preview__cap";
+    cap.setAttribute("aria-hidden", "true");
+    cap.style.setProperty("--seg", seg + "ms");
+    cap.innerHTML = '<span></span><span class="preview__clip"></span><span class="preview__bars">' + items.map(() => "<i></i>").join("") + "</span>";
+    cap.firstChild.textContent = pv.name;
+    box.appendChild(cap);
+    const label = cap.querySelector(".preview__clip"), bars = [...cap.querySelectorAll(".preview__bars i")];
+    return function mark(i) {                       // name item i, fill the bars up to it
+      label.textContent = items[i].label;
+      bars.forEach((b, j) => { b.className = j < i ? "done" : ""; });
+      void bars[i].offsetWidth;                     // restart the fill
+      bars[i].className = "cur";
+    };
+  }
+
+  // Recordings inside the phone screen (pv.screen = its box, % of the image)
+  function clips(card, box, pv) {
+    const SEG = 6000;
+    let screen, video, mark, i = 0, on = false, wait = 0, timer = 0, startT = 0, left = SEG;
     function build() {
       screen = document.createElement("div");
       screen.className = "preview";
@@ -81,15 +97,8 @@ list.addEventListener("click", (e) => {
       video.muted = true; video.playsInline = true; video.preload = "auto";
       video.setAttribute("aria-hidden", "true");
       screen.appendChild(video);
-      const cap = document.createElement("div");
-      cap.className = "preview__cap";
-      cap.setAttribute("aria-hidden", "true");
-      cap.style.setProperty("--seg", SEG + "ms");
-      cap.innerHTML = '<span></span><span class="preview__clip"></span><span class="preview__bars">' + pv.clips.map(() => "<i></i>").join("") + "</span>";
-      cap.firstChild.textContent = pv.name;
-      label = cap.querySelector(".preview__clip");
-      bars = [...cap.querySelectorAll(".preview__bars i")];
-      box.append(screen, cap);
+      box.appendChild(screen);
+      mark = capsule(box, pv, pv.clips, SEG);
       video.addEventListener("playing", () => { if (on) { box.classList.add("is-previewing"); screen.classList.remove("is-switching"); } });
       load(0);
     }
@@ -98,10 +107,7 @@ list.addEventListener("click", (e) => {
       const c = pv.clips[i];
       video.innerHTML = '<source src="' + c.src + '.hevc.mp4" type=\'video/mp4; codecs="hvc1"\'><source src="' + c.src + '.mp4" type="video/mp4">';
       video.load();
-      label.textContent = c.label;
-      bars.forEach((b, j) => { b.className = j < i ? "done" : ""; });
-      void bars[i].offsetWidth;                     // restart the fill
-      bars[i].className = "cur";
+      mark(i);
       left = SEG;
     }
     function run() { clearTimeout(timer); startT = performance.now(); timer = setTimeout(next, left); }
@@ -109,22 +115,67 @@ list.addEventListener("click", (e) => {
       screen.classList.add("is-switching");
       setTimeout(() => { load((i + 1) % pv.clips.length); if (on) video.play().then(run, () => {}); }, 150);
     }
-    function start() {
-      if (!video) build();
-      video.play().then(run, () => {});
+    return {
+      start() { on = true; if (!video) build(); video.play().then(run, () => {}); },
+      stop() {
+        on = false;
+        if (!video) return;
+        if (!video.paused) { video.pause(); clearTimeout(timer); left = Math.max(400, left - (performance.now() - startT)); }
+        box.classList.remove("is-previewing");
+      },
+    };
+  }
+
+  // Key screens over the card, one after another
+  function stills(card, box, pv) {
+    const STEP = 2400;
+    let layer, imgs, mark, i = 0, on = false, timer = 0;
+    function build() {
+      layer = document.createElement("div");
+      layer.className = "preview-stills";
+      imgs = pv.stills.map((s) => {
+        const im = new Image();
+        im.alt = ""; im.decoding = "async"; im.src = s.src;
+        layer.appendChild(im);
+        return im;
+      });
+      box.appendChild(layer);
+      mark = capsule(box, pv, pv.stills, STEP);
     }
-    function stop() {
-      on = false;
-      clearTimeout(wait);
-      if (!video) return;
-      if (!video.paused) { video.pause(); clearTimeout(timer); left = Math.max(400, left - (performance.now() - startT)); }
-      box.classList.remove("is-previewing");
+    function show(k) {
+      i = k;
+      imgs.forEach((im, j) => im.classList.toggle("on", j === k));
+      mark(k);
+      clearTimeout(timer);
+      timer = setTimeout(() => show((i + 1) % imgs.length), STEP);
     }
+    return {
+      start() {
+        on = true;
+        if (!layer) build();
+        const first = imgs[i];
+        (first.decode ? first.decode() : Promise.resolve()).catch(() => {}).then(() => {
+          if (!on) return;
+          box.classList.add("is-previewing");
+          show(i);                                  // resume on the screen it stopped at
+        });
+      },
+      stop() { on = false; clearTimeout(timer); box.classList.remove("is-previewing"); },
+    };
+  }
+
+  window.PROJECTS.forEach((p) => {
+    const pv = p.preview;
+    const card = pv && list.querySelector('.project[data-id="' + p.id + '"]');
+    const box = card && card.querySelector(".project__image");
+    if (!box) return;
+    const player = pv.clips ? clips(card, box, pv) : stills(card, box, pv);
+    let wait = 0;
+    const stop = () => { clearTimeout(wait); player.stop(); };
     card.addEventListener("pointerenter", (e) => {
       if (e.pointerType !== "mouse") return;
-      on = true;
       clearTimeout(wait);
-      wait = setTimeout(start, 300);                // a beat, so passing over a card doesn't start it
+      wait = setTimeout(player.start, 300);         // a beat, so passing over a card doesn't start it
     });
     card.addEventListener("pointerleave", stop);
     document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); });

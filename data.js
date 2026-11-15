@@ -65,6 +65,15 @@ window.PROJECTS = [
     screen: "alan",
     role: "Product designer: UX Designer, Visual design, Prototype",
     team: "1 PM, Engineers, 1 Product Designer",
+    // Hover preview on the feed card: the key screens, in the order a user meets them
+    preview: {
+      name: "Alan",
+      stills: [
+        { label: "Goal", src: "images/feed-alan-1.webp" },
+        { label: "Dashboard", src: "images/feed-alan-2.webp" },
+        { label: "Quiz", src: "images/feed-alan-3.webp" },
+      ],
+    },
     overview:
       "Alan wanted to help members build healthier relationships with their screens. The challenge was turning a hard, abstract goal (spending less time on your phone) into something motivating, playful and easy to stick with.",
   },
@@ -83,6 +92,15 @@ window.PROJECTS = [
     screen: "cyberchat",
     role: "Product designer: UX Designer, Visual design, Prototype",
     team: "Self-initiated concept",
+    // Hover preview on the feed card: the key screens, in the order a user meets them
+    preview: {
+      name: "CyberChat",
+      stills: [
+        { label: "ID key", src: "images/feed-cyberchat-1.webp" },
+        { label: "Profile", src: "images/feed-cyberchat-2.webp" },
+        { label: "Donation", src: "images/feed-cyberchat-3.webp" },
+      ],
+    },
     overview:
       "A concept exploring what messaging looks like when privacy comes first: no accounts, no logs, and a single unique key generated at onboarding as the only identity.",
   },

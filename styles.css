@@ -271,6 +271,12 @@ a { color: inherit; }
 .preview__bars i.cur::after { content: ""; position: absolute; inset: 0; background: #fff; transform-origin: left; animation: pv-fill var(--seg, 6s) linear forwards; }
 .project__image:not(.is-previewing) .preview__bars i.cur::after { animation-play-state: paused; }
 @keyframes pv-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+/* stills: the key screens replace the card image, on the card's own backdrop */
+.preview-stills { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(#fff, #f0f0f0); opacity: 0; transition: opacity .35s ease; }
+:root[data-theme="dark"] .preview-stills { background: linear-gradient(#1e1e1e, #111); }
+.project__image.is-previewing .preview-stills { opacity: 1; }
+.preview-stills img { position: absolute; bottom: 0; left: 50%; height: 90%; width: auto; transform: translateX(-50%); opacity: 0; transition: opacity .45s ease; }
+.preview-stills img.on { opacity: 1; }
 :root[data-theme="dark"] .preview__cap { background: rgba(245, 245, 247, .94); color: #111; }
 :root[data-theme="dark"] .preview__clip { color: rgba(0, 0, 0, .5); }
 :root[data-theme="dark"] .preview__bars i { background: rgba(0, 0, 0, .18); }
