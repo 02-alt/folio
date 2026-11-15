@@ -47,6 +47,17 @@ window.PROJECTS = [
     screen: "conduite",
     role: "Product designer: UX Designer, Usability Tester, Visual design, Small prototype",
     team: "1 PM, 2 Engineers, 1 Product Designer",
+    // Hover preview on the feed card: the same phone, its screen moving through
+    // the new flow. Overlays are card-sized and repaint only the phone.
+    preview: {
+      name: "Ornikar",
+      overlay: true,
+      stills: [
+        { label: "Entry card" },
+        { label: "Progress", src: "images/feed-ornikar-2.webp" },
+        { label: "My Journey", src: "images/feed-ornikar-3.webp" },
+      ],
+    },
     overview:
       "Ornikar disrupted the French driving school market by offering a more affordable and flexible alternative, but as the platform scaled, key friction points in the user experience were holding back engagement and conversion.",
   },

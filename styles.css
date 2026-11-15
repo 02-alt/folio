@@ -277,6 +277,9 @@ a { color: inherit; }
 .project__image.is-previewing .preview-stills { opacity: 1; }
 .preview-stills img { position: absolute; bottom: 0; left: 50%; height: 90%; width: auto; transform: translateX(-50%); opacity: 0; transition: opacity .45s ease; }
 .preview-stills img.on { opacity: 1; }
+/* overlay: card-sized images that repaint only the phone; the mockup stays */
+.preview-stills.is-overlay { background: none; }
+.preview-stills.is-overlay img { inset: 0; left: 0; width: 100%; height: 100%; transform: none; }
 :root[data-theme="dark"] .preview__cap { background: rgba(245, 245, 247, .94); color: #111; }
 :root[data-theme="dark"] .preview__clip { color: rgba(0, 0, 0, .5); }
 :root[data-theme="dark"] .preview__bars i { background: rgba(0, 0, 0, .18); }

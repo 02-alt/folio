@@ -126,14 +126,17 @@ list.addEventListener("click", (e) => {
     };
   }
 
-  // Key screens over the card, one after another
+  // Key screens over the card, one after another. With `overlay`, each image is
+  // the card's own size and only repaints the phone (an item without `src` is
+  // the card image itself), so the mockup stays and just its screen changes.
   function stills(card, box, pv) {
     const STEP = 2400;
     let layer, imgs, mark, i = 0, on = false, timer = 0;
     function build() {
       layer = document.createElement("div");
-      layer.className = "preview-stills";
+      layer.className = "preview-stills" + (pv.overlay ? " is-overlay" : "");
       imgs = pv.stills.map((s) => {
+        if (!s.src) return null;
         const im = new Image();
         im.alt = ""; im.decoding = "async"; im.src = s.src;
         layer.appendChild(im);
@@ -144,7 +147,7 @@ list.addEventListener("click", (e) => {
     }
     function show(k) {
       i = k;
-      imgs.forEach((im, j) => im.classList.toggle("on", j === k));
+      imgs.forEach((im, j) => { if (im) im.classList.toggle("on", j === k); });
       mark(k);
       clearTimeout(timer);
       timer = setTimeout(() => show((i + 1) % imgs.length), STEP);
@@ -154,7 +157,7 @@ list.addEventListener("click", (e) => {
         on = true;
         if (!layer) build();
         const first = imgs[i];
-        (first.decode ? first.decode() : Promise.resolve()).catch(() => {}).then(() => {
+        (first && first.decode ? first.decode() : Promise.resolve()).catch(() => {}).then(() => {
           if (!on) return;
           box.classList.add("is-previewing");
           show(i);                                  // resume on the screen it stopped at
