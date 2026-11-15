@@ -56,6 +56,82 @@ list.addEventListener("click", (e) => {
   openProject(card.dataset.id);
 });
 
+// ---- Live preview: hovering a card with a `preview` (data.js) plays its real
+// recordings inside the phone of the card image, a few seconds each, with a
+// capsule naming the clip. Pointer devices only; off for reduced motion and
+// Save-Data. Leaving pauses it; coming back resumes where it stopped.
+(function () {
+  if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (navigator.connection && navigator.connection.saveData) return;
+  const SEG = 6000;
+  window.PROJECTS.forEach((p) => {
+    const pv = p.preview;
+    const card = pv && list.querySelector('.project[data-id="' + p.id + '"]');
+    const box = card && card.querySelector(".project__image");
+    if (!box) return;
+    let screen, video, label, bars, i = 0, on = false, wait = 0, timer = 0, startT = 0, left = SEG;
+
+    function build() {
+      screen = document.createElement("div");
+      screen.className = "preview";
+      const [l, t, w, h] = pv.screen;
+      Object.assign(screen.style, { left: l + "%", top: t + "%", width: w + "%", height: h + "%" });
+      video = document.createElement("video");
+      video.muted = true; video.playsInline = true; video.preload = "auto";
+      video.setAttribute("aria-hidden", "true");
+      screen.appendChild(video);
+      const cap = document.createElement("div");
+      cap.className = "preview__cap";
+      cap.setAttribute("aria-hidden", "true");
+      cap.style.setProperty("--seg", SEG + "ms");
+      cap.innerHTML = '<span></span><span class="preview__clip"></span><span class="preview__bars">' + pv.clips.map(() => "<i></i>").join("") + "</span>";
+      cap.firstChild.textContent = pv.name;
+      label = cap.querySelector(".preview__clip");
+      bars = [...cap.querySelectorAll(".preview__bars i")];
+      box.append(screen, cap);
+      video.addEventListener("playing", () => { if (on) { box.classList.add("is-previewing"); screen.classList.remove("is-switching"); } });
+      load(0);
+    }
+    function load(k) {
+      i = k;
+      const c = pv.clips[i];
+      video.innerHTML = '<source src="' + c.src + '.hevc.mp4" type=\'video/mp4; codecs="hvc1"\'><source src="' + c.src + '.mp4" type="video/mp4">';
+      video.load();
+      label.textContent = c.label;
+      bars.forEach((b, j) => { b.className = j < i ? "done" : ""; });
+      void bars[i].offsetWidth;                     // restart the fill
+      bars[i].className = "cur";
+      left = SEG;
+    }
+    function run() { clearTimeout(timer); startT = performance.now(); timer = setTimeout(next, left); }
+    function next() {
+      screen.classList.add("is-switching");
+      setTimeout(() => { load((i + 1) % pv.clips.length); if (on) video.play().then(run, () => {}); }, 150);
+    }
+    function start() {
+      if (!video) build();
+      video.play().then(run, () => {});
+    }
+    function stop() {
+      on = false;
+      clearTimeout(wait);
+      if (!video) return;
+      if (!video.paused) { video.pause(); clearTimeout(timer); left = Math.max(400, left - (performance.now() - startT)); }
+      box.classList.remove("is-previewing");
+    }
+    card.addEventListener("pointerenter", (e) => {
+      if (e.pointerType !== "mouse") return;
+      on = true;
+      clearTimeout(wait);
+      wait = setTimeout(start, 300);                // a beat, so passing over a card doesn't start it
+    });
+    card.addEventListener("pointerleave", stop);
+    document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); });
+    addEventListener("pagehide", stop);
+  });
+})();
+
 // ---- Entrance: one page-load sequence, no scroll reveals ----
 // What's in view at load rises in top to bottom; anything below the fold is
 // simply visible once scrolled to. The signature keeps its own observer (below)

@@ -16,6 +16,19 @@ window.PROJECTS = [
     accent: "#111111",
     role: "Designer & builder: end-to-end, from concept to shipped product",
     team: "Solo",
+    // Hover preview on the feed card: Cabin's iPhone recordings play inside the
+    // phone of the card image. `screen` = the screen's box in % of the image
+    // (left, top, width, height), measured on images/lab-crate.webp.
+    preview: {
+      name: "Cabin",
+      screen: [32.617, 13.021, 34.766, 133.94],
+      clips: [
+        { label: "Crate", src: "media/cabin-crate" },
+        { label: "Album", src: "media/cabin-album" },
+        { label: "Now Playing", src: "media/cabin-nowplaying" },
+        { label: "Map", src: "media/cabin-map" },
+      ],
+    },
     overview:
       "Prototyping in code closes the gap between design and product: faster validation, higher-fidelity decisions, and a real feel for constraints. This is a living collection of things I’ve designed and built myself, starting with this very portfolio.",
   },
