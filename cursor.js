@@ -73,6 +73,52 @@
     });
   });
 
+  /* ---------- External links: where they lead, and that they open a new tab ----------
+     The capsule names the destination (host + path, like the email capsule names
+     the address); while it shows, ⌘C copies the link instead of opening it. */
+  var OUT = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 7.5l5-5M3.5 2.5h4v4"/></svg>';
+  var hovered = null;                                        // { a, owner, show } of the link under the pointer / focus
+  function esc(t) { return t.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  [].forEach.call(document.querySelectorAll('a[target="_blank"][href^="http"]'), function (a) {
+    var u; try { u = new URL(a.href); } catch (e) { return; }
+    var path = u.pathname.replace(/\/$/, "").replace(/-(?=[a-z0-9]*\d)[a-z0-9]{6,}$/i, "");   // drop LinkedIn's id suffix
+    var where = u.hostname.replace(/^www\./, "") + path;
+    var owner = { scrollHides: true }, hovering = false, resetT = 0;
+    var idle = "<span>" + esc(where) + '</span><span class="cx-div"></span><span class="cx-mute">New tab</span>' + OUT +
+      '<span class="cx-key">⌘C</span>';
+    var me = { a: a, owner: owner, show: show };
+    function show() { if (fine.matches) showCap(owner, idle, a.getBoundingClientRect(), "above"); }
+    a.addEventListener("pointerenter", function (e) { if (e.pointerType !== "mouse") return; hovering = true; hovered = me; clearTimeout(resetT); show(); });
+    a.addEventListener("pointerleave", function () { hovering = false; if (hovered === me && document.activeElement !== a) hovered = null; clearTimeout(resetT); hideCap(owner); });
+    a.addEventListener("focus", function () { if (a.matches(":focus-visible")) { hovered = me; show(); } });
+    a.addEventListener("blur", function () { if (!hovering) { if (hovered === me) hovered = null; hideCap(owner); } });
+    me.copied = function () {
+      showCap(owner, CHECK + "<span>Link copied</span>", a.getBoundingClientRect(), "above");
+      announce("Link copied");
+      clearTimeout(resetT);
+      resetT = setTimeout(function () { if (hovering || document.activeElement === a) show(); else hideCap(owner); }, 1400);
+    };
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!hovered || !(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "c" || String(getSelection())) return;
+    e.preventDefault();
+    var h = hovered;
+    copyText(h.a.href).then(h.copied, function () {});
+  });
+
+  /* ---------- Appearance toggle: a help tag, macOS style (after a short rest) ---------- */
+  var tog = document.querySelector(".theme-toggle");
+  if (tog) {
+    var tOwner = { scrollHides: true }, tWait = 0, tOn = false;
+    var tShow = function () {
+      var dark = document.documentElement.dataset.theme === "dark";
+      showCap(tOwner, "<span>" + (dark ? "Light mode" : "Dark mode") + "</span>", tog.getBoundingClientRect(), "left");
+    };
+    tog.addEventListener("pointerenter", function (e) { if (e.pointerType !== "mouse") return; tOn = true; clearTimeout(tWait); tWait = setTimeout(tShow, 500); });
+    tog.addEventListener("pointerleave", function () { tOn = false; clearTimeout(tWait); hideCap(tOwner); });
+    tog.addEventListener("click", function () { if (tOn) setTimeout(tShow, 0); });    // name the next switch
+  }
+
   /* ---------- Context menu on project cards ---------- */
   var ICON = {
     open: '<path d="M6 3H3.5A1.5 1.5 0 0 0 2 4.5v8A1.5 1.5 0 0 0 3.5 14h8a1.5 1.5 0 0 0 1.5-1.5V10M9 2h5v5M14 2 7.5 8.5"/>',

@@ -890,13 +890,26 @@
     r.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") focusRow(i); });
     r.addEventListener("focus", function () { focusRow(i); });
   });
-  ul.addEventListener("keydown", function (e) {
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+  // The legend's keys work while the pointer rests on the list, not only with
+  // keyboard focus in it (hovering doesn't move focus, and Safari doesn't Tab
+  // to links by default).
+  var over = false;
+  ul.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") over = true; });
+  ul.addEventListener("pointerleave", function () { over = false; });
+  document.addEventListener("keydown", function (e) {
+    var inside = ul.contains(document.activeElement);
+    if (!over && !inside) return;
+    var t = document.activeElement;
+    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    if ((e.key === "ArrowDown" || e.key === "ArrowUp") && !e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey) {
       e.preventDefault();
       var n = Math.max(0, Math.min(rows.length - 1, hl + (e.key === "ArrowDown" ? 1 : -1)));
       focusRow(n);
-      rows[n].focus();
-    } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c" && !String(getSelection())) {
+      if (inside) rows[n].focus();
+    } else if (e.key === "Enter" && !inside && !e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey) {
+      e.preventDefault();
+      rows[hl].click();                             // focused rows open natively
+    } else if ((e.metaKey || e.ctrlKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === "c" && !String(getSelection())) {
       e.preventDefault();
       var url = rows[hl].href;
       var done = function () {
